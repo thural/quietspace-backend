@@ -11,7 +11,7 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 
-@Profile("prod")
+@Profile({"staging", "prod"})
 @Service
 @Slf4j
 public class ResendEmailService implements EmailService {

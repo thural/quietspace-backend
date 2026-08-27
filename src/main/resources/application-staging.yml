@@ -1,3 +1,11 @@
-# Staging profile: uses Mailpit SMTP (from base) with MySQL/Flyway (from base).
-# No overrides needed — base application.yml already provides the
-# deployed defaults that both staging and production share.
+spring:
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
+email:
+  provider:
+    url: ${EMAIL_PROVIDER_URL:https://api.resend.com}
+    key: ${EMAIL_API_KEY}
