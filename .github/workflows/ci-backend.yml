@@ -2,7 +2,7 @@ name: Backend CI
 
 on:
   push:
-    branches: [ "main", "prod" ]
+    branches: [ "staging", "prod" ]
     paths:
       - 'src/**'
       - 'build.gradle.kts'
@@ -10,7 +10,7 @@ on:
       - 'Dockerfile'
       - '.github/workflows/ci-backend.yml'
   pull_request:
-    branches: [ "main", "prod" ]
+    branches: [ "staging", "prod" ]
     paths:
       - 'src/**'
       - 'build.gradle.kts'
