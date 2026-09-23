@@ -54,7 +54,7 @@
 | `infrastructure/docker/docker-compose.yaml` | Container orchestration |
 | `.env.example` | Environment variable template (committed) |
 | `.env` | Environment variables (gitignored) |
-| `.dockerignore` | Docker build context exclusions |
+| `../../.dockerignore` | Docker build context exclusions |
 
 ## Related Documentation
 

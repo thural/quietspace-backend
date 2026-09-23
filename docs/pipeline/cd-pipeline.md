@@ -38,13 +38,13 @@ The Continuous Deployment (CD) pipeline runs only on the `prod` branch. It build
 1. Checkout code with full git history
 2. Setup JDK 25 (Amazon Corretto)
 3. Setup Gradle with caching
-4. Extract project version from `build.gradle.kts`
+4. Extract project version from `../../build.gradle.kts`
 5. Login to GHCR using `GITHUB_TOKEN`
 6. Build and push Docker image
 
 **Docker Build:**
 - **Base image:** `eclipse-temurin:25-jre-alpine`
-- **Build context:** Project root (`./`)
+- **Build context:** Project root (`../architecture`)
 - **Dockerfile:** `infrastructure/docker/Dockerfile`
 - **Platform:** `linux/amd64`
 - **Tags:**
