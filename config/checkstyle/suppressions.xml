@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions PUBLIC
+          "-//Puppy Crawl//DTD Suppressions 1.2//EN"
+          "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+    <!-- Suppress for generated MapStruct mappers -->
+    <suppress checks=".*" files=".*MapperImpl\.java"/>
+    <suppress checks=".*" files=".*\$.*\.java"/>
+    
+    <!-- Suppress for Spring Boot generated code -->
+    <suppress checks=".*" files=".*/generated/.*"/>
+    
+    <!-- Allow longer lines for test files -->
+    <suppress checks="LineLength" files=".*Test\.java"/>
+    <suppress checks="LineLength" files=".*IT\.java"/>
+    
+    <!-- Suppress for DTOs with many fields -->
+    <suppress checks="ParameterNumber" files=".*Request\.java"/>
+    <suppress checks="ParameterNumber" files=".*Response\.java"/>
+</suppressions>

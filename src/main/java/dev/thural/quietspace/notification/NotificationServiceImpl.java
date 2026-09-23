@@ -115,6 +115,7 @@ public class NotificationServiceImpl implements NotificationService {
         switch (type) {
             case COMMENT -> processNotification(COMMENT_REACTION, contentId);
             case POST -> processNotification(POST_REACTION, contentId);
+            default -> throw new IllegalArgumentException("Unknown entity type: " + type);
         }
     }
 

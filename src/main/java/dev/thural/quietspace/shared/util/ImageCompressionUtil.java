@@ -43,6 +43,18 @@ public class ImageCompressionUtil {
     }
 
     /**
+     * Compress image from byte array with improved format-specific handling
+     *
+     * @param imageBytes      Original image bytes
+     * @param targetSizeBytes Target size in bytes
+     * @return Compressed image bytes
+     * @throws IOException If compression fails
+     */
+    public byte[] compressImage(byte[] imageBytes, int targetSizeBytes) throws IOException {
+        return compressImage(new ByteArrayInputStream(imageBytes), targetSizeBytes);
+    }
+
+    /**
      * Enhanced compression method with improved quality preservation
      *
      * @param originalImage   Original BufferedImage
@@ -113,11 +125,6 @@ public class ImageCompressionUtil {
         // Calculate scale, ensuring it doesn't reduce below 0.1
         double scale = Math.sqrt(targetSize / originalSize);
         return Math.max(Math.min(scale, 1.0), 0.1);
-    }
-
-    // Existing methods remain the same (compressImage overloads, etc.)
-    public byte[] compressImage(byte[] imageBytes, int targetSizeBytes) throws IOException {
-        return compressImage(new ByteArrayInputStream(imageBytes), targetSizeBytes);
     }
 
     /**

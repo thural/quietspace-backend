@@ -1,0 +1,669 @@
+quietspace -> java.base
+quietspace -> java.desktop
+quietspace -> not found
+   dev.thural.quietspace                              -> java.lang                                          java.base
+   dev.thural.quietspace                              -> org.springframework.boot                           not found
+   dev.thural.quietspace                              -> org.springframework.boot.autoconfigure             not found
+   dev.thural.quietspace                              -> org.springframework.context                        not found
+   dev.thural.quietspace                              -> org.springframework.data.web.config                not found
+   dev.thural.quietspace                              -> org.springframework.scheduling.annotation          not found
+   dev.thural.quietspace.auth                         -> dev.thural.quietspace.auth.dto                     quietspace
+   dev.thural.quietspace.auth                         -> dev.thural.quietspace.security                     quietspace
+   dev.thural.quietspace.auth                         -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.auth                         -> dev.thural.quietspace.shared.event                 quietspace
+   dev.thural.quietspace.auth                         -> dev.thural.quietspace.shared.exception             quietspace
+   dev.thural.quietspace.auth                         -> dev.thural.quietspace.shared.service               quietspace
+   dev.thural.quietspace.auth                         -> dev.thural.quietspace.shared.service.impl          quietspace
+   dev.thural.quietspace.auth                         -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.auth                         -> io.micrometer.core.instrument                      not found
+   dev.thural.quietspace.auth                         -> java.lang                                          java.base
+   dev.thural.quietspace.auth                         -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.auth                         -> java.security                                      java.base
+   dev.thural.quietspace.auth                         -> java.time                                          java.base
+   dev.thural.quietspace.auth                         -> java.util                                          java.base
+   dev.thural.quietspace.auth                         -> java.util.function                                 java.base
+   dev.thural.quietspace.auth                         -> org.slf4j                                          not found
+   dev.thural.quietspace.auth                         -> org.springframework.beans.factory.annotation       not found
+   dev.thural.quietspace.auth                         -> org.springframework.http                           not found
+   dev.thural.quietspace.auth                         -> org.springframework.security.authentication        not found
+   dev.thural.quietspace.auth                         -> org.springframework.security.core                  not found
+   dev.thural.quietspace.auth                         -> org.springframework.security.core.context          not found
+   dev.thural.quietspace.auth                         -> org.springframework.security.core.userdetails      not found
+   dev.thural.quietspace.auth                         -> org.springframework.security.crypto.password       not found
+   dev.thural.quietspace.auth                         -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.auth                         -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.auth                         -> org.springframework.util                           not found
+   dev.thural.quietspace.auth.controller              -> dev.thural.quietspace.auth                         quietspace
+   dev.thural.quietspace.auth.controller              -> dev.thural.quietspace.auth.dto                     quietspace
+   dev.thural.quietspace.auth.controller              -> io.swagger.v3.oas.annotations.security             not found
+   dev.thural.quietspace.auth.controller              -> io.swagger.v3.oas.annotations.tags                 not found
+   dev.thural.quietspace.auth.controller              -> jakarta.validation                                 not found
+   dev.thural.quietspace.auth.controller              -> java.lang                                          java.base
+   dev.thural.quietspace.auth.controller              -> org.springframework.http                           not found
+   dev.thural.quietspace.auth.controller              -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.auth.dto                     -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.auth.dto                     -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.auth.dto                     -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.auth.dto                     -> java.lang                                          java.base
+   dev.thural.quietspace.auth.dto                     -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.auth.dto                     -> java.util                                          java.base
+   dev.thural.quietspace.bootstrap                    -> dev.thural.quietspace.security                     quietspace
+   dev.thural.quietspace.bootstrap                    -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.bootstrap                    -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.bootstrap                    -> jakarta.transaction                                not found
+   dev.thural.quietspace.bootstrap                    -> java.lang                                          java.base
+   dev.thural.quietspace.bootstrap                    -> java.time                                          java.base
+   dev.thural.quietspace.bootstrap                    -> java.util                                          java.base
+   dev.thural.quietspace.bootstrap                    -> org.slf4j                                          not found
+   dev.thural.quietspace.bootstrap                    -> org.springframework.beans.factory.annotation       not found
+   dev.thural.quietspace.bootstrap                    -> org.springframework.boot                           not found
+   dev.thural.quietspace.bootstrap                    -> org.springframework.scheduling.annotation          not found
+   dev.thural.quietspace.bootstrap                    -> org.springframework.security.crypto.password       not found
+   dev.thural.quietspace.bootstrap                    -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.chat                         -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.chat                         -> dev.thural.quietspace.chat.dto                     quietspace
+   dev.thural.quietspace.chat                         -> dev.thural.quietspace.message                      quietspace
+   dev.thural.quietspace.chat                         -> dev.thural.quietspace.message.dto                  quietspace
+   dev.thural.quietspace.chat                         -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.chat                         -> dev.thural.quietspace.shared.exception             quietspace
+   dev.thural.quietspace.chat                         -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.chat                         -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.chat                         -> dev.thural.quietspace.user.dto                     quietspace
+   dev.thural.quietspace.chat                         -> jakarta.persistence                                not found
+   dev.thural.quietspace.chat                         -> java.lang                                          java.base
+   dev.thural.quietspace.chat                         -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.chat                         -> java.time                                          java.base
+   dev.thural.quietspace.chat                         -> java.util                                          java.base
+   dev.thural.quietspace.chat                         -> java.util.function                                 java.base
+   dev.thural.quietspace.chat                         -> java.util.stream                                   java.base
+   dev.thural.quietspace.chat                         -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.chat                         -> org.springframework.data.repository.query          not found
+   dev.thural.quietspace.chat                         -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.chat                         -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.chat                         quietspace
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.chat.dto                     quietspace
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.message                      quietspace
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.message.dto                  quietspace
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.user.dto                     quietspace
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.websocket.constant           quietspace
+   dev.thural.quietspace.chat.controller              -> dev.thural.quietspace.websocket.event.message      quietspace
+   dev.thural.quietspace.chat.controller              -> jakarta.persistence                                not found
+   dev.thural.quietspace.chat.controller              -> java.lang                                          java.base
+   dev.thural.quietspace.chat.controller              -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.chat.controller              -> java.util                                          java.base
+   dev.thural.quietspace.chat.controller              -> java.util.function                                 java.base
+   dev.thural.quietspace.chat.controller              -> org.slf4j                                          not found
+   dev.thural.quietspace.chat.controller              -> org.springframework.http                           not found
+   dev.thural.quietspace.chat.controller              -> org.springframework.messaging.handler.annotation   not found
+   dev.thural.quietspace.chat.controller              -> org.springframework.security.access.prepost        not found
+   dev.thural.quietspace.chat.controller              -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.chat.controller              -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.chat.dto                     -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.chat.dto                     -> dev.thural.quietspace.message.dto                  quietspace
+   dev.thural.quietspace.chat.dto                     -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.chat.dto                     -> dev.thural.quietspace.user.dto                     quietspace
+   dev.thural.quietspace.chat.dto                     -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.chat.dto                     -> java.lang                                          java.base
+   dev.thural.quietspace.chat.dto                     -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.chat.dto                     -> java.util                                          java.base
+   dev.thural.quietspace.comment                      -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.comment.dto                  quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.post                         quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.reaction                     quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.reaction.dto                 quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.shared.exception             quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.shared.util                  quietspace
+   dev.thural.quietspace.comment                      -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.comment                      -> jakarta.persistence                                not found
+   dev.thural.quietspace.comment                      -> jakarta.transaction                                not found
+   dev.thural.quietspace.comment                      -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.comment                      -> java.lang                                          java.base
+   dev.thural.quietspace.comment                      -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.comment                      -> java.time                                          java.base
+   dev.thural.quietspace.comment                      -> java.util                                          java.base
+   dev.thural.quietspace.comment                      -> java.util.function                                 java.base
+   dev.thural.quietspace.comment                      -> org.slf4j                                          not found
+   dev.thural.quietspace.comment                      -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.comment                      -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.comment                      -> org.springframework.data.repository.query          not found
+   dev.thural.quietspace.comment                      -> org.springframework.security.access                not found
+   dev.thural.quietspace.comment                      -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.comment                      -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.comment                      -> org.springframework.util                           not found
+   dev.thural.quietspace.comment.controller           -> dev.thural.quietspace.comment                      quietspace
+   dev.thural.quietspace.comment.controller           -> dev.thural.quietspace.comment.dto                  quietspace
+   dev.thural.quietspace.comment.controller           -> dev.thural.quietspace.notification                 quietspace
+   dev.thural.quietspace.comment.controller           -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.comment.controller           -> java.lang                                          java.base
+   dev.thural.quietspace.comment.controller           -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.comment.controller           -> java.util                                          java.base
+   dev.thural.quietspace.comment.controller           -> java.util.function                                 java.base
+   dev.thural.quietspace.comment.controller           -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.comment.controller           -> org.springframework.http                           not found
+   dev.thural.quietspace.comment.controller           -> org.springframework.validation.annotation          not found
+   dev.thural.quietspace.comment.controller           -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.comment.dto                  -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.comment.dto                  -> dev.thural.quietspace.reaction.dto                 quietspace
+   dev.thural.quietspace.comment.dto                  -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.comment.dto                  -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.comment.dto                  -> java.lang                                          java.base
+   dev.thural.quietspace.comment.dto                  -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.comment.dto                  -> java.util                                          java.base
+   dev.thural.quietspace.config                       -> com.fasterxml.jackson.databind                     not found
+   dev.thural.quietspace.config                       -> com.fasterxml.jackson.datatype.jsr310              not found
+   dev.thural.quietspace.config                       -> dev.thural.quietspace.security                     quietspace
+   dev.thural.quietspace.config                       -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.config                       -> io.swagger.v3.oas.models                           not found
+   dev.thural.quietspace.config                       -> io.swagger.v3.oas.models.info                      not found
+   dev.thural.quietspace.config                       -> io.swagger.v3.oas.models.security                  not found
+   dev.thural.quietspace.config                       -> io.swagger.v3.oas.models.servers                   not found
+   dev.thural.quietspace.config                       -> java.lang                                          java.base
+   dev.thural.quietspace.config                       -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.config                       -> java.time                                          java.base
+   dev.thural.quietspace.config                       -> java.time.temporal                                 java.base
+   dev.thural.quietspace.config                       -> java.util                                          java.base
+   dev.thural.quietspace.config                       -> java.util.concurrent                               java.base
+   dev.thural.quietspace.config                       -> java.util.function                                 java.base
+   dev.thural.quietspace.config                       -> java.util.stream                                   java.base
+   dev.thural.quietspace.config                       -> org.slf4j                                          not found
+   dev.thural.quietspace.config                       -> org.springframework.amqp.core                      not found
+   dev.thural.quietspace.config                       -> org.springframework.amqp.rabbit.connection         not found
+   dev.thural.quietspace.config                       -> org.springframework.amqp.rabbit.core               not found
+   dev.thural.quietspace.config                       -> org.springframework.amqp.support.converter         not found
+   dev.thural.quietspace.config                       -> org.springframework.beans.factory.annotation       not found
+   dev.thural.quietspace.config                       -> org.springframework.boot.actuate.audit             not found
+   dev.thural.quietspace.config                       -> org.springframework.context.annotation             not found
+   dev.thural.quietspace.config                       -> org.springframework.data.auditing                  not found
+   dev.thural.quietspace.config                       -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.config                       -> org.springframework.data.jpa.repository.config     not found
+   dev.thural.quietspace.config                       -> org.springframework.http                           not found
+   dev.thural.quietspace.config                       -> org.springframework.scheduling.annotation          not found
+   dev.thural.quietspace.config                       -> org.springframework.security.authentication        not found
+   dev.thural.quietspace.config                       -> org.springframework.security.authentication.dao    not found
+   dev.thural.quietspace.config                       -> org.springframework.security.config.annotation.authentication.configuration not found
+   dev.thural.quietspace.config                       -> org.springframework.security.core                  not found
+   dev.thural.quietspace.config                       -> org.springframework.security.core.context          not found
+   dev.thural.quietspace.config                       -> org.springframework.security.core.userdetails      not found
+   dev.thural.quietspace.config                       -> org.springframework.security.crypto.bcrypt         not found
+   dev.thural.quietspace.config                       -> org.springframework.security.crypto.password       not found
+   dev.thural.quietspace.config                       -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.config                       -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.config                       -> org.springframework.web.client                     not found
+   dev.thural.quietspace.config                       -> org.springframework.web.cors                       not found
+   dev.thural.quietspace.config                       -> org.springframework.web.filter                     not found
+   dev.thural.quietspace.message                      -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.chat                         quietspace
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.message.dto                  quietspace
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.photo                        quietspace
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.photo.dto                    quietspace
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.shared.util                  quietspace
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.message                      -> dev.thural.quietspace.websocket.constant           quietspace
+   dev.thural.quietspace.message                      -> jakarta.persistence                                not found
+   dev.thural.quietspace.message                      -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.message                      -> java.lang                                          java.base
+   dev.thural.quietspace.message                      -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.message                      -> java.util                                          java.base
+   dev.thural.quietspace.message                      -> java.util.function                                 java.base
+   dev.thural.quietspace.message                      -> org.slf4j                                          not found
+   dev.thural.quietspace.message                      -> org.springframework.beans                          not found
+   dev.thural.quietspace.message                      -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.message                      -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.message                      -> org.springframework.messaging.simp                 not found
+   dev.thural.quietspace.message                      -> org.springframework.security.access                not found
+   dev.thural.quietspace.message                      -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.message                      -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.message                      -> org.springframework.web.multipart                  not found
+   dev.thural.quietspace.message.controller           -> dev.thural.quietspace.message                      quietspace
+   dev.thural.quietspace.message.controller           -> dev.thural.quietspace.message.dto                  quietspace
+   dev.thural.quietspace.message.controller           -> jakarta.validation                                 not found
+   dev.thural.quietspace.message.controller           -> java.lang                                          java.base
+   dev.thural.quietspace.message.controller           -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.message.controller           -> java.util                                          java.base
+   dev.thural.quietspace.message.controller           -> java.util.function                                 java.base
+   dev.thural.quietspace.message.controller           -> org.slf4j                                          not found
+   dev.thural.quietspace.message.controller           -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.message.controller           -> org.springframework.http                           not found
+   dev.thural.quietspace.message.controller           -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.message.controller           -> org.springframework.web.multipart                  not found
+   dev.thural.quietspace.message.dto                  -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.message.dto                  -> dev.thural.quietspace.photo.dto                    quietspace
+   dev.thural.quietspace.message.dto                  -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.message.dto                  -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.message.dto                  -> java.lang                                          java.base
+   dev.thural.quietspace.message.dto                  -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.message.dto                  -> java.util                                          java.base
+   dev.thural.quietspace.message.dto                  -> org.springframework.web.multipart                  not found
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.comment                      quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.notification.dto             quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.post                         quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.shared.exception             quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.shared.util                  quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.websocket.constant           quietspace
+   dev.thural.quietspace.notification                 -> dev.thural.quietspace.websocket.event.message      quietspace
+   dev.thural.quietspace.notification                 -> jakarta.persistence                                not found
+   dev.thural.quietspace.notification                 -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.notification                 -> java.lang                                          java.base
+   dev.thural.quietspace.notification                 -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.notification                 -> java.util                                          java.base
+   dev.thural.quietspace.notification                 -> java.util.function                                 java.base
+   dev.thural.quietspace.notification                 -> org.slf4j                                          not found
+   dev.thural.quietspace.notification                 -> org.springframework.beans                          not found
+   dev.thural.quietspace.notification                 -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.notification                 -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.notification                 -> org.springframework.messaging                      not found
+   dev.thural.quietspace.notification                 -> org.springframework.messaging.simp                 not found
+   dev.thural.quietspace.notification                 -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.notification                 -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.notification                 -> org.springframework.web.client                     not found
+   dev.thural.quietspace.notification.controller      -> dev.thural.quietspace.notification                 quietspace
+   dev.thural.quietspace.notification.controller      -> dev.thural.quietspace.notification.dto             quietspace
+   dev.thural.quietspace.notification.controller      -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.notification.controller      -> java.lang                                          java.base
+   dev.thural.quietspace.notification.controller      -> java.util                                          java.base
+   dev.thural.quietspace.notification.controller      -> org.slf4j                                          not found
+   dev.thural.quietspace.notification.controller      -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.notification.controller      -> org.springframework.http                           not found
+   dev.thural.quietspace.notification.controller      -> org.springframework.messaging.handler.annotation   not found
+   dev.thural.quietspace.notification.controller      -> org.springframework.security.access.prepost        not found
+   dev.thural.quietspace.notification.controller      -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.notification.controller      -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.notification.dto             -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.notification.dto             -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.notification.dto             -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.notification.dto             -> java.lang                                          java.base
+   dev.thural.quietspace.notification.dto             -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.notification.dto             -> java.util                                          java.base
+   dev.thural.quietspace.photo                        -> dev.thural.quietspace.photo.dto                    quietspace
+   dev.thural.quietspace.photo                        -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.photo                        -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.photo                        -> dev.thural.quietspace.shared.exception             quietspace
+   dev.thural.quietspace.photo                        -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.photo                        -> dev.thural.quietspace.shared.service               quietspace
+   dev.thural.quietspace.photo                        -> dev.thural.quietspace.shared.util                  quietspace
+   dev.thural.quietspace.photo                        -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.photo                        -> jakarta.persistence                                not found
+   dev.thural.quietspace.photo                        -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.photo                        -> java.io                                            java.base
+   dev.thural.quietspace.photo                        -> java.lang                                          java.base
+   dev.thural.quietspace.photo                        -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.photo                        -> java.util                                          java.base
+   dev.thural.quietspace.photo                        -> java.util.function                                 java.base
+   dev.thural.quietspace.photo                        -> org.slf4j                                          not found
+   dev.thural.quietspace.photo                        -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.photo                        -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.photo                        -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.photo                        -> org.springframework.web.multipart                  not found
+   dev.thural.quietspace.photo.controller             -> dev.thural.quietspace.photo                        quietspace
+   dev.thural.quietspace.photo.controller             -> dev.thural.quietspace.photo.dto                    quietspace
+   dev.thural.quietspace.photo.controller             -> java.lang                                          java.base
+   dev.thural.quietspace.photo.controller             -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.photo.controller             -> java.util                                          java.base
+   dev.thural.quietspace.photo.controller             -> org.slf4j                                          not found
+   dev.thural.quietspace.photo.controller             -> org.springframework.http                           not found
+   dev.thural.quietspace.photo.controller             -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.photo.controller             -> org.springframework.web.multipart                  not found
+   dev.thural.quietspace.photo.dto                    -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.photo.dto                    -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.photo.dto                    -> jakarta.persistence                                not found
+   dev.thural.quietspace.photo.dto                    -> java.lang                                          java.base
+   dev.thural.quietspace.photo.dto                    -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.photo.dto                    -> java.util                                          java.base
+   dev.thural.quietspace.post                         -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.comment                      quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.photo                        quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.photo.dto                    quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.post.dto                     quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.reaction                     quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.reaction.dto                 quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.shared.util                  quietspace
+   dev.thural.quietspace.post                         -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.post                         -> jakarta.persistence                                not found
+   dev.thural.quietspace.post                         -> jakarta.persistence.criteria                       not found
+   dev.thural.quietspace.post                         -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.post                         -> java.io                                            java.base
+   dev.thural.quietspace.post                         -> java.lang                                          java.base
+   dev.thural.quietspace.post                         -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.post                         -> java.time                                          java.base
+   dev.thural.quietspace.post                         -> java.util                                          java.base
+   dev.thural.quietspace.post                         -> java.util.function                                 java.base
+   dev.thural.quietspace.post                         -> java.util.stream                                   java.base
+   dev.thural.quietspace.post                         -> org.hibernate.validator.constraints                not found
+   dev.thural.quietspace.post                         -> org.slf4j                                          not found
+   dev.thural.quietspace.post                         -> org.springframework.beans                          not found
+   dev.thural.quietspace.post                         -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.post                         -> org.springframework.data.jpa.domain                not found
+   dev.thural.quietspace.post                         -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.post                         -> org.springframework.security.access                not found
+   dev.thural.quietspace.post                         -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.post                         -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.post                         -> org.springframework.util                           not found
+   dev.thural.quietspace.post                         -> org.springframework.web.multipart                  not found
+   dev.thural.quietspace.post.controller              -> dev.thural.quietspace.notification                 quietspace
+   dev.thural.quietspace.post.controller              -> dev.thural.quietspace.post                         quietspace
+   dev.thural.quietspace.post.controller              -> dev.thural.quietspace.post.dto                     quietspace
+   dev.thural.quietspace.post.controller              -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.post.controller              -> jakarta.validation                                 not found
+   dev.thural.quietspace.post.controller              -> java.lang                                          java.base
+   dev.thural.quietspace.post.controller              -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.post.controller              -> java.util                                          java.base
+   dev.thural.quietspace.post.controller              -> java.util.function                                 java.base
+   dev.thural.quietspace.post.controller              -> org.slf4j                                          not found
+   dev.thural.quietspace.post.controller              -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.post.controller              -> org.springframework.http                           not found
+   dev.thural.quietspace.post.controller              -> org.springframework.security.access.prepost        not found
+   dev.thural.quietspace.post.controller              -> org.springframework.validation.annotation          not found
+   dev.thural.quietspace.post.controller              -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.post.controller              -> org.springframework.web.multipart                  not found
+   dev.thural.quietspace.post.dto                     -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.post.dto                     -> dev.thural.quietspace.photo.dto                    quietspace
+   dev.thural.quietspace.post.dto                     -> dev.thural.quietspace.reaction.dto                 quietspace
+   dev.thural.quietspace.post.dto                     -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.post.dto                     -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.post.dto                     -> java.lang                                          java.base
+   dev.thural.quietspace.post.dto                     -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.post.dto                     -> java.time                                          java.base
+   dev.thural.quietspace.post.dto                     -> java.util                                          java.base
+   dev.thural.quietspace.post.dto                     -> org.springframework.web.multipart                  not found
+   dev.thural.quietspace.reaction                     -> dev.thural.quietspace.reaction.dto                 quietspace
+   dev.thural.quietspace.reaction                     -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.reaction                     -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.reaction                     -> dev.thural.quietspace.shared.util                  quietspace
+   dev.thural.quietspace.reaction                     -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.reaction                     -> jakarta.persistence                                not found
+   dev.thural.quietspace.reaction                     -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.reaction                     -> java.lang                                          java.base
+   dev.thural.quietspace.reaction                     -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.reaction                     -> java.util                                          java.base
+   dev.thural.quietspace.reaction                     -> java.util.function                                 java.base
+   dev.thural.quietspace.reaction                     -> org.springframework.beans                          not found
+   dev.thural.quietspace.reaction                     -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.reaction                     -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.reaction                     -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.reaction.controller          -> dev.thural.quietspace.notification                 quietspace
+   dev.thural.quietspace.reaction.controller          -> dev.thural.quietspace.reaction                     quietspace
+   dev.thural.quietspace.reaction.controller          -> dev.thural.quietspace.reaction.dto                 quietspace
+   dev.thural.quietspace.reaction.controller          -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.reaction.controller          -> java.lang                                          java.base
+   dev.thural.quietspace.reaction.controller          -> java.util                                          java.base
+   dev.thural.quietspace.reaction.controller          -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.reaction.controller          -> org.springframework.http                           not found
+   dev.thural.quietspace.reaction.controller          -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.reaction.dto                 -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.reaction.dto                 -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.reaction.dto                 -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.reaction.dto                 -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.reaction.dto                 -> java.lang                                          java.base
+   dev.thural.quietspace.reaction.dto                 -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.reaction.dto                 -> java.util                                          java.base
+   dev.thural.quietspace.security                     -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.security                     -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.security                     -> dev.thural.quietspace.shared.service               quietspace
+   dev.thural.quietspace.security                     -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.security                     -> io.jsonwebtoken                                    not found
+   dev.thural.quietspace.security                     -> io.jsonwebtoken.io                                 not found
+   dev.thural.quietspace.security                     -> io.jsonwebtoken.lang                               not found
+   dev.thural.quietspace.security                     -> io.jsonwebtoken.security                           not found
+   dev.thural.quietspace.security                     -> jakarta.persistence                                not found
+   dev.thural.quietspace.security                     -> jakarta.servlet                                    not found
+   dev.thural.quietspace.security                     -> jakarta.servlet.http                               not found
+   dev.thural.quietspace.security                     -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.security                     -> java.io                                            java.base
+   dev.thural.quietspace.security                     -> java.lang                                          java.base
+   dev.thural.quietspace.security                     -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.security                     -> java.security                                      java.base
+   dev.thural.quietspace.security                     -> java.time                                          java.base
+   dev.thural.quietspace.security                     -> java.util                                          java.base
+   dev.thural.quietspace.security                     -> java.util.function                                 java.base
+   dev.thural.quietspace.security                     -> java.util.stream                                   java.base
+   dev.thural.quietspace.security                     -> javax.crypto                                       java.base
+   dev.thural.quietspace.security                     -> org.slf4j                                          not found
+   dev.thural.quietspace.security                     -> org.springframework.beans.factory.annotation       not found
+   dev.thural.quietspace.security                     -> org.springframework.context.annotation             not found
+   dev.thural.quietspace.security                     -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.security                     -> org.springframework.http                           not found
+   dev.thural.quietspace.security                     -> org.springframework.security.access                not found
+   dev.thural.quietspace.security                     -> org.springframework.security.authentication        not found
+   dev.thural.quietspace.security                     -> org.springframework.security.config                not found
+   dev.thural.quietspace.security                     -> org.springframework.security.config.annotation.method.configuration not found
+   dev.thural.quietspace.security                     -> org.springframework.security.config.annotation.web.builders not found
+   dev.thural.quietspace.security                     -> org.springframework.security.config.annotation.web.configuration not found
+   dev.thural.quietspace.security                     -> org.springframework.security.config.annotation.web.configurers not found
+   dev.thural.quietspace.security                     -> org.springframework.security.config.http           not found
+   dev.thural.quietspace.security                     -> org.springframework.security.core                  not found
+   dev.thural.quietspace.security                     -> org.springframework.security.core.context          not found
+   dev.thural.quietspace.security                     -> org.springframework.security.core.userdetails      not found
+   dev.thural.quietspace.security                     -> org.springframework.security.web                   not found
+   dev.thural.quietspace.security                     -> org.springframework.security.web.access            not found
+   dev.thural.quietspace.security                     -> org.springframework.security.web.authentication    not found
+   dev.thural.quietspace.security                     -> org.springframework.security.web.csrf              not found
+   dev.thural.quietspace.security                     -> org.springframework.security.web.header.writers    not found
+   dev.thural.quietspace.security                     -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.security                     -> org.springframework.util                           not found
+   dev.thural.quietspace.security                     -> org.springframework.web.filter                     not found
+   dev.thural.quietspace.security                     -> tools.jackson.databind                             not found
+   dev.thural.quietspace.shared.controller            -> jakarta.servlet.http                               not found
+   dev.thural.quietspace.shared.controller            -> java.lang                                          java.base
+   dev.thural.quietspace.shared.controller            -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.shared.controller            -> java.util                                          java.base
+   dev.thural.quietspace.shared.controller            -> org.springframework.http                           not found
+   dev.thural.quietspace.shared.controller            -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.shared.entity                -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.shared.entity                -> jakarta.persistence                                not found
+   dev.thural.quietspace.shared.entity                -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.shared.entity                -> java.lang                                          java.base
+   dev.thural.quietspace.shared.entity                -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.shared.entity                -> java.time                                          java.base
+   dev.thural.quietspace.shared.entity                -> java.util                                          java.base
+   dev.thural.quietspace.shared.entity                -> org.hibernate.annotations                          not found
+   dev.thural.quietspace.shared.entity                -> org.springframework.data.annotation                not found
+   dev.thural.quietspace.shared.enums                 -> java.lang                                          java.base
+   dev.thural.quietspace.shared.enums                 -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.shared.enums                 -> java.util                                          java.base
+   dev.thural.quietspace.shared.enums                 -> java.util.function                                 java.base
+   dev.thural.quietspace.shared.enums                 -> java.util.stream                                   java.base
+   dev.thural.quietspace.shared.enums                 -> org.springframework.security.core.authority        not found
+   dev.thural.quietspace.shared.event                 -> java.io                                            java.base
+   dev.thural.quietspace.shared.event                 -> java.lang                                          java.base
+   dev.thural.quietspace.shared.event                 -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.shared.event                 -> java.lang.runtime                                  java.base
+   dev.thural.quietspace.shared.event                 -> java.util                                          java.base
+   dev.thural.quietspace.shared.exception             -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.shared.exception             -> jakarta.persistence                                not found
+   dev.thural.quietspace.shared.exception             -> jakarta.validation                                 not found
+   dev.thural.quietspace.shared.exception             -> java.lang                                          java.base
+   dev.thural.quietspace.shared.exception             -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.shared.exception             -> java.net                                           java.base
+   dev.thural.quietspace.shared.exception             -> java.util                                          java.base
+   dev.thural.quietspace.shared.exception             -> java.util.function                                 java.base
+   dev.thural.quietspace.shared.exception             -> java.util.stream                                   java.base
+   dev.thural.quietspace.shared.exception             -> org.springframework.http                           not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.messaging                      not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.messaging.handler.annotation   not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.security.authentication        not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.security.core.userdetails      not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.transaction                    not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.validation                     not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.web.bind                       not found
+   dev.thural.quietspace.shared.exception             -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.shared.model                 -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.shared.model                 -> jakarta.persistence                                not found
+   dev.thural.quietspace.shared.model                 -> java.lang                                          java.base
+   dev.thural.quietspace.shared.model                 -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.shared.model                 -> java.lang.runtime                                  java.base
+   dev.thural.quietspace.shared.model                 -> java.time                                          java.base
+   dev.thural.quietspace.shared.model                 -> java.util                                          java.base
+   dev.thural.quietspace.shared.service               -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.shared.service               -> java.lang                                          java.base
+   dev.thural.quietspace.shared.service               -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.shared.service               -> java.time                                          java.base
+   dev.thural.quietspace.shared.service               -> java.util                                          java.base
+   dev.thural.quietspace.shared.service               -> org.slf4j                                          not found
+   dev.thural.quietspace.shared.service               -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.shared.service.impl          -> dev.thural.quietspace.shared.event                 quietspace
+   dev.thural.quietspace.shared.service.impl          -> dev.thural.quietspace.shared.exception             quietspace
+   dev.thural.quietspace.shared.service.impl          -> dev.thural.quietspace.shared.service               quietspace
+   dev.thural.quietspace.shared.service.impl          -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.shared.service.impl          -> jakarta.mail                                       not found
+   dev.thural.quietspace.shared.service.impl          -> jakarta.mail.internet                              not found
+   dev.thural.quietspace.shared.service.impl          -> java.lang                                          java.base
+   dev.thural.quietspace.shared.service.impl          -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.shared.service.impl          -> java.nio.charset                                   java.base
+   dev.thural.quietspace.shared.service.impl          -> java.util                                          java.base
+   dev.thural.quietspace.shared.service.impl          -> java.util.function                                 java.base
+   dev.thural.quietspace.shared.service.impl          -> org.slf4j                                          not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.amqp.rabbit.annotation         not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.amqp.rabbit.core               not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.beans.factory.annotation       not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.context.annotation             not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.http                           not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.mail.javamail                  not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.scheduling.annotation          not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.security.core                  not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.security.core.context          not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.shared.service.impl          -> org.springframework.web.client                     not found
+   dev.thural.quietspace.shared.service.impl          -> org.thymeleaf.context                              not found
+   dev.thural.quietspace.shared.service.impl          -> org.thymeleaf.spring6                              not found
+   dev.thural.quietspace.shared.util                  -> java.awt.image                                     java.desktop
+   dev.thural.quietspace.shared.util                  -> java.io                                            java.base
+   dev.thural.quietspace.shared.util                  -> java.lang                                          java.base
+   dev.thural.quietspace.shared.util                  -> java.util                                          java.base
+   dev.thural.quietspace.shared.util                  -> javax.imageio                                      java.desktop
+   dev.thural.quietspace.shared.util                  -> net.coobird.thumbnailator                          not found
+   dev.thural.quietspace.shared.util                  -> org.slf4j                                          not found
+   dev.thural.quietspace.shared.util                  -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.shared.util                  -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.user                         -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.chat                         quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.comment                      quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.message                      quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.photo                        quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.photo.dto                    quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.post                         quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.shared.entity                quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.shared.exception             quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.shared.util                  quietspace
+   dev.thural.quietspace.user                         -> dev.thural.quietspace.user.dto                     quietspace
+   dev.thural.quietspace.user                         -> jakarta.persistence                                not found
+   dev.thural.quietspace.user                         -> jakarta.persistence.criteria                       not found
+   dev.thural.quietspace.user                         -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.user                         -> java.io                                            java.base
+   dev.thural.quietspace.user                         -> java.lang                                          java.base
+   dev.thural.quietspace.user                         -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.user                         -> java.security                                      java.base
+   dev.thural.quietspace.user                         -> java.time                                          java.base
+   dev.thural.quietspace.user                         -> java.util                                          java.base
+   dev.thural.quietspace.user                         -> java.util.function                                 java.base
+   dev.thural.quietspace.user                         -> java.util.stream                                   java.base
+   dev.thural.quietspace.user                         -> org.slf4j                                          not found
+   dev.thural.quietspace.user                         -> org.springframework.beans                          not found
+   dev.thural.quietspace.user                         -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.user                         -> org.springframework.data.jpa.repository            not found
+   dev.thural.quietspace.user                         -> org.springframework.http                           not found
+   dev.thural.quietspace.user                         -> org.springframework.security.core                  not found
+   dev.thural.quietspace.user                         -> org.springframework.security.core.context          not found
+   dev.thural.quietspace.user                         -> org.springframework.security.core.userdetails      not found
+   dev.thural.quietspace.user                         -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.user                         -> org.springframework.transaction.annotation         not found
+   dev.thural.quietspace.user                         -> org.springframework.util                           not found
+   dev.thural.quietspace.user.controller              -> dev.thural.quietspace.notification                 quietspace
+   dev.thural.quietspace.user.controller              -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.user.controller              -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.user.controller              -> dev.thural.quietspace.user.dto                     quietspace
+   dev.thural.quietspace.user.controller              -> dev.thural.quietspace.websocket.constant           quietspace
+   dev.thural.quietspace.user.controller              -> dev.thural.quietspace.websocket.model              quietspace
+   dev.thural.quietspace.user.controller              -> jakarta.validation                                 not found
+   dev.thural.quietspace.user.controller              -> java.lang                                          java.base
+   dev.thural.quietspace.user.controller              -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.user.controller              -> java.util                                          java.base
+   dev.thural.quietspace.user.controller              -> java.util.function                                 java.base
+   dev.thural.quietspace.user.controller              -> org.slf4j                                          not found
+   dev.thural.quietspace.user.controller              -> org.springframework.data.domain                    not found
+   dev.thural.quietspace.user.controller              -> org.springframework.http                           not found
+   dev.thural.quietspace.user.controller              -> org.springframework.messaging.handler.annotation   not found
+   dev.thural.quietspace.user.controller              -> org.springframework.messaging.simp                 not found
+   dev.thural.quietspace.user.controller              -> org.springframework.security.access.prepost        not found
+   dev.thural.quietspace.user.controller              -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.user.controller              -> org.springframework.web.bind.annotation            not found
+   dev.thural.quietspace.user.dto                     -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.user.dto                     -> dev.thural.quietspace.photo.dto                    quietspace
+   dev.thural.quietspace.user.dto                     -> dev.thural.quietspace.shared.model                 quietspace
+   dev.thural.quietspace.user.dto                     -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.user.dto                     -> java.lang                                          java.base
+   dev.thural.quietspace.user.dto                     -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.user.dto                     -> java.util                                          java.base
+   dev.thural.quietspace.websocket.config             -> dev.thural.quietspace.security                     quietspace
+   dev.thural.quietspace.websocket.config             -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.websocket.config             -> java.lang                                          java.base
+   dev.thural.quietspace.websocket.config             -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.websocket.config             -> java.security                                      java.base
+   dev.thural.quietspace.websocket.config             -> java.util                                          java.base
+   dev.thural.quietspace.websocket.config             -> org.slf4j                                          not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.context.annotation             not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.core.annotation                not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.core.task                      not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.http.server                    not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.messaging                      not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.messaging.simp.config          not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.messaging.simp.stomp           not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.messaging.support              not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.scheduling.concurrent          not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.security.authentication        not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.security.authorization         not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.security.config.annotation.web.socket not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.security.core                  not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.security.core.context          not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.security.core.userdetails      not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.security.messaging.access.intercept not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.web.socket                     not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.web.socket.config.annotation   not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.web.socket.server              not found
+   dev.thural.quietspace.websocket.config             -> org.springframework.web.socket.server.support      not found
+   dev.thural.quietspace.websocket.constant           -> java.lang                                          java.base
+   dev.thural.quietspace.websocket.controller         -> dev.thural.quietspace.websocket.event.message      quietspace
+   dev.thural.quietspace.websocket.controller         -> java.lang                                          java.base
+   dev.thural.quietspace.websocket.controller         -> org.slf4j                                          not found
+   dev.thural.quietspace.websocket.controller         -> org.springframework.messaging.handler.annotation   not found
+   dev.thural.quietspace.websocket.controller         -> org.springframework.security.access.prepost        not found
+   dev.thural.quietspace.websocket.controller         -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.websocket.event.listener     -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.websocket.event.listener     -> dev.thural.quietspace.user                         quietspace
+   dev.thural.quietspace.websocket.event.listener     -> dev.thural.quietspace.websocket.event.message      quietspace
+   dev.thural.quietspace.websocket.event.listener     -> java.lang                                          java.base
+   dev.thural.quietspace.websocket.event.listener     -> java.security                                      java.base
+   dev.thural.quietspace.websocket.event.listener     -> org.slf4j                                          not found
+   dev.thural.quietspace.websocket.event.listener     -> org.springframework.context.event                  not found
+   dev.thural.quietspace.websocket.event.listener     -> org.springframework.messaging                      not found
+   dev.thural.quietspace.websocket.event.listener     -> org.springframework.messaging.simp                 not found
+   dev.thural.quietspace.websocket.event.listener     -> org.springframework.stereotype                     not found
+   dev.thural.quietspace.websocket.event.listener     -> org.springframework.web.socket.messaging           not found
+   dev.thural.quietspace.websocket.event.message      -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.websocket.event.message      -> com.fasterxml.jackson.databind.annotation          not found
+   dev.thural.quietspace.websocket.event.message      -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.websocket.event.message      -> jakarta.persistence                                not found
+   dev.thural.quietspace.websocket.event.message      -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.websocket.event.message      -> java.lang                                          java.base
+   dev.thural.quietspace.websocket.event.message      -> java.lang.invoke                                   java.base
+   dev.thural.quietspace.websocket.event.message      -> java.util                                          java.base
+   dev.thural.quietspace.websocket.model              -> com.fasterxml.jackson.annotation                   not found
+   dev.thural.quietspace.websocket.model              -> dev.thural.quietspace.shared.enums                 quietspace
+   dev.thural.quietspace.websocket.model              -> jakarta.validation.constraints                     not found
+   dev.thural.quietspace.websocket.model              -> java.lang                                          java.base
+   dev.thural.quietspace.websocket.model              -> java.lang.invoke                                   java.base

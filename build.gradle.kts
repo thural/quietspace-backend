@@ -3,6 +3,9 @@ plugins {
     id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("jacoco")
+    id("com.github.spotbugs") version "6.2.1"
+    id("pmd")
+    id("checkstyle")
 }
 
 group = "dev.thural"
@@ -91,6 +94,9 @@ dependencies {
     // WireMock
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")
 
+    // ArchUnit
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
@@ -145,4 +151,51 @@ tasks.bootJar {
         enabled = true
     }
     archiveFileName.set("quietspace-${project.version}.jar")
+}
+
+spotbugs {
+    toolVersion = "4.9.0"
+    ignoreFailures = false
+    showStackTraces = true
+    excludeFilter = file("config/spotbugs/exclude.xml")
+}
+
+tasks.named<com.github.spotbugs.snom.SpotBugsTask>("spotbugsMain") {
+    dependsOn("compileJava")
+}
+
+tasks.named<com.github.spotbugs.snom.SpotBugsTask>("spotbugsTest") {
+    dependsOn("compileTestJava")
+}
+
+pmd {
+    toolVersion = "6.55.0"
+    ruleSets = mutableListOf("category/java/bestpractices.xml", "category/java/codestyle.xml", "category/java/design.xml", "category/java/errorprone.xml", "category/java/performance.xml")
+}
+
+tasks.named<Pmd>("pmdMain") {
+    ruleSetFiles = files("config/pmd/ruleset.xml")
+    ruleSets = mutableListOf()
+}
+
+tasks.named<Pmd>("pmdTest") {
+    ruleSetFiles = files("config/pmd/ruleset.xml")
+    ruleSets = mutableListOf()
+}
+
+checkstyle {
+    toolVersion = "10.17.0"
+    configFile = file("config/checkstyle/checkstyle.xml")
+}
+
+tasks.named<Checkstyle>("checkstyleMain") {
+    configFile = file("config/checkstyle/checkstyle.xml")
+}
+
+tasks.named<Checkstyle>("checkstyleTest") {
+    configFile = file("config/checkstyle/checkstyle.xml")
+}
+
+tasks.named("check") {
+    dependsOn("spotbugsMain", "pmdMain", "checkstyleMain")
 }
