@@ -15,6 +15,4 @@ public abstract class DomainEvent {
     private String aggregateType;
     private UUID aggregateId;
     private String eventType;
-
-    public abstract String getEventType();
 }
