@@ -21,6 +21,9 @@ public class RabbitMQConfig {
     static final String DLX = "email.dlx";
     static final String DLQ = "email.dlq";
 
+    // Domain Events Exchange
+    static final String DOMAIN_EVENTS_EXCHANGE = "domain.events";
+
     @Bean
     TopicExchange emailExchange() {
         return new TopicExchange(EXCHANGE);
@@ -52,6 +55,21 @@ public class RabbitMQConfig {
     @Bean
     Binding deadLetterBinding(Queue deadLetterQueue, DirectExchange deadLetterExchange) {
         return BindingBuilder.bind(deadLetterQueue).to(deadLetterExchange).with(ROUTING_KEY);
+    }
+
+    @Bean
+    TopicExchange domainEventsExchange() {
+        return new TopicExchange(DOMAIN_EVENTS_EXCHANGE);
+    }
+
+    @Bean
+    Queue domainEventsQueue() {
+        return QueueBuilder.durable("domain.events.queue").build();
+    }
+
+    @Bean
+    Binding domainEventsBinding(Queue domainEventsQueue, TopicExchange domainEventsExchange) {
+        return BindingBuilder.bind(domainEventsQueue).to(domainEventsExchange).with("#");
     }
 
     @Bean
