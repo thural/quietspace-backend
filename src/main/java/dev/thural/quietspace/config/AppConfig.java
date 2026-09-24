@@ -2,6 +2,10 @@ package dev.thural.quietspace.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dev.thural.quietspace.security.AuthenticationProvider;
+import dev.thural.quietspace.security.JwtTokenService;
+import dev.thural.quietspace.security.JwtTokenServiceImpl;
+import dev.thural.quietspace.security.UserAuthenticationProvider;
 import dev.thural.quietspace.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,5 +110,10 @@ public class AppConfig {
     @Bean
     public AuditEventRepository auditEventRepository() {
         return new InMemoryAuditEventRepository();
+    }
+
+    @Bean
+    public JwtTokenService jwtTokenService() {
+        return new JwtTokenServiceImpl();
     }
 }

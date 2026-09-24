@@ -3,7 +3,7 @@ package dev.thural.quietspace.auth;
 import dev.thural.quietspace.auth.dto.AuthRequest;
 import dev.thural.quietspace.auth.dto.AuthResponse;
 import dev.thural.quietspace.auth.dto.RegistrationRequest;
-import dev.thural.quietspace.security.JwtService;
+import dev.thural.quietspace.security.JwtTokenService;
 import dev.thural.quietspace.security.Token;
 import dev.thural.quietspace.security.TokenRepository;
 import dev.thural.quietspace.shared.enums.StatusType;
@@ -49,7 +49,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtTokenService jwtTokenService;
     private final AuthenticationManager authenticationManager;
     private final EmailEventPublisher emailEventPublisher;
     private final TokenRepository tokenRepository;
@@ -102,8 +102,8 @@ public class AuthService {
             if (user == null) throw new IllegalStateException("authenticated principal cannot be null");
             claims.put("fullName", user.getFullName());
 
-            String jwtAccessToken = jwtService.generateToken(claims, user);
-            String jwtRefreshToken = jwtService.generateRefreshToken(claims, user);
+            String jwtAccessToken = jwtTokenService.generateToken(claims, user);
+            String jwtRefreshToken = jwtTokenService.generateRefreshToken(claims, user);
             log.info("jwt token generated successfully for user: {}", user.getUsername());
             auditService.logLoginSuccess(user.getEmail());
             meterRegistry.counter("auth.login.success").increment();
@@ -116,7 +116,7 @@ public class AuthService {
                     .userId(user.getId().toString())
                     .accessToken(jwtAccessToken)
                     .refreshToken(jwtRefreshToken)
-                    .refreshTokenId(jwtService.extractJti(jwtRefreshToken))
+                    .refreshTokenId(jwtTokenService.extractJti(jwtRefreshToken))
                     .build();
         } catch (UsernameNotFoundException e) {
             auditService.logLoginFailure(request.getEmail());
@@ -209,7 +209,7 @@ public class AuthService {
     }
 
     private void saveToken(String jwtToken, User user) {
-        var jti = jwtService.extractJti(jwtToken);
+        var jti = jwtTokenService.extractJti(jwtToken);
         meterRegistry.counter("auth.token.revoked").increment();
         tokenRepository.save(Token.builder()
                 .token(jwtToken)
@@ -230,16 +230,16 @@ public class AuthService {
         if (!StringUtils.hasText(authHeader) || !authHeader.startsWith("Bearer ")) return authResponse;
         if (tokenRepository.existsByToken(refreshToken)) return authResponse;
 
-        String username = jwtService.extractUsername(refreshToken);
+        String username = jwtTokenService.extractUsername(refreshToken);
         if (username == null) return authResponse;
 
         User user = userRepository.findUserByUsername(username).orElseThrow(UserNotFoundException::new);
-        if (!jwtService.isTokenValid(refreshToken, user)) {
+        if (!jwtTokenService.isTokenValid(refreshToken, user)) {
             auditService.logEvent("TOKEN_REFRESH_FAILED", username, "invalid or expired refresh token");
             return authResponse;
         }
 
-        String jti = jwtService.extractJti(refreshToken);
+        String jti = jwtTokenService.extractJti(refreshToken);
         var storedToken = tokenRepository.findByJti(jti);
 
         if (storedToken.isPresent()) {
@@ -253,8 +253,8 @@ public class AuthService {
 
         var claims = new HashMap<String, Object>();
         claims.put("fullName", user.getFullName());
-        String newAccessToken = jwtService.generateToken(claims, user);
-        String newRefreshToken = jwtService.generateRefreshToken(claims, user);
+        String newAccessToken = jwtTokenService.generateToken(claims, user);
+        String newRefreshToken = jwtTokenService.generateRefreshToken(claims, user);
         saveRefreshTokenJti(newRefreshToken, user);
 
         auditService.logTokenRefresh(username);
@@ -263,14 +263,14 @@ public class AuthService {
         return AuthResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
-                .refreshTokenId(jwtService.extractJti(newRefreshToken))
+                .refreshTokenId(jwtTokenService.extractJti(newRefreshToken))
                 .message("token was refreshed")
                 .userId(String.valueOf(user.getId()))
                 .build();
     }
 
     private void saveRefreshTokenJti(String refreshToken, User user) {
-        String jti = jwtService.extractJti(refreshToken);
+        String jti = jwtTokenService.extractJti(refreshToken);
         tokenRepository.save(Token.builder()
                 .token(jti)
                 .jti(jti)
@@ -299,5 +299,4 @@ public class AuthService {
         userRepository.findUserEntityByEmail(email)
                 .ifPresent(user -> user.setStatusType(type));
     }
-
 }

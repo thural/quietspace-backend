@@ -23,8 +23,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final TokenRepository tokenRepository;
     private final UserDetailsService userDetailsService;
-    private final JwtService jwtService;
-
+    private final JwtTokenService jwtTokenService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -45,17 +44,17 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         try {
-            if (tokenRepository.existsByJti(jwtService.extractJti(jwtToken))) {
+            if (tokenRepository.existsByJti(jwtTokenService.extractJti(jwtToken))) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            String username = jwtService.extractUsername(jwtToken);
+            String username = jwtTokenService.extractUsername(jwtToken);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                if (jwtService.isTokenValid(jwtToken, userDetails)) {
+                if (jwtTokenService.isTokenValid(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             userDetails.getPassword(),
@@ -72,5 +71,4 @@ public class JwtFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 }
