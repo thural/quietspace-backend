@@ -1,0 +1,9 @@
+Hello ${username},
+
+Thank you for signing up! Please use the following activation code to activate your account:
+
+${activationCode}
+
+Or click the link below to activate your account:
+
+${confirmationUrl}

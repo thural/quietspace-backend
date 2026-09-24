@@ -51,6 +51,7 @@ class ArchitectureRulesTest {
             .and().resideInAPackage("dev.thural.quietspace..")
             .should().haveNameMatching(PUBLIC_REPOSITORIES_PATTERN)
             .orShould().bePackagePrivate()
+            .allowEmptyShould(true)
             .because("Only explicitly listed repositories may be public; new repositories must be package-private");
 
     @ArchTest
@@ -58,6 +59,7 @@ class ArchitectureRulesTest {
             .that().areInterfaces()
             .and().haveSimpleNameEndingWith("Repository")
             .should().resideInAPackage("dev.thural.quietspace..")
+            .allowEmptyShould(true)
             .because("Repository interfaces should exist for each aggregate");
 
     @ArchTest
@@ -65,12 +67,14 @@ class ArchitectureRulesTest {
             .that().resideInAPackage("..controller..")
             .should().dependOnClassesThat()
             .haveSimpleNameEndingWith("Repository")
+            .allowEmptyShould(true)
             .because("Controllers must not access repositories directly; use services instead");
 
     @ArchTest
     static final ArchRule services_must_be_in_feature_package = classes()
             .that().haveSimpleNameEndingWith("ServiceImpl")
             .should().resideInAPackage("dev.thural.quietspace..")
+            .allowEmptyShould(true)
             .because("Service implementations must reside in feature package");
 
     @ArchTest

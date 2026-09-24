@@ -1,4 +1,4 @@
-package dev.thural.quietspace.shared.controller;
+package dev.thural.quietspace.core.shared.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

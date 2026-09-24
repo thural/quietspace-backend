@@ -1,4 +1,4 @@
-package dev.thural.quietspace.shared.controller;
+package dev.thural.quietspace.core.shared.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

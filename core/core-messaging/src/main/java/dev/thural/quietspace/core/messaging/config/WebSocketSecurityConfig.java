@@ -1,4 +1,4 @@
-package dev.thural.quietspace.websocket.config;
+package dev.thural.quietspace.core.messaging.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

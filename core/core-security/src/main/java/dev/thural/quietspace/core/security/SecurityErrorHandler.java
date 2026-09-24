@@ -1,6 +1,6 @@
 package dev.thural.quietspace.security;
 
-import dev.thural.quietspace.shared.model.ErrorResponse;
+import dev.thural.quietspace.core.shared.model.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;

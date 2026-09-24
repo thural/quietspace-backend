@@ -1,4 +1,4 @@
-package dev.thural.quietspace.shared.exception;
+package dev.thural.quietspace.core.shared.exception;
 
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.SendTo;

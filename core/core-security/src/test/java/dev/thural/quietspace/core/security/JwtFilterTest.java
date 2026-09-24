@@ -1,6 +1,7 @@
 package dev.thural.quietspace.security;
 
-import dev.thural.quietspace.security.TokenRepository;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ class JwtFilterTest {
     @Mock
     private UserDetailsService userDetailsService;
     @Mock
-    private JwtService jwtService;
+    private JwtTokenService jwtTokenService;
     @Mock
     private HttpServletRequest request;
     @Mock
@@ -86,7 +87,7 @@ class JwtFilterTest {
     void doFilter_givenRevokedJti_shouldSkip() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer revoked-jti-token");
         when(tokenRepository.existsByToken("revoked-jti-token")).thenReturn(false);
-        when(jwtService.extractJti("revoked-jti-token")).thenReturn("revoked-jti");
+        when(jwtTokenService.extractJti("revoked-jti-token")).thenReturn("revoked-jti");
         when(tokenRepository.existsByJti("revoked-jti")).thenReturn(true);
 
         jwtFilter.doFilterInternal(request, response, filterChain);
@@ -99,7 +100,7 @@ class JwtFilterTest {
     void doFilter_givenNullUsername_shouldSkip() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer some-token");
         when(tokenRepository.existsByToken("some-token")).thenReturn(false);
-        when(jwtService.extractUsername("some-token")).thenReturn(null);
+        when(jwtTokenService.extractUsername("some-token")).thenReturn(null);
 
         jwtFilter.doFilterInternal(request, response, filterChain);
 
@@ -111,9 +112,9 @@ class JwtFilterTest {
     void doFilter_givenValidToken_shouldSetAuthenticationAndContinue() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer valid-token");
         when(tokenRepository.existsByToken("valid-token")).thenReturn(false);
-        when(jwtService.extractUsername("valid-token")).thenReturn("testuser");
+        when(jwtTokenService.extractUsername("valid-token")).thenReturn("testuser");
         when(userDetailsService.loadUserByUsername("testuser")).thenReturn(userDetails);
-        when(jwtService.isTokenValid("valid-token", userDetails)).thenReturn(true);
+        when(jwtTokenService.isTokenValid("valid-token", userDetails)).thenReturn(true);
 
         jwtFilter.doFilterInternal(request, response, filterChain);
 
@@ -126,7 +127,7 @@ class JwtFilterTest {
     void doFilter_whenUserDetailsNotFound_shouldPropagate() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer valid-token");
         when(tokenRepository.existsByToken("valid-token")).thenReturn(false);
-        when(jwtService.extractUsername("valid-token")).thenReturn("unknown");
+        when(jwtTokenService.extractUsername("valid-token")).thenReturn("unknown");
         when(userDetailsService.loadUserByUsername("unknown")).thenThrow(new RuntimeException("User not found"));
 
         try {

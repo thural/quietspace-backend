@@ -1,6 +1,6 @@
 package dev.thural.quietspace.security;
 
-import dev.thural.quietspace.shared.service.SecurityAuditService;
+import dev.thural.quietspace.core.shared.service.SecurityAuditService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.Nullable;

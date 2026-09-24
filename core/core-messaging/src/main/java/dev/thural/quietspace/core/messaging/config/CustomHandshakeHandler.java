@@ -1,7 +1,6 @@
-package dev.thural.quietspace.websocket.config;
+package dev.thural.quietspace.core.messaging.config;
 
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -13,13 +12,14 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 class CustomHandshakeHandler extends DefaultHandshakeHandler {
 
-    private final UserService userService;
+    private final WebSocketUserPort userPort;
 
     @Override
     protected Principal determineUser(
@@ -32,9 +32,9 @@ class CustomHandshakeHandler extends DefaultHandshakeHandler {
             return null;
         }
         try {
-            User user = userService.getSignedUser();
-            log.info("username at CustomHandshakeHandler: {}", user.getName());
-            return new StompPrincipal(user.getId().toString());
+            UUID userId = userPort.currentUserId();
+            log.info("user id at CustomHandshakeHandler: {}", userId);
+            return new StompPrincipal(userId.toString());
         } catch (Exception e) {
             log.warn("Could not determine user during WebSocket handshake: {}", e.getMessage());
             return null;

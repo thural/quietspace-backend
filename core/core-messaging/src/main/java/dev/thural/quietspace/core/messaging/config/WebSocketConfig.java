@@ -1,8 +1,7 @@
-package dev.thural.quietspace.websocket.config;
+package dev.thural.quietspace.core.messaging.config;
 
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -38,9 +37,9 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final JwtService jwtService;
+    private final JwtTokenService jwtTokenService;
     private final UserDetailsService userDetailsService;
-    private final UserRepository userRepository;
+    private final WebSocketUserPort userPort;
     private final CustomHandshakeHandler handshakeHandler;
 
     @Override
@@ -115,9 +114,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
                 try {
                     String token = authorizationHeader.substring(7);
-                    String username = jwtService.extractUsername(token);
+                    String username = jwtTokenService.extractUsername(token);
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    User user = (User) userDetails;
+                    UUID userId = userPort.userIdForUsername(username);
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails, userDetails.getPassword(), userDetails.getAuthorities()
@@ -125,10 +124,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     UsernamePasswordAuthenticationToken stompToken = new UsernamePasswordAuthenticationToken(
-                            user.getId().toString(), userDetails.getPassword(), userDetails.getAuthorities()
+                            userId.toString(), userDetails.getPassword(), userDetails.getAuthorities()
                     );
                     accessor.setUser(stompToken);
-                    log.warn("STOMP CONNECT auth: SUCCESS principal={}", user.getId());
+                    log.warn("STOMP CONNECT auth: SUCCESS principal={}", userId);
                 } catch (Exception e) {
                     log.warn("Authentication failed in STOMP CONNECT: {}; cause: {}", e.getMessage(), e.getClass().getSimpleName());
                 }
@@ -146,13 +145,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
                 try {
                     UUID userId = UUID.fromString(principal.getName());
-                    User user = userRepository.findById(userId).orElse(null);
-                    if (user == null) {
-                        log.warn("User not found for principal={}", principal.getName());
-                        return false;
-                    }
+                    UserDetails userDetails = userPort.userForId(userId);
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            user, null, user.getAuthorities()
+                            userDetails, null, userDetails.getAuthorities()
                     );
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                     return true;

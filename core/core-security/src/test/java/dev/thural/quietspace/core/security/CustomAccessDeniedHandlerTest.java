@@ -1,6 +1,6 @@
 package dev.thural.quietspace.security;
 
-import dev.thural.quietspace.shared.service.SecurityAuditService;
+import dev.thural.quietspace.core.shared.service.SecurityAuditService;
 import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

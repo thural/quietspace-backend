@@ -24,6 +24,9 @@ dependencies {
     implementation("net.coobird:thumbnailator:0.4.20")
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.thymeleaf:thymeleaf-spring6")
+    implementation("io.jsonwebtoken:jjwt-api:0.13.0")
+    implementation("io.jsonwebtoken:jjwt-impl:0.13.0")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
 
     annotationProcessor("org.projectlombok:lombok:1.18.46")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
@@ -32,11 +35,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Testcontainers

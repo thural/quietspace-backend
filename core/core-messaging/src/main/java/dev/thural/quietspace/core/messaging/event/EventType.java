@@ -1,4 +1,4 @@
-package dev.thural.quietspace.websocket.event;
+package dev.thural.quietspace.core.messaging.event;
 
 public enum EventType {
     CONNECT,

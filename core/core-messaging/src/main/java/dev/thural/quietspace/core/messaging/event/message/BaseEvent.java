@@ -1,7 +1,7 @@
-package dev.thural.quietspace.websocket.event.message;
+package dev.thural.quietspace.core.messaging.event.message;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.thural.quietspace.websocket.event.EventType;
+import dev.thural.quietspace.core.messaging.event.EventType;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

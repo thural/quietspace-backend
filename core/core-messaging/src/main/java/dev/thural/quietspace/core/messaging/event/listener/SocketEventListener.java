@@ -1,7 +1,7 @@
-package dev.thural.quietspace.websocket.event.listener;
+package dev.thural.quietspace.core.messaging.event.listener;
 
-import dev.thural.quietspace.user.UserService;
-import dev.thural.quietspace.websocket.event.message.BaseEvent;
+import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
+import dev.thural.quietspace.core.messaging.event.message.BaseEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -14,10 +14,10 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.Principal;
 
-import static dev.thural.quietspace.websocket.event.EventType.CONNECT;
-import static dev.thural.quietspace.websocket.event.EventType.DISCONNECT;
-import static dev.thural.quietspace.shared.enums.StatusType.OFFLINE;
-import static dev.thural.quietspace.shared.enums.StatusType.ONLINE;
+import static dev.thural.quietspace.core.messaging.event.EventType.CONNECT;
+import static dev.thural.quietspace.core.messaging.event.EventType.DISCONNECT;
+import static dev.thural.quietspace.core.shared.enums.StatusType.OFFLINE;
+import static dev.thural.quietspace.core.shared.enums.StatusType.ONLINE;
 
 @Slf4j
 @Component
@@ -25,7 +25,7 @@ import static dev.thural.quietspace.shared.enums.StatusType.ONLINE;
 public class SocketEventListener {
 
     private final SimpMessageSendingOperations messageTemplate;
-    private final UserService userService;
+    private final WebSocketUserPort userPort;
 
     String extractUsernameFromSocketEvent(AbstractSubProtocolEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
@@ -39,7 +39,7 @@ public class SocketEventListener {
         String username = extractUsernameFromSocketEvent(event);
         log.info("user has disconnected with username: {}", username);
 
-        userService.setOnlineStatus(username, OFFLINE);
+        userPort.setOnlineStatus(username, OFFLINE);
         BaseEvent payload = BaseEvent.builder()
                 .message(username).type(DISCONNECT).build();
 
@@ -52,7 +52,7 @@ public class SocketEventListener {
         String username = extractUsernameFromSocketEvent(event);
         log.info("user has connected with username: {}", username);
 
-        userService.setOnlineStatus(username, ONLINE);
+        userPort.setOnlineStatus(username, ONLINE);
         BaseEvent payload = BaseEvent.builder()
                 .message(username).type(CONNECT).build();
 

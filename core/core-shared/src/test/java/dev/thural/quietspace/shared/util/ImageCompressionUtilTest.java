@@ -55,7 +55,7 @@ class ImageCompressionUtilTest {
 
     @Test
     void decompressImage_givenByteArray_returnsSameBytes() {
-        byte[] input = "test-image-data".getBytes();
+        byte[] input = "test-image-data".getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
         byte[] result = util.decompressImage(input);
 
@@ -64,7 +64,7 @@ class ImageCompressionUtilTest {
 
     @Test
     void decompressImage_givenInputStream_returnsAllBytes() throws IOException {
-        byte[] input = "test-stream-data".getBytes();
+        byte[] input = "test-stream-data".getBytes(java.nio.charset.StandardCharsets.UTF_8);
         InputStream inputStream = new ByteArrayInputStream(input);
 
         byte[] result = util.decompressImage(inputStream);

@@ -1,4 +1,4 @@
-package dev.thural.quietspace.websocket.constant;
+package dev.thural.quietspace.core.messaging.constant;
 
 public final class WebSocketPaths {
 

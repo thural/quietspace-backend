@@ -1,4 +1,4 @@
-package dev.thural.quietspace.websocket.event.message;
+package dev.thural.quietspace.core.messaging.event.message;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
