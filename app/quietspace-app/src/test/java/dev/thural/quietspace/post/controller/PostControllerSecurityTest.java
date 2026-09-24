@@ -1,9 +1,9 @@
-package dev.thural.quietspace.post.controller;
+package dev.thural.quietspace.domain.post.controller;
 
-import dev.thural.quietspace.notification.NotificationService;
-import dev.thural.quietspace.post.PostService;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
+import dev.thural.quietspace.domain.notification.NotificationService;
+import dev.thural.quietspace.domain.post.PostService;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +33,7 @@ class PostControllerSecurityTest {
     @MockitoBean
     private TokenRepository tokenRepository;
     @MockitoBean
-    private JwtService jwtService;
+    private JwtTokenService jwtTokenService;
     @MockitoBean
     private UserDetailsService userDetailsService;
 

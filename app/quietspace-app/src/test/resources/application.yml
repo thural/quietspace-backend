@@ -48,7 +48,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.H2Dialect
+    # NOTE: no forced database-platform — Boot auto-detects the dialect from
+    # the actual DataSource (MySQL via Testcontainers, H2 fallback). A forced
+    # H2Dialect generates non-MySQL DDL (e.g. "timestamp with time zone").
     show-sql: false
   flyway:
     enabled: false

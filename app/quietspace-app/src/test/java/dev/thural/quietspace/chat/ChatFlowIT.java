@@ -1,14 +1,14 @@
 package dev.thural.quietspace.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.chat.ChatRepository;
-import dev.thural.quietspace.chat.dto.CreateChatRequest;
-import dev.thural.quietspace.chat.dto.UpdateChatRequest;
+import dev.thural.quietspace.domain.chat.ChatRepository;
+import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
+import dev.thural.quietspace.domain.chat.dto.UpdateChatRequest;
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.message.MessageRepository;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.shared.util.IntegrationTestHelper;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.message.MessageRepository;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
+import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +63,6 @@ class ChatFlowIT {
 
     private IntegrationTestHelper helper;
     private String user1Jwt;
-    private String user2Jwt;
     private UUID user1Id;
     private UUID user2Id;
 
@@ -78,7 +77,7 @@ class ChatFlowIT {
         helper = new IntegrationTestHelper(mockMvc, objectMapper, userRepository, passwordEncoder);
         user1Jwt = helper.registerAndLogin("chatuser1@test.com", "password123");
         user1Id = userRepository.findUserEntityByEmail("chatuser1@test.com").orElseThrow().getId();
-        user2Jwt = helper.registerAndLogin("chatuser2@test.com", "password456");
+        helper.registerAndLogin("chatuser2@test.com", "password456");
         user2Id = userRepository.findUserEntityByEmail("chatuser2@test.com").orElseThrow().getId();
     }
 
@@ -192,7 +191,7 @@ class ChatFlowIT {
 
         String chatId = objectMapper.readTree(responseBody).get("id").asText();
 
-        var user3Jwt = helper.registerAndLogin("chatuser3@test.com", "password789");
+        helper.registerAndLogin("chatuser3@test.com", "password789");
         var user3Id = userRepository.findUserEntityByEmail("chatuser3@test.com").orElseThrow().getId();
 
         mockMvc.perform(patch("/api/v1/chats/{chatId}/members/add/{userId}", chatId, user3Id)

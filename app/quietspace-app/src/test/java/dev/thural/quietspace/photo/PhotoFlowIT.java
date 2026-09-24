@@ -2,8 +2,8 @@ package dev.thural.quietspace.photo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.shared.util.IntegrationTestHelper;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
+import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,7 +83,7 @@ class PhotoFlowIT {
     void uploadProfilePhoto_givenUnsupportedType_shouldReturn400() throws Exception {
         MockMultipartFile image = new MockMultipartFile(
                 "image", "file.txt", MediaType.TEXT_PLAIN_VALUE,
-                "not an image".getBytes()
+                "not an image".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
 
         mockMvc.perform(multipart("/api/v1/photos/profile")

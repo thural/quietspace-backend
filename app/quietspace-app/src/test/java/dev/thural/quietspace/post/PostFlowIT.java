@@ -2,11 +2,11 @@ package dev.thural.quietspace.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.post.dto.PostRequest;
-import dev.thural.quietspace.shared.util.IntegrationTestHelper;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.post.PostRepository;
+import dev.thural.quietspace.domain.post.dto.PostRequest;
+import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
+import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -283,7 +283,7 @@ class PostFlowIT {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString()).get("id").asText();
 
-        var commentReq = dev.thural.quietspace.comment.dto.CommentRequest.builder()
+        var commentReq = dev.thural.quietspace.domain.comment.dto.CommentRequest.builder()
                 .userId(userId)
                 .postId(UUID.fromString(postId))
                 .text("A comment on this post")
@@ -381,7 +381,7 @@ class PostFlowIT {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString()).get("id").asText();
 
-        var repostReq = dev.thural.quietspace.post.dto.RepostRequest.builder()
+        var repostReq = dev.thural.quietspace.domain.post.dto.RepostRequest.builder()
                 .postId(UUID.fromString(postId))
                 .text("Reposting this!")
                 .build();
@@ -395,7 +395,7 @@ class PostFlowIT {
 
     @Test
     void votePoll_shouldReturn200() throws Exception {
-        var pollReq = dev.thural.quietspace.post.dto.PollRequest.builder()
+        var pollReq = dev.thural.quietspace.domain.post.dto.PollRequest.builder()
                 .dueDate(OffsetDateTime.now().plusDays(7))
                 .options(List.of("Option A", "Option B"))
                 .build();
@@ -416,7 +416,7 @@ class PostFlowIT {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString()).get("id").asText();
 
-        var voteReq = dev.thural.quietspace.post.dto.VoteRequest.builder()
+        var voteReq = dev.thural.quietspace.domain.post.dto.VoteRequest.builder()
                 .userId(userId)
                 .postId(UUID.fromString(postId))
                 .option("Option A")

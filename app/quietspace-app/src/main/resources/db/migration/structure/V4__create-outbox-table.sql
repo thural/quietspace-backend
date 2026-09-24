@@ -1,7 +1,7 @@
 CREATE TABLE `outbox_events` (
-    `id` BINARY(16) NOT NULL,
+    `id` varchar(36) NOT NULL,
     `aggregate_type` VARCHAR(255) NOT NULL,
-    `aggregate_id` BINARY(16) NOT NULL,
+    `aggregate_id` varchar(36) NOT NULL,
     `event_type` VARCHAR(255) NOT NULL,
     `payload` JSON NOT NULL,
     `created_at` DATETIME(6) NOT NULL,

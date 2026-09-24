@@ -1,14 +1,14 @@
 package dev.thural.quietspace.reaction;
 
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.reaction.Reaction;
-import dev.thural.quietspace.reaction.ReactionRepository;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.post.Post;
+import dev.thural.quietspace.domain.post.PostRepository;
+import dev.thural.quietspace.domain.reaction.Reaction;
+import dev.thural.quietspace.domain.reaction.ReactionRepository;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -105,9 +105,9 @@ class ReactionRepositoryTest {
 
     @Test
     void findByContentIdAndUserId() {
-        Optional<Reaction> reaction = reactionRepository.findByContentIdAndUserId(post.getId(), user.getId());
-        assertThat(reaction.isPresent()).isTrue();
-        assertThat(reaction.get()).isEqualTo(savedReaction);
+        Optional<Reaction> found = reactionRepository.findByContentIdAndUserId(post.getId(), user.getId());
+        assertThat(found.isPresent()).isTrue();
+        assertThat(found.get()).isEqualTo(savedReaction);
     }
 
     @Test

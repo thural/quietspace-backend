@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":core:core-web"))
     implementation(project(":core:core-security"))
     implementation(project(":core:core-messaging"))
-    implementation(project(":domain:domain-auth"))
     implementation(project(":domain:domain-user"))
     implementation(project(":domain:domain-post"))
     implementation(project(":domain:domain-photo"))
@@ -71,6 +70,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
+    testImplementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Testcontainers

@@ -1,12 +1,12 @@
 package dev.thural.quietspace.post;
 
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.comment.CommentRepository;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.comment.Comment;
+import dev.thural.quietspace.domain.comment.CommentRepository;
+import dev.thural.quietspace.domain.post.Post;
+import dev.thural.quietspace.domain.post.PostRepository;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,9 +81,9 @@ class PostRepositoryTest {
 
     @Test
     void testFindSavedPostsByUserId() {
-        savedUser.getSavedPosts().add(savedPost);
+        savedUser.getSavedPostIds().add(savedPost.getId());
         userRepository.save(savedUser);
-        Page<Post> list = postRepository.findSavedPostsByUserId(savedUser.getId(), null);
+        Page<Post> list = postRepository.findSavedPostsByIds(savedUser.getSavedPostIds(), null);
         assertThat(list.toList()).hasSize(1);
     }
 
@@ -92,7 +92,7 @@ class PostRepositoryTest {
         Comment comment = Comment.builder()
                 .text("test comment")
                 .user(savedUser)
-                .post(savedPost)
+                .postId(savedPost.getId())
                 .createDate(OffsetDateTime.now())
                 .updateDate(OffsetDateTime.now())
                 .build();

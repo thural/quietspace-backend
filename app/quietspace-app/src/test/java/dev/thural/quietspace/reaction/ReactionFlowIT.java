@@ -2,13 +2,13 @@ package dev.thural.quietspace.reaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.reaction.ReactionRepository;
-import dev.thural.quietspace.reaction.dto.ReactionRequest;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
-import dev.thural.quietspace.shared.util.IntegrationTestHelper;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.reaction.ReactionRepository;
+import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
+import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,7 +75,7 @@ class ReactionFlowIT {
         jwtToken = helper.registerAndLogin("reactuser@test.com", "password123");
         userId = userRepository.findUserEntityByEmail("reactuser@test.com").orElseThrow().getId();
 
-        var request = dev.thural.quietspace.post.dto.PostRequest.builder()
+        var request = dev.thural.quietspace.domain.post.dto.PostRequest.builder()
                 .userId(userId)
                 .title("Test Post for Reaction")
                 .text("This post will be reacted to")

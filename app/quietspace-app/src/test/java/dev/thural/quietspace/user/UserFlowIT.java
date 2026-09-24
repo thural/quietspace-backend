@@ -1,13 +1,13 @@
-package dev.thural.quietspace.user;
+package dev.thural.quietspace.domain.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.shared.util.IntegrationTestHelper;
-import dev.thural.quietspace.user.UserRepository;
-import dev.thural.quietspace.user.controller.UserController;
-import dev.thural.quietspace.user.dto.ProfileSettingsRequest;
-import dev.thural.quietspace.user.dto.UserRequest;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
+import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.controller.UserController;
+import dev.thural.quietspace.domain.user.dto.ProfileSettingsRequest;
+import dev.thural.quietspace.domain.user.dto.UserRequest;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

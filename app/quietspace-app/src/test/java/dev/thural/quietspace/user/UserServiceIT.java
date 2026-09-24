@@ -1,12 +1,12 @@
 package dev.thural.quietspace.user;
 
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.user.ProfileSettings;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.user.ProfileSettings;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

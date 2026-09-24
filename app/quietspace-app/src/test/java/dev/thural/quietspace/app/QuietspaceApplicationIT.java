@@ -11,8 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("testcontainers")
 class QuietspaceApplicationIT {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

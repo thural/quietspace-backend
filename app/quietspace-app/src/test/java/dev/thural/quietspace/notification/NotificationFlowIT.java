@@ -2,11 +2,11 @@ package dev.thural.quietspace.notification;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.notification.Notification;
-import dev.thural.quietspace.notification.NotificationRepository;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.shared.util.IntegrationTestHelper;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.notification.Notification;
+import dev.thural.quietspace.domain.notification.NotificationRepository;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
+import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,7 +124,7 @@ class NotificationFlowIT {
                 .actorId(user2Id)
                 .contentId(user2Id)
                 .isSeen(false)
-                .notificationType(dev.thural.quietspace.notification.NotificationType.FOLLOW_REQUEST)
+                .notificationType(dev.thural.quietspace.domain.notification.NotificationType.FOLLOW_REQUEST)
                 .build();
         notificationRepository.save(notification);
 

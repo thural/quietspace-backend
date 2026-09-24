@@ -1,5 +1,5 @@
 CREATE TABLE `processed_events` (
-    `event_id` BINARY(16) NOT NULL,
+    `event_id` varchar(36) NOT NULL,
     `event_type` VARCHAR(255) NOT NULL,
     `processed_at` DATETIME(6) NOT NULL,
     PRIMARY KEY (`event_id`),

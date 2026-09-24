@@ -1,12 +1,12 @@
 package dev.thural.quietspace.comment;
 
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.comment.CommentRepository;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.comment.Comment;
+import dev.thural.quietspace.domain.comment.CommentRepository;
+import dev.thural.quietspace.domain.post.Post;
+import dev.thural.quietspace.domain.post.PostRepository;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,6 @@ class CommentRepositoryTest {
 
     private final Comment comment = Comment.builder()
             .user(user)
-            .post(post)
             .text("sample text")
             .parentId(UUID.randomUUID())
             .build();
@@ -66,6 +65,7 @@ class CommentRepositoryTest {
     void setUp() {
         this.savedUser = userRepository.save(user);
         this.savedPost = postRepository.save(post);
+        comment.setPostId(savedPost.getId());
         this.savedComment = commentRepository.save(comment);
     }
 
@@ -85,14 +85,14 @@ class CommentRepositoryTest {
 
     @Test
     void countByParentIdAndPost() {
-        Integer commentCount = commentRepository.countByParentIdAndPost(comment.getParentId(), savedPost);
+        Integer commentCount = commentRepository.countByParentIdAndPostId(comment.getParentId(), savedPost.getId());
         assertThat(commentCount).isEqualTo(1);
     }
 
     @Test
     void deleteAllByParentId() {
         commentRepository.deleteAllByParentId(comment.getParentId());
-        Integer commentCount = commentRepository.countByParentIdAndPost(comment.getParentId(), savedPost);
+        Integer commentCount = commentRepository.countByParentIdAndPostId(comment.getParentId(), savedPost.getId());
         assertThat(commentCount).isEqualTo(0);
 
     }

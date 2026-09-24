@@ -68,9 +68,15 @@ spring:
     open-in-view: false
     properties:
       hibernate:
+    # Write UUIDs as strings (not binary) to match varchar(36) schema
+    spring.jackson.serialization.write-uuids-as-strings=true
         show_sql: false
         format_sql: false
+        # Use varchar(36) for UUID columns instead of binary(16)
+        hibernate.type.preferred_uuid_jdbc_type: CHAR
     hibernate:
+    # Write UUIDs as strings (not binary) to match varchar(36) schema
+    spring.jackson.serialization.write-uuids-as-strings=true
       ddl-auto: validate
   flyway:
     baseline-description: "init"

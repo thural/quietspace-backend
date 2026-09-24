@@ -1,17 +1,17 @@
 package dev.thural.quietspace.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.auth.dto.AuthRequest;
-import dev.thural.quietspace.auth.dto.AuthResponse;
-import dev.thural.quietspace.auth.dto.RegistrationRequest;
+import dev.thural.quietspace.domain.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.auth.dto.AuthResponse;
+import dev.thural.quietspace.domain.auth.dto.RegistrationRequest;
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.security.Token;
-import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.shared.service.EmailService;
-import dev.thural.quietspace.shared.util.IntegrationTestHelper;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.core.shared.security.Token;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.shared.service.EmailService;
+import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
