@@ -1,4 +1,4 @@
-package dev.thural.quietspace.shared.util;
+package dev.thural.quietspace.core.shared.util;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;

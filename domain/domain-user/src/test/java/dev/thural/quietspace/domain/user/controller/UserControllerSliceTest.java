@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.core.shared.exception.GlobalExceptionHandler;

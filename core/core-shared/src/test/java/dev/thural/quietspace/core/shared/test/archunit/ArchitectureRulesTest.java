@@ -1,4 +1,4 @@
-package dev.thural.quietspace.shared.test.archunit;
+package dev.thural.quietspace.core.shared.test.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;

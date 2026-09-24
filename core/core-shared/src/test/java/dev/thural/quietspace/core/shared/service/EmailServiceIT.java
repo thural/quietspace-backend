@@ -1,6 +1,6 @@
-package dev.thural.quietspace.shared.service;
+package dev.thural.quietspace.core.shared.service;
 
-import dev.thural.quietspace.shared.service.impl.SmtpEmailService;
+import dev.thural.quietspace.core.shared.service.impl.SmtpEmailService;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

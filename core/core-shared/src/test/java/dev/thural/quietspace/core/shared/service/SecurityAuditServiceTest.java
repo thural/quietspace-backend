@@ -1,4 +1,4 @@
-package dev.thural.quietspace.shared.service;
+package dev.thural.quietspace.core.shared.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
