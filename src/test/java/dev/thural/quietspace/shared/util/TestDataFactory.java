@@ -9,9 +9,9 @@ import dev.thural.quietspace.post.Poll;
 import dev.thural.quietspace.post.PollOption;
 import dev.thural.quietspace.post.Post;
 import dev.thural.quietspace.reaction.Reaction;
-import dev.thural.quietspace.shared.enums.EntityType;
-import dev.thural.quietspace.shared.enums.NotificationType;
-import dev.thural.quietspace.shared.enums.ReactionType;
+import dev.thural.quietspace.reaction.EntityType;
+import dev.thural.quietspace.notification.NotificationType;
+import dev.thural.quietspace.reaction.ReactionType;
 import dev.thural.quietspace.shared.enums.Role;
 import dev.thural.quietspace.user.User;
 

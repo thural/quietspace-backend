@@ -14,8 +14,8 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.Principal;
 
-import static dev.thural.quietspace.shared.enums.EventType.CONNECT;
-import static dev.thural.quietspace.shared.enums.EventType.DISCONNECT;
+import static dev.thural.quietspace.websocket.event.EventType.CONNECT;
+import static dev.thural.quietspace.websocket.event.EventType.DISCONNECT;
 import static dev.thural.quietspace.shared.enums.StatusType.OFFLINE;
 import static dev.thural.quietspace.shared.enums.StatusType.ONLINE;
 

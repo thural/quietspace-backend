@@ -2,7 +2,7 @@ package dev.thural.quietspace.photo;
 
 import dev.thural.quietspace.photo.Photo;
 import dev.thural.quietspace.photo.PhotoRepository;
-import dev.thural.quietspace.shared.enums.EntityType;
+import dev.thural.quietspace.reaction.EntityType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

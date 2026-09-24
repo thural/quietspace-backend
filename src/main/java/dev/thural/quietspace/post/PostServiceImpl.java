@@ -6,7 +6,7 @@ import dev.thural.quietspace.post.dto.PostRequest;
 import dev.thural.quietspace.post.dto.PostResponse;
 import dev.thural.quietspace.post.dto.RepostRequest;
 import dev.thural.quietspace.post.dto.VoteRequest;
-import dev.thural.quietspace.shared.enums.EntityType;
+import dev.thural.quietspace.reaction.EntityType;
 import dev.thural.quietspace.user.User;
 import dev.thural.quietspace.user.UserService;
 import jakarta.persistence.EntityNotFoundException;

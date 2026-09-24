@@ -6,7 +6,7 @@ import dev.thural.quietspace.message.dto.MessageRequest;
 import dev.thural.quietspace.message.dto.MessageResponse;
 import dev.thural.quietspace.photo.Photo;
 import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.shared.enums.EntityType;
+import dev.thural.quietspace.reaction.EntityType;
 import dev.thural.quietspace.user.User;
 import dev.thural.quietspace.user.UserService;
 import jakarta.persistence.EntityNotFoundException;

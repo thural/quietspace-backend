@@ -5,8 +5,8 @@ import dev.thural.quietspace.comment.CommentRepository;
 import dev.thural.quietspace.notification.dto.NotificationResponse;
 import dev.thural.quietspace.post.Post;
 import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.shared.enums.EntityType;
-import dev.thural.quietspace.shared.enums.NotificationType;
+import dev.thural.quietspace.reaction.EntityType;
+import dev.thural.quietspace.notification.NotificationType;
 import dev.thural.quietspace.shared.exception.UserNotFoundException;
 import dev.thural.quietspace.user.User;
 import dev.thural.quietspace.user.UserService;
@@ -24,9 +24,9 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.enums.EventType.SEEN_NOTIFICATION;
-import static dev.thural.quietspace.shared.enums.NotificationType.COMMENT_REACTION;
-import static dev.thural.quietspace.shared.enums.NotificationType.POST_REACTION;
+import static dev.thural.quietspace.websocket.event.EventType.SEEN_NOTIFICATION;
+import static dev.thural.quietspace.notification.NotificationType.COMMENT_REACTION;
+import static dev.thural.quietspace.notification.NotificationType.POST_REACTION;
 import static dev.thural.quietspace.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
 import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
 import static dev.thural.quietspace.websocket.constant.WebSocketPaths.*;

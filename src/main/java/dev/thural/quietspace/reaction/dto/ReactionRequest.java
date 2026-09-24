@@ -1,7 +1,7 @@
 package dev.thural.quietspace.reaction.dto;
 
-import dev.thural.quietspace.shared.enums.EntityType;
-import dev.thural.quietspace.shared.enums.ReactionType;
+import dev.thural.quietspace.reaction.EntityType;
+import dev.thural.quietspace.reaction.ReactionType;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

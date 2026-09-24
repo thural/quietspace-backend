@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.enums.NotificationType.FOLLOW_REQUEST;
+import static dev.thural.quietspace.notification.NotificationType.FOLLOW_REQUEST;
 
 @Slf4j
 @RestController

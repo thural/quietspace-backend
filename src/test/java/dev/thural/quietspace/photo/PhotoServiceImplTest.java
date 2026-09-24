@@ -4,7 +4,7 @@ import dev.thural.quietspace.photo.Photo;
 import dev.thural.quietspace.photo.PhotoRepository;
 import dev.thural.quietspace.photo.PhotoServiceImpl;
 import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.shared.enums.EntityType;
+import dev.thural.quietspace.reaction.EntityType;
 import dev.thural.quietspace.shared.exception.ImageUploadException;
 import dev.thural.quietspace.shared.exception.UnsupportedImageTypeException;
 import dev.thural.quietspace.shared.service.CommonService;

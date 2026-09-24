@@ -310,7 +310,7 @@ class WebSocketFlowIT {
         var chatEvent = dev.thural.quietspace.websocket.event.message.ChatEvent.builder()
                 .chatId(chatId)
                 .actorId(user1Id)
-                .type(dev.thural.quietspace.shared.enums.EventType.LEFT_CHAT)
+                .type(dev.thural.quietspace.websocket.event.EventType.LEFT_CHAT)
                 .build();
 
         user1Session.send("/app/private/chat/leave", chatEvent);
@@ -350,7 +350,7 @@ class WebSocketFlowIT {
                 .chatId(chatId)
                 .actorId(user1Id)
                 .recipientId(user2Id)
-                .type(dev.thural.quietspace.shared.enums.EventType.JOINED_CHAT)
+                .type(dev.thural.quietspace.websocket.event.EventType.JOINED_CHAT)
                 .build();
 
         user1Session.send("/app/private/chat/join", chatEvent);

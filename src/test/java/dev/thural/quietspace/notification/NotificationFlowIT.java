@@ -124,7 +124,7 @@ class NotificationFlowIT {
                 .actorId(user2Id)
                 .contentId(user2Id)
                 .isSeen(false)
-                .notificationType(dev.thural.quietspace.shared.enums.NotificationType.FOLLOW_REQUEST)
+                .notificationType(dev.thural.quietspace.notification.NotificationType.FOLLOW_REQUEST)
                 .build();
         notificationRepository.save(notification);
 

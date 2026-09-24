@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.enums.NotificationType.COMMENT;
+import static dev.thural.quietspace.notification.NotificationType.COMMENT;
 
 @RestController
 @RequiredArgsConstructor

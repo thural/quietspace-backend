@@ -1,7 +1,7 @@
 package dev.thural.quietspace.photo;
 import dev.thural.quietspace.shared.entity.BaseEntity;
 
-import dev.thural.quietspace.shared.enums.EntityType;
+import dev.thural.quietspace.reaction.EntityType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotNull;

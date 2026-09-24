@@ -5,7 +5,7 @@ import dev.thural.quietspace.notification.NotificationService;
 import dev.thural.quietspace.notification.dto.NotificationResponse;
 import dev.thural.quietspace.security.JwtService;
 import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.shared.enums.NotificationType;
+import dev.thural.quietspace.notification.NotificationType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;

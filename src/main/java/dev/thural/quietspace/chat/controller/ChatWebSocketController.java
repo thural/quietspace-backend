@@ -5,7 +5,7 @@ import dev.thural.quietspace.chat.dto.TypingStatus;
 import dev.thural.quietspace.message.MessageService;
 import dev.thural.quietspace.message.dto.MessageRequest;
 import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.shared.enums.EventType;
+import dev.thural.quietspace.websocket.event.EventType;
 import dev.thural.quietspace.websocket.event.message.ChatEvent;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.enums.EventType.*;
+import static dev.thural.quietspace.websocket.event.EventType.*;
 import static dev.thural.quietspace.websocket.constant.WebSocketPaths.*;
 import static dev.thural.quietspace.websocket.constant.WebSocketPaths.DELETE_MESSAGE;
 import static dev.thural.quietspace.websocket.constant.WebSocketPaths.SEEN_MESSAGE;

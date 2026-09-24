@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static dev.thural.quietspace.shared.enums.ReactionType.DISLIKE;
-import static dev.thural.quietspace.shared.enums.ReactionType.LIKE;
+import static dev.thural.quietspace.reaction.ReactionType.DISLIKE;
+import static dev.thural.quietspace.reaction.ReactionType.LIKE;
 
 @Slf4j
 @Component
