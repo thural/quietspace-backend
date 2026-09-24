@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,11 +31,25 @@ public class Chat extends BaseEntity {
             joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "id"))
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
-    
     @JsonManagedReference
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
 
+    // Domain methods for member management
+    public void addMember(User user) {
+        if (users == null) {
+            users = new ArrayList<>();
+        }
+        if (!users.contains(user)) {
+            users.add(user);
+        }
+    }
+
+    public void removeMember(User user) {
+        if (users != null) {
+            users.remove(user);
+        }
+    }
 }

@@ -55,4 +55,35 @@ public class Message extends BaseEntity {
         setIsSeen(false);
     }
 
+    // Factory method with validation
+    public static Message create(User sender, User recipient, Chat chat, String text) {
+        if (sender == null || recipient == null || chat == null) {
+            throw new IllegalArgumentException("Sender, recipient, and chat are required");
+        }
+        if (text == null || text.trim().isEmpty()) {
+            throw new IllegalArgumentException("Message text cannot be empty");
+        }
+        if (sender.equals(recipient)) {
+            throw new IllegalArgumentException("Sender and recipient cannot be the same user");
+        }
+        
+        Message message = new Message();
+        message.setSender(sender);
+        message.setRecipient(recipient);
+        message.setChat(chat);
+        message.setText(text);
+        message.setIsSeen(false);
+        return message;
+    }
+
+    // Domain method for marking as seen (read receipt)
+    public void markAsSeen() {
+        this.isSeen = true;
+    }
+
+    // Domain method for checking if seen
+    public boolean isSeen() {
+        return Boolean.TRUE.equals(this.isSeen);
+    }
+
 }

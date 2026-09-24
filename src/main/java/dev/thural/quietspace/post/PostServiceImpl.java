@@ -99,15 +99,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void votePoll(VoteRequest voteRequest) {
         Post foundPost = postRepository.findById(voteRequest.getPostId()).orElseThrow(EntityNotFoundException::new);
-        if (foundPost.getPoll().getOptions().stream()
-                .anyMatch(option -> option.getVotes().contains(voteRequest.getUserId()))) return;
-        foundPost.getPoll().getOptions().stream()
-                .filter(option -> option.getLabel().equals(voteRequest.getOption())).findFirst()
-                .ifPresent(option -> {
-                    Set<UUID> votes = option.getVotes();
-                    votes.add(voteRequest.getUserId());
-                    option.setVotes(votes);
-                });
+        foundPost.votePoll(voteRequest.getUserId(), voteRequest.getOption());
     }
 
     @Override
@@ -149,8 +141,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public PostResponse addRepost(RepostRequest repost) {
-        return postMapper.postEntityToResponse(postRepository.save(postMapper.repostRequestToEntity(repost)));
+        Post repostEntity = postMapper.repostRequestToEntity(repost);
+        return postMapper.postEntityToResponse(postRepository.save(repostEntity));
     }
 
     @Override
@@ -168,14 +162,14 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void savePostForUser(UUID postId) {
         Post foundPost = findPostEntityById(postId);
-        userService.getSignedUser().getSavedPosts().add(foundPost);
+        foundPost.saveBy(userService.getSignedUser());
     }
 
     @Override
     @Transactional
     public void unsavePostForUser(UUID postId) {
         Post foundPost = findPostEntityById(postId);
-        userService.getSignedUser().getSavedPosts().remove(foundPost);
+        foundPost.unsaveBy(userService.getSignedUser());
     }
 
     @Override

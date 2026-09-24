@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
     public void addUserToBlockList(UUID userId) {
         User signedUser = getSignedUser();
         User requestedUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        signedUser.getProfileSettings().getBlockedUsers().add(requestedUser);
+        signedUser.block(requestedUser);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     public void removeUserFromBlockList(UUID userId) {
         User signedUser = getSignedUser();
         User requestedUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        signedUser.getProfileSettings().getBlockedUsers().remove(requestedUser);
+        signedUser.unblock(requestedUser);
     }
 
     @Override
@@ -205,11 +205,9 @@ public class UserServiceImpl implements UserService {
             throw new CustomErrorException(HttpStatus.BAD_REQUEST, "users can't unfollow themselves");
         User followedUser = userRepository.findById(followedUserId).orElseThrow(UserNotFoundException::new);
         if (signedUser.getFollowings().contains(followedUser)) {
-            signedUser.getFollowings().remove(followedUser);
-            followedUser.getFollowers().remove(signedUser);
+            signedUser.unfollow(followedUser);
         } else {
-            signedUser.getFollowings().add(followedUser);
-            followedUser.getFollowers().add(signedUser);
+            signedUser.follow(followedUser);
         }
     }
 
@@ -220,10 +218,7 @@ public class UserServiceImpl implements UserService {
         if (signedUser.getId().equals(userId))
             throw new CustomErrorException(HttpStatus.BAD_REQUEST, "cannot follow yourself");
         User target = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        if (!signedUser.getFollowings().contains(target)) {
-            signedUser.getFollowings().add(target);
-            target.getFollowers().add(signedUser);
-        }
+        signedUser.follow(target);
     }
 
     @Override
@@ -233,8 +228,7 @@ public class UserServiceImpl implements UserService {
         if (signedUser.getId().equals(userId))
             throw new CustomErrorException(HttpStatus.BAD_REQUEST, "cannot unfollow yourself");
         User target = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        signedUser.getFollowings().remove(target);
-        target.getFollowers().remove(signedUser);
+        signedUser.unfollow(target);
     }
 
     @Override
@@ -244,10 +238,11 @@ public class UserServiceImpl implements UserService {
         if (signedUser.getId().equals(followingUserId))
             throw new CustomErrorException(HttpStatus.BAD_REQUEST, "users can't unfollow themselves");
         User followingUser = userRepository.findById(followingUserId).orElseThrow(UserNotFoundException::new);
-        if (signedUser.getFollowers().contains(followingUser)) {
-            signedUser.getFollowers().remove(followingUser);
-            followingUser.getFollowings().remove(signedUser);
-        } else throw new CustomErrorException("user is not found in followers");
+        if (!signedUser.getFollowers().contains(followingUser)) {
+            throw new CustomErrorException(HttpStatus.BAD_REQUEST, "user is not found in followers");
+        }
+        signedUser.removeFollower(followingUser);
+        followingUser.unfollow(signedUser);
     }
 
     @Override

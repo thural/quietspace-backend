@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProfileSettings extends BaseEntity implements Serializable {
 
@@ -45,4 +44,18 @@ public class ProfileSettings extends BaseEntity implements Serializable {
     @Builder.Default
     Boolean isHideLikeCounts = false;
 
+    public void blockUser(User target) {
+        if (blockedUsers.contains(target)) {
+            throw new IllegalArgumentException("User is already blocked");
+        }
+        blockedUsers.add(target);
+    }
+
+    public void unblockUser(User target) {
+        blockedUsers.remove(target);
+    }
+
+    public boolean isBlocked(User target) {
+        return blockedUsers.contains(target);
+    }
 }

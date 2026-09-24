@@ -169,6 +169,53 @@ public class User extends BaseEntity implements UserDetails, Principal {
         return firstname + " " + lastname;
     }
 
+    // Domain methods for follow/unfollow
+    public void follow(User target) {
+        if (this.equals(target)) {
+            throw new IllegalArgumentException("Cannot follow yourself");
+        }
+        if (!followings.contains(target)) {
+            followings.add(target);
+            target.getFollowers().add(this);
+        }
+    }
+
+    public void unfollow(User target) {
+        if (this.equals(target)) {
+            throw new IllegalArgumentException("Cannot unfollow yourself");
+        }
+        if (followings.remove(target)) {
+            target.getFollowers().remove(this);
+        }
+    }
+
+    public void block(User target) {
+        if (this.equals(target)) {
+            throw new IllegalArgumentException("Cannot block yourself");
+        }
+        getProfileSettings().blockUser(target);
+    }
+
+    public void unblock(User target) {
+        if (this.equals(target)) {
+            throw new IllegalArgumentException("Cannot unblock yourself");
+        }
+        getProfileSettings().unblockUser(target);
+    }
+
+    // Followers management (called by target user)
+    void addFollower(User follower) {
+        if (!followers.contains(follower)) {
+            followers.add(follower);
+        }
+    }
+
+    void removeFollower(User follower) {
+        if (!followers.remove(follower)) {
+            throw new IllegalArgumentException("User is not found in followers");
+        }
+    }
+
     @PreRemove
     void onRemove() {
         // TODO: remove photo associated

@@ -9,6 +9,7 @@ import dev.thural.quietspace.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,6 +53,46 @@ public class Post extends BaseEntity implements Serializable {
     private List<Comment> comments;
 
     @ManyToMany(mappedBy = "savedPosts")
-    private List<User> savedByUsers;
+    @Builder.Default
+    private List<User> savedByUsers = new ArrayList<>();
 
+    // Domain methods for poll voting
+    public void votePoll(UUID userId, String optionLabel) {
+        if (poll == null) {
+            throw new IllegalStateException("Post does not have a poll");
+        }
+        PollOption option = poll.getOptions().stream()
+                .filter(opt -> opt.getLabel().equals(optionLabel))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid poll option"));
+        
+        // Check if user already voted on any option (silently return if already voted)
+        boolean alreadyVoted = poll.getOptions().stream()
+                .anyMatch(opt -> opt.getVotes().contains(userId));
+        if (alreadyVoted) {
+            return;
+        }
+        
+        option.getVotes().add(userId);
+    }
+
+    // Domain methods for save/unsave
+    public void saveBy(User userEntity) {
+        if (!userEntity.getSavedPosts().contains(this)) {
+            userEntity.getSavedPosts().add(this);
+        }
+    }
+
+    public void unsaveBy(User userEntity) {
+        userEntity.getSavedPosts().remove(this);
+    }
+
+    // Factory method for repost
+    public static Post repostBy(User user, String text, String originalPostId) {
+        Post repost = new Post();
+        repost.setUser(user);
+        repost.setText(text);
+        repost.setRepostId(originalPostId);
+        return repost;
+    }
 }

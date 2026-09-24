@@ -21,4 +21,5 @@ public class VoteRequest {
     @NotNull(message = "vote label can not be null")
     private String option;
 
+    private UUID optionId;
 }

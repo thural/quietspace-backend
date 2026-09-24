@@ -51,9 +51,7 @@ public class ChatServiceImpl implements ChatService {
     public UserResponse addMemberWithId(UUID memberId, UUID chatId) {
         Chat foundChat = findChatEntityById(chatId);
         User foundMember = userService.getUserById(memberId).orElseThrow(UserNotFoundException::new);
-        List<User> members = new ArrayList<>(foundChat.getUsers());
-        members.add(foundMember);
-        foundChat.setUsers(members);
+        foundChat.addMember(foundMember);
         return userMapper.toResponse(foundMember);
     }
 
@@ -62,11 +60,9 @@ public class ChatServiceImpl implements ChatService {
     public List<UserResponse> removeMemberWithId(UUID memberId, UUID chatId) {
         Chat foundChat = findChatEntityById(chatId);
         User foundMember = getUserById(memberId);
-        List<User> members = new ArrayList<>(foundChat.getUsers());
-        members.remove(foundMember);
-        foundChat.setUsers(members);
+        foundChat.removeMember(foundMember);
         chatRepository.save(foundChat);
-        return members.stream().map(userMapper::toResponse).toList();
+        return foundChat.getUsers().stream().map(userMapper::toResponse).toList();
     }
 
     @Override

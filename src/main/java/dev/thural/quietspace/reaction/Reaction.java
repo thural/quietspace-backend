@@ -1,4 +1,5 @@
 package dev.thural.quietspace.reaction;
+
 import dev.thural.quietspace.shared.entity.BaseEntity;
 
 import dev.thural.quietspace.reaction.EntityType;
@@ -20,7 +21,6 @@ import java.util.UUID;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Reaction extends BaseEntity {
 
     @NotNull
@@ -38,4 +38,30 @@ public class Reaction extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReactionType reactionType;
 
+    // Factory method with validation
+    public static Reaction create(UUID userId, String username, UUID contentId, EntityType contentType, ReactionType reactionType) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID is required");
+        }
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username is required");
+        }
+        if (contentId == null) {
+            throw new IllegalArgumentException("Content ID is required");
+        }
+        if (contentType == null) {
+            throw new IllegalArgumentException("Content type is required");
+        }
+        if (reactionType == null) {
+            throw new IllegalArgumentException("Reaction type is required");
+        }
+        
+        Reaction reaction = new Reaction();
+        reaction.setUserId(userId);
+        reaction.setUsername(username);
+        reaction.setContentId(contentId);
+        reaction.setContentType(contentType);
+        reaction.setReactionType(reactionType);
+        return reaction;
+    }
 }
