@@ -1,15 +1,15 @@
-package dev.thural.quietspace.chat;
+package dev.thural.quietspace.domain.chat;
 
-import dev.thural.quietspace.chat.Chat;
-import dev.thural.quietspace.chat.ChatMapper;
-import dev.thural.quietspace.chat.dto.ChatResponse;
-import dev.thural.quietspace.chat.dto.CreateChatRequest;
-import dev.thural.quietspace.message.MessageService;
-import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserMapper;
-import dev.thural.quietspace.user.UserService;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.domain.chat.Chat;
+import dev.thural.quietspace.domain.chat.ChatMapper;
+import dev.thural.quietspace.domain.chat.dto.ChatResponse;
+import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
+import dev.thural.quietspace.domain.chat.dto.ChatMessageView;
+import dev.thural.quietspace.domain.chat.port.ChatMessagePort;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserMapper;
+import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +36,7 @@ class ChatMapperTest {
     private UserService userService;
 
     @Mock
-    private MessageService messageService;
+    private ChatMessagePort messagePort;
 
     @InjectMocks
     private ChatMapper chatMapper;
@@ -46,7 +46,7 @@ class ChatMapperTest {
     private User user1;
     private User user2;
     private User loggedUser;
-    private MessageResponse recentMessage;
+    private ChatMessageView recentMessage;
     private UserResponse userResponse1;
     private UserResponse userResponse2;
 
@@ -88,7 +88,7 @@ class ChatMapperTest {
                 .updateDate(OffsetDateTime.now())
                 .build();
 
-        recentMessage = MessageResponse.builder()
+        recentMessage = ChatMessageView.builder()
                 .id(UUID.randomUUID())
                 .text("Recent message")
                 .senderId(userId1)
@@ -146,7 +146,7 @@ class ChatMapperTest {
         when(userService.getSignedUser()).thenReturn(loggedUser);
         when(userMapper.toResponse(user1)).thenReturn(userResponse1);
         when(userMapper.toResponse(user2)).thenReturn(userResponse2);
-        when(messageService.getLastMessageByChat(chat)).thenReturn(Optional.of(recentMessage));
+        when(messagePort.findLastMessage(chat.getId())).thenReturn(Optional.of(recentMessage));
 
         // When
         ChatResponse result = chatMapper.chatEntityToResponse(chat);
@@ -163,7 +163,7 @@ class ChatMapperTest {
         verify(userService).getSignedUser();
         verify(userMapper).toResponse(user1);
         verify(userMapper).toResponse(user2);
-        verify(messageService).getLastMessageByChat(chat);
+        verify(messagePort).findLastMessage(chat.getId());
     }
 
     @Test
@@ -172,7 +172,7 @@ class ChatMapperTest {
         when(userService.getSignedUser()).thenReturn(loggedUser);
         when(userMapper.toResponse(user1)).thenReturn(userResponse1);
         when(userMapper.toResponse(user2)).thenReturn(userResponse2);
-        when(messageService.getLastMessageByChat(chat)).thenReturn(Optional.empty());
+        when(messagePort.findLastMessage(chat.getId())).thenReturn(Optional.empty());
 
         // When
         ChatResponse result = chatMapper.chatEntityToResponse(chat);
@@ -180,7 +180,7 @@ class ChatMapperTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getRecentMessage()).isNull();
-        verify(messageService).getLastMessageByChat(chat);
+        verify(messagePort).findLastMessage(chat.getId());
     }
 
     @Test
@@ -189,7 +189,7 @@ class ChatMapperTest {
         when(userService.getSignedUser()).thenReturn(loggedUser);
         when(userMapper.toResponse(user1)).thenReturn(userResponse1);
         when(userMapper.toResponse(user2)).thenReturn(userResponse2);
-        when(messageService.getLastMessageByChat(chat)).thenReturn(Optional.empty());
+        when(messagePort.findLastMessage(chat.getId())).thenReturn(Optional.empty());
 
         // When
         ChatResponse result = chatMapper.chatEntityToResponse(chat);
@@ -212,7 +212,7 @@ class ChatMapperTest {
                 .build();
         
         when(userService.getSignedUser()).thenReturn(loggedUser);
-        when(messageService.getLastMessageByChat(emptyChat)).thenReturn(Optional.empty());
+        when(messagePort.findLastMessage(emptyChat.getId())).thenReturn(Optional.empty());
 
         // When
         ChatResponse result = chatMapper.chatEntityToResponse(emptyChat);
@@ -235,7 +235,7 @@ class ChatMapperTest {
                 .build();
         
         when(userService.getSignedUser()).thenReturn(loggedUser);
-        when(messageService.getLastMessageByChat(singleUserChat)).thenReturn(Optional.empty());
+        when(messagePort.findLastMessage(singleUserChat.getId())).thenReturn(Optional.empty());
 
         // When
         ChatResponse result = chatMapper.chatEntityToResponse(singleUserChat);
@@ -253,13 +253,13 @@ class ChatMapperTest {
         when(userService.getSignedUser()).thenReturn(loggedUser);
         when(userMapper.toResponse(user1)).thenReturn(userResponse1);
         when(userMapper.toResponse(user2)).thenReturn(userResponse2);
-        when(messageService.getLastMessageByChat(chat)).thenReturn(Optional.empty());
+        when(messagePort.findLastMessage(chat.getId())).thenReturn(Optional.empty());
 
         // When
         ChatResponse result = chatMapper.chatEntityToResponse(chat);
 
         // Then
         assertThat(result.getRecentMessage()).isNull();
-        verify(messageService).getLastMessageByChat(chat);
+        verify(messagePort).findLastMessage(chat.getId());
     }
 }

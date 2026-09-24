@@ -1,11 +1,11 @@
-package dev.thural.quietspace.reaction;
+package dev.thural.quietspace.domain.reaction;
 
-import dev.thural.quietspace.reaction.dto.ReactionRequest;
-import dev.thural.quietspace.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
+import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.thural.quietspace.reaction.ReactionType.LIKE;
-import static dev.thural.quietspace.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.shared.enums.ReactionType.LIKE;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
 
 @Service
 @RequiredArgsConstructor

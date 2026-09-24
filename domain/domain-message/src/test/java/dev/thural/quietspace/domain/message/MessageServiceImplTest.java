@@ -1,16 +1,16 @@
-package dev.thural.quietspace.message;
+package dev.thural.quietspace.domain.message;
 
-import dev.thural.quietspace.chat.Chat;
-import dev.thural.quietspace.chat.ChatRepository;
-import dev.thural.quietspace.message.Message;
-import dev.thural.quietspace.message.MessageMapper;
-import dev.thural.quietspace.message.MessageRepository;
-import dev.thural.quietspace.message.MessageServiceImpl;
-import dev.thural.quietspace.message.dto.MessageRequest;
-import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.chat.Chat;
+import dev.thural.quietspace.domain.chat.ChatRepository;
+import dev.thural.quietspace.domain.message.Message;
+import dev.thural.quietspace.domain.message.MessageMapper;
+import dev.thural.quietspace.domain.message.MessageRepository;
+import dev.thural.quietspace.domain.message.MessageServiceImpl;
+import dev.thural.quietspace.domain.message.dto.MessageRequest;
+import dev.thural.quietspace.domain.message.dto.MessageResponse;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
@@ -73,7 +73,6 @@ class MessageServiceImplTest {
         this.chat = Chat.builder()
                 .id(UUID.randomUUID())
                 .users(List.of())
-                .messages(List.of())
                 .build();
 
         this.message = Message.builder()
@@ -140,10 +139,10 @@ class MessageServiceImplTest {
         when(messageRepository.findFirstByChatOrderByCreateDateDesc(chat)).thenReturn(Optional.ofNullable(message));
         when(messageMapper.toResponse(message)).thenReturn(messageResponse);
 
-        Optional<MessageResponse> messageResponse = messageService.getLastMessageByChat(chat);
+        Optional<MessageResponse> result = messageService.getLastMessageByChat(chat);
 
-        assertThat(messageResponse).isPresent();
-        assertThat(messageResponse.get()).isInstanceOf(MessageResponse.class);
+        assertThat(result).isPresent();
+        assertThat(result.get()).isInstanceOf(MessageResponse.class);
     }
 
     @Test

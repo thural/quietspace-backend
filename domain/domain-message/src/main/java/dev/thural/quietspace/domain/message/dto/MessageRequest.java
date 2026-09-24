@@ -1,4 +1,4 @@
-package dev.thural.quietspace.message.dto;
+package dev.thural.quietspace.domain.message.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;

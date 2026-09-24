@@ -1,9 +1,8 @@
-package dev.thural.quietspace.chat.dto;
+package dev.thural.quietspace.domain.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.shared.model.BaseResponse;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.core.shared.model.BaseResponse;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +22,6 @@ public class ChatResponse extends BaseResponse {
     
     private List<UUID> userIds;
     private List<UserResponse> members;
-    private MessageResponse recentMessage;
+    private ChatMessageView recentMessage;
 
 }

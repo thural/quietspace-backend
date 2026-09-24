@@ -1,13 +1,13 @@
-package dev.thural.quietspace.reaction.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.notification.NotificationService;
-import dev.thural.quietspace.reaction.ReactionService;
-import dev.thural.quietspace.reaction.dto.ReactionRequest;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
+import dev.thural.quietspace.domain.notification.NotificationService;
+import dev.thural.quietspace.domain.reaction.ReactionService;
+import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -47,7 +47,7 @@ class ReactionControllerTest {
     @MockitoBean
     TokenRepository tokenRepository;
     @MockitoBean
-    JwtService jwtService;
+    JwtTokenService jwtTokenService;
     @MockitoBean
     UserDetailsService userDetailsService;
 

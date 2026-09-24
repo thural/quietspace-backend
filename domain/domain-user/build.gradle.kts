@@ -1,33 +1,18 @@
 plugins {
-    id("java")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
-    id("jacoco")
-    id("com.github.spotbugs")
-    id("pmd")
-    id("checkstyle")
+    id("quietspace.domain-conventions")
 }
 
 dependencies {
     implementation(project(":core:core-shared"))
     implementation(project(":core:core-data"))
-    implementation(project(":domain:domain-auth"))
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation(project(":core:core-messaging"))
+    // One-way edge: user reads photo views; photo never depends on user.
+    implementation(project(":domain:domain-photo"))
+    // One-way edge: user implements notification-owned ports; notification is a sink.
+    implementation(project(":domain:domain-notification"))
 
-    implementation("org.mapstruct:mapstruct:1.6.3")
-
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
-    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // Test-only: exception advice for web-slice tests (core-web has no domain deps).
+    testImplementation(project(":core:core-web"))
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework:spring-messaging")
 }

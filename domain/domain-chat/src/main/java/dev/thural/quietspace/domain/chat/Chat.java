@@ -1,10 +1,8 @@
-package dev.thural.quietspace.chat;
+package dev.thural.quietspace.domain.chat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import dev.thural.quietspace.message.Message;
-import dev.thural.quietspace.shared.entity.BaseEntity;
-import dev.thural.quietspace.user.User;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
+import dev.thural.quietspace.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,10 +30,6 @@ public class Chat extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "id"))
     private List<User> users = new ArrayList<>();
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> messages;
 
     // Domain methods for member management
     public void addMember(User user) {

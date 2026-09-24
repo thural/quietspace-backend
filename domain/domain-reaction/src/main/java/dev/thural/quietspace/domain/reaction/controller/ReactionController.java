@@ -1,11 +1,11 @@
-package dev.thural.quietspace.reaction.controller;
+package dev.thural.quietspace.domain.controller;
 
-import dev.thural.quietspace.notification.NotificationService;
-import dev.thural.quietspace.reaction.ReactionService;
-import dev.thural.quietspace.reaction.dto.ReactionRequest;
-import dev.thural.quietspace.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
+import dev.thural.quietspace.domain.notification.NotificationService;
+import dev.thural.quietspace.domain.reaction.ReactionService;
+import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
+import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

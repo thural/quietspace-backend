@@ -1,11 +1,10 @@
-package dev.thural.quietspace.user.controller;
+package dev.thural.quietspace.domain.user.controller;
 
-import dev.thural.quietspace.notification.NotificationService;
-import dev.thural.quietspace.user.UserService;
-import dev.thural.quietspace.user.dto.ProfileSettingsRequest;
-import dev.thural.quietspace.user.dto.ProfileSettingsResponse;
-import dev.thural.quietspace.user.dto.UserRequest;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.dto.ProfileSettingsRequest;
+import dev.thural.quietspace.domain.user.dto.ProfileSettingsResponse;
+import dev.thural.quietspace.domain.user.dto.UserRequest;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import static dev.thural.quietspace.notification.NotificationType.FOLLOW_REQUEST;
 
 @Slf4j
 @RestController
@@ -33,7 +30,6 @@ public class UserController {
     public static final String FOLLOW_USER_TOGGLE_PATH = FOLLOW_PATH_ID + "/toggle-follow";
 
     private final UserService userService;
-    private final NotificationService notificationService;
 
     @GetMapping("/search")
     Page<UserResponse> listUsersBySearchTerm(
@@ -124,7 +120,6 @@ public class UserController {
     @PostMapping("/{userId}/follow")
     ResponseEntity<Void> followUser(@PathVariable UUID userId) {
         userService.followUser(userId);
-        notificationService.processNotification(FOLLOW_REQUEST, userId);
         return ResponseEntity.ok().build();
     }
 
@@ -137,7 +132,6 @@ public class UserController {
     @PostMapping(FOLLOW_USER_TOGGLE_PATH)
     ResponseEntity<?> toggleFollow(@PathVariable UUID userId) {
         userService.toggleFollow(userId);
-        notificationService.processNotification(FOLLOW_REQUEST, userId);
         return ResponseEntity.ok().build();
     }
 

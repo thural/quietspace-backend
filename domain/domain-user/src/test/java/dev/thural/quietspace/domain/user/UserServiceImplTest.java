@@ -1,15 +1,16 @@
-package dev.thural.quietspace.user;
+package dev.thural.quietspace.domain.user;
 
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.shared.enums.StatusType;
-import dev.thural.quietspace.shared.exception.CustomErrorException;
-import dev.thural.quietspace.shared.util.PagingProvider;
-import dev.thural.quietspace.user.*;
-import dev.thural.quietspace.user.dto.ProfileSettingsRequest;
-import dev.thural.quietspace.user.dto.ProfileSettingsResponse;
-import dev.thural.quietspace.user.dto.UserRequest;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.core.shared.enums.StatusType;
+import dev.thural.quietspace.core.shared.event.TransactionalEventPublisher;
+import dev.thural.quietspace.core.shared.exception.CustomErrorException;
+import dev.thural.quietspace.core.shared.util.PagingProvider;
+import dev.thural.quietspace.domain.user.*;
+import dev.thural.quietspace.domain.user.dto.ProfileSettingsRequest;
+import dev.thural.quietspace.domain.user.dto.ProfileSettingsResponse;
+import dev.thural.quietspace.domain.user.dto.UserRequest;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +48,8 @@ class UserServiceImplTest {
     private PhotoService photoService;
     @Mock
     private UserQuery userQuery;
+    @Mock
+    private TransactionalEventPublisher eventPublisher;
 
     @InjectMocks
     UserServiceImpl userService;
@@ -55,8 +58,6 @@ class UserServiceImplTest {
     private User user;
     private UserRequest registerRequest;
     private ProfileSettings profileSettings;
-    private User followingUser;
-    private User followerUser;
 
     @BeforeEach
     void initMockData() {
@@ -529,7 +530,7 @@ class UserServiceImplTest {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.disableUser(id))
-                .isInstanceOf(dev.thural.quietspace.shared.exception.UserNotFoundException.class);
+                .isInstanceOf(dev.thural.quietspace.core.shared.exception.UserNotFoundException.class);
     }
 
 }

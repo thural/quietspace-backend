@@ -1,6 +1,6 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,14 +1,18 @@
-package dev.thural.quietspace.message;
+package dev.thural.quietspace.domain.message;
 
-import dev.thural.quietspace.chat.Chat;
-import dev.thural.quietspace.chat.ChatRepository;
-import dev.thural.quietspace.message.dto.MessageRequest;
-import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.photo.Photo;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.chat.Chat;
+import dev.thural.quietspace.domain.chat.ChatRepository;
+import dev.thural.quietspace.domain.message.Message;
+import dev.thural.quietspace.domain.message.MessageMapper;
+import dev.thural.quietspace.domain.message.MessageRepository;
+import dev.thural.quietspace.domain.message.MessageService;
+import dev.thural.quietspace.domain.message.dto.MessageRequest;
+import dev.thural.quietspace.domain.message.dto.MessageResponse;
+import dev.thural.quietspace.domain.photo.Photo;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
-import static dev.thural.quietspace.websocket.constant.WebSocketPaths.UNREAD_COUNT;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.UNREAD_COUNT;
 
 @Slf4j
 @Service

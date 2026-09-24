@@ -1,4 +1,4 @@
-package dev.thural.quietspace.user;
+package dev.thural.quietspace.domain.user;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

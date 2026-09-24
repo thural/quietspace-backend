@@ -1,4 +1,4 @@
-package dev.thural.quietspace.chat.dto;
+package dev.thural.quietspace.domain.chat.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

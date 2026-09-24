@@ -1,9 +1,9 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.user.ProfileSettings;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.comment.Comment;
+import dev.thural.quietspace.domain.user.ProfileSettings;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -70,11 +70,8 @@ public class PostSpecifications {
         return commentedByUser(userService.getSignedUser().getId());
     }
 
-    public Specification<Post> savedByUser(UUID userId) {
-        return (root, query, criteriaBuilder) -> {
-            Join<Post, User> savedByJoin = root.join("savedByUsers");
-            return criteriaBuilder.equal(savedByJoin.get("id"), userId);
-        };
+    public Specification<Post> savedWithIds(java.util.List<UUID> savedIds) {
+        return (root, query, criteriaBuilder) -> root.get("id").in(savedIds);
     }
 
     public Specification<Post> byUser(User user) {

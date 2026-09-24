@@ -1,13 +1,13 @@
-package dev.thural.quietspace.post.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostService;
-import dev.thural.quietspace.post.dto.PostRequest;
-import dev.thural.quietspace.post.dto.PostResponse;
-import dev.thural.quietspace.post.dto.VoteRequest;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.user.User;
+import dev.thural.quietspace.domain.post.Post;
+import dev.thural.quietspace.domain.post.PostService;
+import dev.thural.quietspace.domain.post.dto.PostRequest;
+import dev.thural.quietspace.domain.post.dto.PostResponse;
+import dev.thural.quietspace.domain.post.dto.VoteRequest;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

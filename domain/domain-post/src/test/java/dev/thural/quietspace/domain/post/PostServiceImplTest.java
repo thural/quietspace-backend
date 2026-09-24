@@ -1,15 +1,15 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.post.*;
-import dev.thural.quietspace.post.dto.PostRequest;
-import dev.thural.quietspace.post.dto.PostResponse;
-import dev.thural.quietspace.post.dto.RepostRequest;
-import dev.thural.quietspace.post.dto.VoteRequest;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.shared.util.PagingProvider;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.post.*;
+import dev.thural.quietspace.domain.post.dto.PostRequest;
+import dev.thural.quietspace.domain.post.dto.PostResponse;
+import dev.thural.quietspace.domain.post.dto.RepostRequest;
+import dev.thural.quietspace.domain.post.dto.VoteRequest;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.core.shared.util.PagingProvider;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -143,9 +143,9 @@ public class PostServiceImplTest {
         when(postMapper.postEntityToResponse(post)).thenReturn(postResponse);
         when(postRepository.save(any(Post.class))).thenReturn(post);
 
-        PostResponse postResponse = postService.addPost(postRequest);
+        PostResponse result = postService.addPost(postRequest);
 
-        assertThat(postResponse).isInstanceOf(PostResponse.class);
+        assertThat(result).isInstanceOf(PostResponse.class);
         verify(postRepository, times(1)).save(post);
     }
 
@@ -245,7 +245,6 @@ public class PostServiceImplTest {
         Specification<Post> mockSpec = Specification.where((root, query, cb) -> cb.conjunction());
         when(postSpecifications.visibleToUser()).thenReturn(mockSpec);
         when(postSpecifications.containsText(any())).thenReturn(mockSpec);
-        PageRequest pageRequest = PagingProvider.buildPageRequest(0, 10, null);
         when(postRepository.findAll(anySpec(), any(PageRequest.class))).thenReturn(Page.empty());
 
         Page<PostResponse> result = postService.getAllByQuery("test", 0, 10);
@@ -281,8 +280,9 @@ public class PostServiceImplTest {
     @Test
     void getSavedPostsByUser_shouldReturnSavedPostsPage() {
         Specification<Post> mockSpec = Specification.where((root, query, cb) -> cb.conjunction());
+        user.setSavedPostIds(new ArrayList<>(List.of(post.getId())));
         when(postSpecifications.visibleToUser()).thenReturn(mockSpec);
-        when(postSpecifications.savedByUser(any())).thenReturn(mockSpec);
+        when(postSpecifications.savedWithIds(any())).thenReturn(mockSpec);
         when(userService.getSignedUser()).thenReturn(user);
         when(postRepository.findAll(anySpec(), any(PageRequest.class))).thenReturn(Page.empty());
 
@@ -293,13 +293,13 @@ public class PostServiceImplTest {
 
     @Test
     void savePostForUser_givenExistingPost_shouldAddToSaved() {
-        user.setSavedPosts(new ArrayList<>());
+        user.setSavedPostIds(new ArrayList<>());
         when(userService.getSignedUser()).thenReturn(user);
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
 
         postService.savePostForUser(post.getId());
 
-        assertThat(user.getSavedPosts()).contains(post);
+        assertThat(user.getSavedPostIds()).contains(post.getId());
     }
 
     @Test
@@ -312,13 +312,13 @@ public class PostServiceImplTest {
 
     @Test
     void unsavePostForUser_givenSavedPost_shouldRemove() {
-        user.setSavedPosts(new ArrayList<>(List.of(post)));
+        user.setSavedPostIds(new ArrayList<>(List.of(post.getId())));
         when(userService.getSignedUser()).thenReturn(user);
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
 
         postService.unsavePostForUser(post.getId());
 
-        assertThat(user.getSavedPosts()).doesNotContain(post);
+        assertThat(user.getSavedPostIds()).doesNotContain(post.getId());
     }
 
     @Test

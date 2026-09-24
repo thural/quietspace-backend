@@ -1,4 +1,4 @@
-package dev.thural.quietspace.photo;
+package dev.thural.quietspace.domain.photo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

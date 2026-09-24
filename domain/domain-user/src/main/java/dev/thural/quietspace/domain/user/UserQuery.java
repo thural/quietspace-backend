@@ -1,6 +1,6 @@
-package dev.thural.quietspace.user;
+package dev.thural.quietspace.domain.user;
 
-import dev.thural.quietspace.shared.util.PageUtils;
+import dev.thural.quietspace.core.shared.util.PageUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;

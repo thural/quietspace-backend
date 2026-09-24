@@ -1,14 +1,14 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.post.*;
-import dev.thural.quietspace.post.dto.*;
-import dev.thural.quietspace.reaction.ReactionService;
-import dev.thural.quietspace.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.reaction.ReactionType;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
+import dev.thural.quietspace.domain.post.*;
+import dev.thural.quietspace.domain.post.dto.*;
+import dev.thural.quietspace.domain.reaction.ReactionService;
+import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

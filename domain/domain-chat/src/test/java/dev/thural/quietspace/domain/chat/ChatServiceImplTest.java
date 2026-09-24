@@ -1,18 +1,17 @@
-package dev.thural.quietspace.chat;
+package dev.thural.quietspace.domain.chat;
 
-import dev.thural.quietspace.chat.Chat;
-import dev.thural.quietspace.chat.ChatMapper;
-import dev.thural.quietspace.chat.ChatRepository;
-import dev.thural.quietspace.chat.ChatServiceImpl;
-import dev.thural.quietspace.chat.dto.ChatResponse;
-import dev.thural.quietspace.chat.dto.CreateChatRequest;
-import dev.thural.quietspace.chat.dto.UpdateChatRequest;
-import dev.thural.quietspace.message.Message;
-import dev.thural.quietspace.message.MessageRepository;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserMapper;
-import dev.thural.quietspace.user.UserService;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.domain.chat.Chat;
+import dev.thural.quietspace.domain.chat.ChatMapper;
+import dev.thural.quietspace.domain.chat.ChatRepository;
+import dev.thural.quietspace.domain.chat.ChatServiceImpl;
+import dev.thural.quietspace.domain.chat.dto.ChatResponse;
+import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
+import dev.thural.quietspace.domain.chat.dto.UpdateChatRequest;
+import dev.thural.quietspace.domain.chat.port.ChatMessagePort;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserMapper;
+import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,7 @@ public class ChatServiceImplTest {
     @Mock
     private UserMapper userMapper;
     @Mock
-    private MessageRepository messageRepository;
+    private ChatMessagePort messagePort;
 
     @InjectMocks
     private ChatServiceImpl chatService;
@@ -51,7 +50,6 @@ public class ChatServiceImplTest {
     private UUID userId;
     private UUID memberId;
     private User user1;
-    private UserResponse userResponse;
     private List<User> userList;
     private User user2;
     private Chat chat;
@@ -70,10 +68,6 @@ public class ChatServiceImplTest {
                 .password("pAsSword")
                 .build();
 
-        this.userResponse = UserResponse.builder()
-                .id(user1.getId())
-                .build();
-
         this.user2 = User.builder()
                 .id(userId)
                 .username("member")
@@ -87,7 +81,6 @@ public class ChatServiceImplTest {
         this.chat = Chat.builder()
                 .id(UUID.randomUUID())
                 .users(userList)
-                .messages(List.of())
                 .build();
 
         this.chatRequest = CreateChatRequest.builder()
@@ -174,7 +167,6 @@ public class ChatServiceImplTest {
         when(chatMapper.chatEntityToResponse(chat)).thenReturn(chatResponse);
         when(chatMapper.chatRequestToEntity(chatRequest)).thenReturn(chat);
         when(chatRepository.save(chat)).thenReturn(chat);
-        when(messageRepository.save(any(Message.class))).thenReturn(null);
 
         ChatResponse createdChat = chatService.createChat(chatRequest);
 

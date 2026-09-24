@@ -1,4 +1,4 @@
-package dev.thural.quietspace.auth.dto;
+package dev.thural.quietspace.domain.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

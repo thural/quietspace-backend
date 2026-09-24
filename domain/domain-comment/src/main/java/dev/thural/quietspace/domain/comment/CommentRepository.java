@@ -1,6 +1,5 @@
-package dev.thural.quietspace.comment;
+package dev.thural.quietspace.domain.comment;
 
-import dev.thural.quietspace.post.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +13,7 @@ import java.util.UUID;
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
     Page<Comment> findAllByPostId(UUID postId, Pageable pageable);
 
-    Integer countByParentIdAndPost(UUID parentId, Post post);
+    Integer countByParentIdAndPostId(UUID parentId, UUID postId);
 
     @Transactional
     void deleteAllByParentId(UUID parentId);
@@ -24,7 +23,7 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
     Page<Comment> findAllByUserId(UUID userId, Pageable pageable);
 
     @Query("SELECT c FROM Comment c " +
-            "WHERE c.post.id = :postId " +
+            "WHERE c.postId = :postId " +
             "AND c.user.id = :userId " +
             "ORDER BY c.updateDate DESC, c.createDate DESC " +
             "LIMIT 1")

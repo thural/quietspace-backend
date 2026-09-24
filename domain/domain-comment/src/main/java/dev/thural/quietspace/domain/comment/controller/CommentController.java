@@ -1,9 +1,9 @@
-package dev.thural.quietspace.comment.controller;
+package dev.thural.quietspace.domain.controller;
 
-import dev.thural.quietspace.comment.CommentService;
-import dev.thural.quietspace.comment.dto.CommentRequest;
-import dev.thural.quietspace.comment.dto.CommentResponse;
-import dev.thural.quietspace.notification.NotificationService;
+import dev.thural.quietspace.domain.comment.CommentService;
+import dev.thural.quietspace.domain.comment.dto.CommentRequest;
+import dev.thural.quietspace.domain.comment.dto.CommentResponse;
+import dev.thural.quietspace.domain.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static dev.thural.quietspace.notification.NotificationType.COMMENT;
+import static dev.thural.quietspace.domain.notification.NotificationType.COMMENT;
 
 @RestController
 @RequiredArgsConstructor

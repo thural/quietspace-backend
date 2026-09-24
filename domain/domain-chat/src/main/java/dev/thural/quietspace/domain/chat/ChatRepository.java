@@ -1,6 +1,6 @@
-package dev.thural.quietspace.chat;
+package dev.thural.quietspace.domain.chat;
 
-import dev.thural.quietspace.user.User;
+import dev.thural.quietspace.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

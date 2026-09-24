@@ -1,16 +1,14 @@
-package dev.thural.quietspace.message.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.chat.Chat;
-import dev.thural.quietspace.message.Message;
-import dev.thural.quietspace.message.MessageService;
-import dev.thural.quietspace.message.dto.MessageRequest;
-import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.post.PostService;
-import dev.thural.quietspace.reaction.ReactionService;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.user.User;
+import dev.thural.quietspace.domain.chat.Chat;
+import dev.thural.quietspace.domain.message.Message;
+import dev.thural.quietspace.domain.message.MessageService;
+import dev.thural.quietspace.domain.message.dto.MessageRequest;
+import dev.thural.quietspace.domain.message.dto.MessageResponse;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -50,11 +48,7 @@ class MessageControllerSliceTest {
     @MockitoBean
     private MessageService messageService;
     @MockitoBean
-    private ReactionService reactionService;
-    @MockitoBean
-    PostService postService;
-    @MockitoBean
-    JwtService jwtService;
+    JwtTokenService jwtTokenService;
     @MockitoBean
     TokenRepository tokenRepository;
     @MockitoBean
@@ -69,7 +63,6 @@ class MessageControllerSliceTest {
     }
 
     ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
-    ArgumentCaptor<MessageRequest> messageRequestArgumentCaptor = ArgumentCaptor.forClass(MessageRequest.class);
 
     private MessageRequest messageRequest;
     private MessageResponse messageResponse;

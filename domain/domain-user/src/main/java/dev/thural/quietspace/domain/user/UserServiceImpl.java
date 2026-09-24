@@ -1,17 +1,19 @@
-package dev.thural.quietspace.user;
+package dev.thural.quietspace.domain.user;
 
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.shared.enums.StatusType;
-import dev.thural.quietspace.shared.exception.CustomErrorException;
-import dev.thural.quietspace.shared.exception.UnauthorizedException;
-import dev.thural.quietspace.shared.exception.UserNotFoundException;
-import dev.thural.quietspace.shared.util.PageUtils;
-import dev.thural.quietspace.shared.util.PagingProvider;
-import dev.thural.quietspace.user.dto.ProfileSettingsRequest;
-import dev.thural.quietspace.user.dto.ProfileSettingsResponse;
-import dev.thural.quietspace.user.dto.UserRequest;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.core.shared.event.TransactionalEventPublisher;
+import dev.thural.quietspace.core.shared.event.UserFollowedEvent;
+import dev.thural.quietspace.core.shared.enums.StatusType;
+import dev.thural.quietspace.core.shared.exception.CustomErrorException;
+import dev.thural.quietspace.core.shared.exception.UnauthorizedException;
+import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
+import dev.thural.quietspace.core.shared.util.PageUtils;
+import dev.thural.quietspace.core.shared.util.PagingProvider;
+import dev.thural.quietspace.domain.user.dto.ProfileSettingsRequest;
+import dev.thural.quietspace.domain.user.dto.ProfileSettingsResponse;
+import dev.thural.quietspace.domain.user.dto.UserRequest;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -29,10 +31,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.enums.StatusType.OFFLINE;
-import static dev.thural.quietspace.shared.enums.StatusType.ONLINE;
-import static dev.thural.quietspace.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.shared.enums.StatusType.OFFLINE;
+import static dev.thural.quietspace.core.shared.enums.StatusType.ONLINE;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
 
 @Slf4j
 @Service
@@ -43,6 +45,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserQuery userQuery;
     private final PhotoService photoService;
+    private final TransactionalEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -130,8 +133,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsersFromIdList(List<UUID> userIds) {
+        // NOTE: mutable ArrayList — callers attach the result to entities
+        // (e.g. Chat members) and mutate it later within a persistence context.
         return userIds.stream().map(userId -> userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new)).toList();
+                .orElseThrow(UserNotFoundException::new))
+                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
     }
 
     @Override
@@ -209,6 +215,7 @@ public class UserServiceImpl implements UserService {
         } else {
             signedUser.follow(followedUser);
         }
+        eventPublisher.publish(new UserFollowedEvent(signedUser.getId(), followedUserId));
     }
 
     @Override
@@ -219,6 +226,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomErrorException(HttpStatus.BAD_REQUEST, "cannot follow yourself");
         User target = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         signedUser.follow(target);
+        eventPublisher.publish(new UserFollowedEvent(signedUser.getId(), userId));
     }
 
     @Override

@@ -1,14 +1,9 @@
-package dev.thural.quietspace.user;
+package dev.thural.quietspace.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import dev.thural.quietspace.chat.Chat;
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.message.Message;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.shared.entity.BaseEntity;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.shared.enums.StatusType;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.core.shared.enums.StatusType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -46,44 +41,22 @@ public class User extends BaseEntity implements UserDetails, Principal {
     @JsonIgnore
     private String password;
 
-    @JsonIgnore
-    private UUID photoId;
+    @JsonIgnore    private UUID photoId;
 
     @JsonIgnore
     @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
             name = "user_saved_posts",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id")
+            joinColumns = @JoinColumn(name = "user_id")
     )
-    private List<Post> savedPosts = new ArrayList<>();
+    @Column(name = "post_id", columnDefinition = "varchar(36)")
+    private List<UUID> savedPostIds = new ArrayList<>();
 
     @JsonIgnore
     @Builder.Default
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     ProfileSettings profileSettings = new ProfileSettings();
-
-    @JsonIgnore
-    @Builder.Default
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Post> posts = new ArrayList<>();
-
-    @Builder.Default
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Comment> comments = new ArrayList<>();
-
-    @Builder.Default
-    @JsonManagedReference
-    @ManyToMany(mappedBy = "users")
-    private List<Chat> chats = new ArrayList<>();
-
-    @Builder.Default
-    @JsonManagedReference
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Message> messages = new ArrayList<>();
 
 
     @JsonIgnore

@@ -1,21 +1,21 @@
-package dev.thural.quietspace.auth;
+package dev.thural.quietspace.domain.auth;
 
-import dev.thural.quietspace.auth.dto.AuthRequest;
-import dev.thural.quietspace.auth.dto.AuthResponse;
-import dev.thural.quietspace.auth.dto.RegistrationRequest;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.Token;
-import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.shared.exception.ActivationTokenException;
-import dev.thural.quietspace.shared.event.EmailEvent;
-import dev.thural.quietspace.shared.exception.UserNotFoundException;
-import dev.thural.quietspace.shared.service.SecurityAuditService;
-import dev.thural.quietspace.shared.service.impl.EmailEventPublisher;
+import dev.thural.quietspace.domain.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.auth.dto.AuthResponse;
+import dev.thural.quietspace.domain.auth.dto.RegistrationRequest;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.Token;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.core.shared.exception.ActivationTokenException;
+import dev.thural.quietspace.core.shared.event.EmailEvent;
+import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
+import dev.thural.quietspace.core.shared.service.SecurityAuditService;
+import dev.thural.quietspace.core.shared.service.impl.EmailEventPublisher;
 import io.micrometer.core.instrument.MeterRegistry;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +54,7 @@ class AuthServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private JwtService jwtService;
+    private JwtTokenService jwtTokenService;
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock
@@ -146,8 +146,8 @@ class AuthServiceTest {
         when(authentication.getPrincipal()).thenReturn(user);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
-        when(jwtService.generateToken(any(), any(User.class))).thenReturn("access-token");
-        when(jwtService.generateRefreshToken(any(), any(User.class))).thenReturn("refresh-token");
+        when(jwtTokenService.generateToken(any(), any(User.class))).thenReturn("access-token");
+        when(jwtTokenService.generateRefreshToken(any(), any(User.class))).thenReturn("refresh-token");
 
         AuthResponse response = authService.authenticate(authRequest);
 
@@ -171,7 +171,7 @@ class AuthServiceTest {
         Token validToken = Token.builder()
                 .token("valid-code")
                 .expireDate(OffsetDateTime.now().plusMinutes(15))
-                .user(user)
+                .userId(userId)
                 .build();
         when(tokenRepository.findByToken("valid-code")).thenReturn(Optional.of(validToken));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -184,9 +184,10 @@ class AuthServiceTest {
         Token expiredToken = Token.builder()
                 .token("expired-code")
                 .expireDate(OffsetDateTime.now().minusMinutes(5))
-                .user(user)
+                .userId(userId)
                 .build();
         when(tokenRepository.findByToken("expired-code")).thenReturn(Optional.of(expiredToken));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         assertThatThrownBy(() -> authService.activateAccount("expired-code"))
                 .isInstanceOf(RuntimeException.class)
@@ -240,9 +241,9 @@ class AuthServiceTest {
 
     @Test
     void refreshToken_givenValidToken_shouldReturnNewAccessToken() {
-        when(jwtService.extractUsername("valid-refresh-token")).thenReturn("testuser");
-        when(jwtService.isTokenValid("valid-refresh-token", user)).thenReturn(true);
-        when(jwtService.generateToken(any(), any(User.class))).thenReturn("new-access-token");
+        when(jwtTokenService.extractUsername("valid-refresh-token")).thenReturn("testuser");
+        when(jwtTokenService.isTokenValid("valid-refresh-token", user)).thenReturn(true);
+        when(jwtTokenService.generateToken(any(), any(User.class))).thenReturn("new-access-token");
         when(tokenRepository.existsByToken("valid-refresh-token")).thenReturn(false);
         when(userRepository.findUserByUsername("testuser")).thenReturn(Optional.of(user));
 

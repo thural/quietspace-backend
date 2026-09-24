@@ -1,8 +1,8 @@
-package dev.thural.quietspace.notification;
+package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.notification.dto.NotificationResponse;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.notification.NotificationType;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.domain.notification.NotificationType;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;

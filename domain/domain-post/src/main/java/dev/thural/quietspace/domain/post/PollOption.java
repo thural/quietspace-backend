@@ -1,7 +1,7 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import dev.thural.quietspace.shared.entity.BaseEntity;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PollOption extends BaseEntity {
+public class PollOption extends BaseEntity implements Serializable {
 
     @NotNull
     @ManyToOne

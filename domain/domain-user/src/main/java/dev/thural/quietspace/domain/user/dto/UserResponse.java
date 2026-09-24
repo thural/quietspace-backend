@@ -1,8 +1,8 @@
-package dev.thural.quietspace.user.dto;
+package dev.thural.quietspace.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.shared.model.BaseResponse;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
+import dev.thural.quietspace.core.shared.model.BaseResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

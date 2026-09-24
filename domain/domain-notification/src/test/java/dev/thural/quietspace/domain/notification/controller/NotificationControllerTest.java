@@ -1,11 +1,11 @@
-package dev.thural.quietspace.notification.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.notification.NotificationService;
-import dev.thural.quietspace.notification.dto.NotificationResponse;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.notification.NotificationType;
+import dev.thural.quietspace.domain.notification.NotificationService;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.domain.notification.NotificationType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -44,7 +44,7 @@ class NotificationControllerTest {
     @MockitoBean
     TokenRepository tokenRepository;
     @MockitoBean
-    JwtService jwtService;
+    JwtTokenService jwtTokenService;
     @MockitoBean
     UserDetailsService userDetailsService;
 

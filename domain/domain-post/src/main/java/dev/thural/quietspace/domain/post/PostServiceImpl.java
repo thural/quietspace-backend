@@ -1,14 +1,14 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.photo.Photo;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.post.dto.PostRequest;
-import dev.thural.quietspace.post.dto.PostResponse;
-import dev.thural.quietspace.post.dto.RepostRequest;
-import dev.thural.quietspace.post.dto.VoteRequest;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.photo.Photo;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.post.dto.PostRequest;
+import dev.thural.quietspace.domain.post.dto.PostResponse;
+import dev.thural.quietspace.domain.post.dto.RepostRequest;
+import dev.thural.quietspace.domain.post.dto.VoteRequest;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -20,11 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class PostServiceImpl implements PostService {
     private final UserService userService;
     private final PostMapper postMapper;
 
-    public final String AUTHOR_MISMATCH_MESSAGE = "post author mismatch with current user";
+    public static final String AUTHOR_MISMATCH_MESSAGE = "post author mismatch with current user";
 
     @Override
     public Page<PostResponse> getAllPosts(Integer pageNumber, Integer pageSize) {
@@ -151,9 +152,12 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public Page<PostResponse> getSavedPostsByUser(Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, null);
-        UUID userId = userService.getSignedUser().getId();
+        List<UUID> savedIds = userService.getSignedUser().getSavedPostIds();
+        if (savedIds == null || savedIds.isEmpty()) {
+            return Page.empty(pageRequest);
+        }
         Specification<Post> specification = postSpecifications.visibleToUser()
-                .and(postSpecifications.savedByUser(userId));
+                .and(postSpecifications.savedWithIds(savedIds));
         return postRepository.findAll(specification, pageRequest)
                 .map(postMapper::postEntityToResponse);
     }
@@ -161,15 +165,18 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void savePostForUser(UUID postId) {
-        Post foundPost = findPostEntityById(postId);
-        foundPost.saveBy(userService.getSignedUser());
+        findPostEntityById(postId);
+        List<UUID> savedIds = userService.getSignedUser().getSavedPostIds();
+        if (!savedIds.contains(postId)) {
+            savedIds.add(postId);
+        }
     }
 
     @Override
     @Transactional
     public void unsavePostForUser(UUID postId) {
-        Post foundPost = findPostEntityById(postId);
-        foundPost.unsaveBy(userService.getSignedUser());
+        findPostEntityById(postId);
+        userService.getSignedUser().getSavedPostIds().remove(postId);
     }
 
     @Override

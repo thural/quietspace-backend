@@ -1,13 +1,13 @@
-package dev.thural.quietspace.reaction;
+package dev.thural.quietspace.domain.reaction;
 
-import dev.thural.quietspace.reaction.Reaction;
-import dev.thural.quietspace.reaction.ReactionMapper;
-import dev.thural.quietspace.reaction.dto.ReactionRequest;
-import dev.thural.quietspace.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.reaction.Reaction;
+import dev.thural.quietspace.domain.reaction.ReactionMapper;
+import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
+import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

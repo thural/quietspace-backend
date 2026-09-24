@@ -1,9 +1,9 @@
-package dev.thural.quietspace.notification.controller;
+package dev.thural.quietspace.domain.controller;
 
-import dev.thural.quietspace.notification.NotificationService;
-import dev.thural.quietspace.notification.dto.NotificationResponse;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.notification.NotificationType;
+import dev.thural.quietspace.domain.notification.NotificationService;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.domain.notification.NotificationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -1,21 +1,15 @@
-package dev.thural.quietspace.comment.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.comment.CommentMapper;
-import dev.thural.quietspace.comment.CommentRepository;
-import dev.thural.quietspace.comment.CommentService;
-import dev.thural.quietspace.comment.dto.CommentRequest;
-import dev.thural.quietspace.comment.dto.CommentResponse;
-import dev.thural.quietspace.notification.NotificationService;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.reaction.ReactionService;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.comment.Comment;
+import dev.thural.quietspace.domain.comment.CommentService;
+import dev.thural.quietspace.domain.comment.dto.CommentRequest;
+import dev.thural.quietspace.domain.comment.dto.CommentResponse;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.domain.notification.NotificationService;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -53,21 +47,11 @@ class CommentControllerSliceTest {
     @MockitoBean
     CommentService commentService;
     @MockitoBean
-    CommentMapper commentMapper;
-    @MockitoBean
     NotificationService notificationService;
     @MockitoBean
-    UserService userService;
-    @MockitoBean
-    CommentRepository commentRepository;
-    @MockitoBean
-    PostRepository postRepository;
-    @MockitoBean
-    ReactionService reactionService;
-    @MockitoBean
-    JwtService jwtService;
-    @MockitoBean
     TokenRepository tokenRepository;
+    @MockitoBean
+    JwtTokenService jwtTokenService;
     @MockitoBean
     UserDetailsService userDetailsService;
 
@@ -85,7 +69,7 @@ class CommentControllerSliceTest {
     private Comment comment;
     private CommentResponse commentResponse;
     private CommentRequest commentRequest;
-    private Post post;
+    private UUID postId;
     private User user;
 
     @BeforeEach
@@ -99,21 +83,17 @@ class CommentControllerSliceTest {
                 .password("pAsSword")
                 .build();
 
-        this.post = Post.builder()
-                .id(UUID.randomUUID())
-                .user(user)
-                .text("sample text")
-                .build();
+        this.postId = UUID.randomUUID();
 
         this.comment = Comment.builder()
                 .id(UUID.randomUUID())
                 .text("sample text")
-                .post(post)
+                .postId(postId)
                 .user(user)
                 .build();
 
         this.commentRequest = CommentRequest.builder()
-                .postId(post.getId())
+                .postId(postId)
                 .text("sample text")
                 .userId(user.getId())
                 .build();
@@ -123,20 +103,20 @@ class CommentControllerSliceTest {
                 .text(comment.getText())
                 .username(comment.getUser().getUsername())
                 .userId(user.getId())
-                .postId(post.getId())
+                .postId(postId)
                 .build();
     }
 
     @Test
     void getCommentsByPostId() throws Exception {
 
-        mockMvc.perform(get(CommentController.COMMENT_PATH + "/post/" + post.getId())
+        mockMvc.perform(get(CommentController.COMMENT_PATH + "/post/" + postId)
                         .param("page-number", "1")
                         .param("page-size", "10")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(commentService, times(1)).getCommentsByPostId(post.getId(), 1, 10);
+        verify(commentService, times(1)).getCommentsByPostId(postId, 1, 10);
     }
 
     @Test
@@ -220,7 +200,6 @@ class CommentControllerSliceTest {
 
     @Test
     void patchComment() throws Exception {
-        ArgumentCaptor<CommentRequest> commentRequestCaptor = ArgumentCaptor.forClass(CommentRequest.class);
         when(commentService.patchComment(any(UUID.class), any(CommentRequest.class))).thenReturn(commentResponse);
 
         mockMvc.perform(patch(CommentController.COMMENT_PATH + "/" + comment.getId())

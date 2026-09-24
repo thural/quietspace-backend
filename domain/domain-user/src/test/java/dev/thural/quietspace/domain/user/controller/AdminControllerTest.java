@@ -1,9 +1,7 @@
-package dev.thural.quietspace.user.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -12,6 +10,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,7 +39,7 @@ class AdminControllerTest {
     @MockitoBean
     TokenRepository tokenRepository;
     @MockitoBean
-    JwtService jwtService;
+    JwtTokenService jwtTokenService;
     @MockitoBean
     UserDetailsService userDetailsService;
 

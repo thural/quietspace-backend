@@ -1,8 +1,8 @@
-package dev.thural.quietspace.comment.dto;
+package dev.thural.quietspace.domain.comment.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.thural.quietspace.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.shared.model.BaseResponse;
+import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
+import dev.thural.quietspace.core.shared.model.BaseResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

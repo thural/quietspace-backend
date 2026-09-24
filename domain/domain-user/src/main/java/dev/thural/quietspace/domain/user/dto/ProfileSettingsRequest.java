@@ -1,4 +1,4 @@
-package dev.thural.quietspace.user.dto;
+package dev.thural.quietspace.domain.user.dto;
 
 import lombok.*;
 

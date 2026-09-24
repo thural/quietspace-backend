@@ -1,17 +1,12 @@
-package dev.thural.quietspace.notification;
+package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.comment.CommentRepository;
-import dev.thural.quietspace.notification.dto.NotificationResponse;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
-import dev.thural.quietspace.shared.event.*;
-import dev.thural.quietspace.shared.exception.UserNotFoundException;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
-import dev.thural.quietspace.websocket.event.message.NotificationEvent;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
+import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
+import dev.thural.quietspace.core.shared.event.*;
+import dev.thural.quietspace.core.messaging.event.message.NotificationEvent;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static dev.thural.quietspace.websocket.event.EventType.SEEN_NOTIFICATION;
-import static dev.thural.quietspace.notification.NotificationType.COMMENT_REACTION;
-import static dev.thural.quietspace.notification.NotificationType.POST_REACTION;
-import static dev.thural.quietspace.websocket.constant.WebSocketPaths.*;
+import static dev.thural.quietspace.core.messaging.event.EventType.SEEN_NOTIFICATION;
+import static dev.thural.quietspace.domain.notification.NotificationType.COMMENT_REACTION;
+import static dev.thural.quietspace.domain.notification.NotificationType.POST_REACTION;
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.*;
 
 @Slf4j
 @Component
@@ -35,9 +30,8 @@ public class NotificationEventListener {
 
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
-    private final UserService userService;
-    private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final NotificationCommentPort commentPort;
+    private final NotificationPostPort postPort;
     private final SimpMessagingTemplate template;
     private final ProcessedEventRepository processedEventRepository;
 
@@ -207,10 +201,10 @@ public class NotificationEventListener {
     }
 
     private UUID getUserIdByPostId(UUID postId) {
-        return postRepository.findById(postId).map(Post::getUser).map(User::getId).orElseThrow();
+        return postPort.findPostOwnerId(postId);
     }
 
     private UUID getUserIdByCommentId(UUID commentId) {
-        return commentRepository.findById(commentId).map(Comment::getUser).map(User::getId).orElseThrow();
+        return commentPort.findCommentOwnerId(commentId);
     }
 }

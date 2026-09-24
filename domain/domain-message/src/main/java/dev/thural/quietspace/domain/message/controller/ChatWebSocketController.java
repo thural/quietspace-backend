@@ -1,12 +1,12 @@
-package dev.thural.quietspace.chat.controller;
+package dev.thural.quietspace.domain.controller;
 
-import dev.thural.quietspace.chat.ChatService;
-import dev.thural.quietspace.chat.dto.TypingStatus;
-import dev.thural.quietspace.message.MessageService;
-import dev.thural.quietspace.message.dto.MessageRequest;
-import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.websocket.event.EventType;
-import dev.thural.quietspace.websocket.event.message.ChatEvent;
+import dev.thural.quietspace.domain.chat.ChatService;
+import dev.thural.quietspace.domain.chat.dto.TypingStatus;
+import dev.thural.quietspace.domain.message.MessageService;
+import dev.thural.quietspace.domain.message.dto.MessageRequest;
+import dev.thural.quietspace.domain.message.dto.MessageResponse;
+import dev.thural.quietspace.core.messaging.event.EventType;
+import dev.thural.quietspace.core.messaging.event.message.ChatEvent;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +19,10 @@ import org.springframework.stereotype.Controller;
 
 import java.util.UUID;
 
-import static dev.thural.quietspace.websocket.event.EventType.*;
-import static dev.thural.quietspace.websocket.constant.WebSocketPaths.*;
-import static dev.thural.quietspace.websocket.constant.WebSocketPaths.DELETE_MESSAGE;
-import static dev.thural.quietspace.websocket.constant.WebSocketPaths.SEEN_MESSAGE;
+import static dev.thural.quietspace.core.messaging.event.EventType.*;
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.*;
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.DELETE_MESSAGE;
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.SEEN_MESSAGE;
 
 @Slf4j
 @Controller

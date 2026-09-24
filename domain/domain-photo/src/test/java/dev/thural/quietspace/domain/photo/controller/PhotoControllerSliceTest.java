@@ -1,10 +1,8 @@
-package dev.thural.quietspace.photo.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -12,7 +10,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -38,12 +35,6 @@ class PhotoControllerSliceTest {
 
     @MockitoBean
     PhotoService photoService;
-    @MockitoBean
-    TokenRepository tokenRepository;
-    @MockitoBean
-    JwtService jwtService;
-    @MockitoBean
-    UserDetailsService userDetailsService;
 
     @TestConfiguration
     static class TestConfig {
@@ -58,7 +49,7 @@ class PhotoControllerSliceTest {
         when(photoService.uploadProfilePhoto(any())).thenReturn("photo-name.jpg");
 
         MockMultipartFile file = new MockMultipartFile(
-                "image", "photo.jpg", "image/jpeg", "photo-content".getBytes()
+                "image", "photo.jpg", "image/jpeg", "photo-content".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
 
         mockMvc.perform(multipart("/api/v1/photos/profile")
@@ -94,7 +85,7 @@ class PhotoControllerSliceTest {
         when(photoService.uploadPhoto(any())).thenReturn(photoResponse);
 
         MockMultipartFile file = new MockMultipartFile(
-                "image", "photo.jpg", "image/jpeg", "photo-content".getBytes()
+                "image", "photo.jpg", "image/jpeg", "photo-content".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
 
         mockMvc.perform(multipart("/api/v1/photos")

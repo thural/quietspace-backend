@@ -1,7 +1,7 @@
-package dev.thural.quietspace.photo;
+package dev.thural.quietspace.domain.photo;
 
-import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.reaction.EntityType;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;

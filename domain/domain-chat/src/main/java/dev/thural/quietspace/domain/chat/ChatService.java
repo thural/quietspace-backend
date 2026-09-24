@@ -1,9 +1,9 @@
-package dev.thural.quietspace.chat;
+package dev.thural.quietspace.domain.chat;
 
-import dev.thural.quietspace.chat.dto.ChatResponse;
-import dev.thural.quietspace.chat.dto.CreateChatRequest;
-import dev.thural.quietspace.chat.dto.UpdateChatRequest;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.domain.chat.dto.ChatResponse;
+import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
+import dev.thural.quietspace.domain.chat.dto.UpdateChatRequest;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 
 import java.util.List;
 import java.util.UUID;

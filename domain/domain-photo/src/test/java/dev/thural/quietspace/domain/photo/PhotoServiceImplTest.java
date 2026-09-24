@@ -1,15 +1,14 @@
-package dev.thural.quietspace.photo;
+package dev.thural.quietspace.domain.photo;
 
-import dev.thural.quietspace.photo.Photo;
-import dev.thural.quietspace.photo.PhotoRepository;
-import dev.thural.quietspace.photo.PhotoServiceImpl;
-import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.shared.exception.ImageUploadException;
-import dev.thural.quietspace.shared.exception.UnsupportedImageTypeException;
-import dev.thural.quietspace.shared.service.CommonService;
-import dev.thural.quietspace.shared.util.ImageCompressionUtil;
-import dev.thural.quietspace.user.User;
+import dev.thural.quietspace.domain.photo.Photo;
+import dev.thural.quietspace.domain.photo.PhotoRepository;
+import dev.thural.quietspace.domain.photo.PhotoServiceImpl;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.exception.ImageUploadException;
+import dev.thural.quietspace.core.shared.exception.UnsupportedImageTypeException;
+import dev.thural.quietspace.core.shared.ports.UserProfilePort;
+import dev.thural.quietspace.core.shared.util.ImageCompressionUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ import static org.mockito.Mockito.*;
 class PhotoServiceImplTest {
 
     @Mock
-    private CommonService commonService;
+    private UserProfilePort userProfile;
     @Mock
     private PhotoRepository photoRepository;
     @Mock
@@ -44,7 +43,6 @@ class PhotoServiceImplTest {
     @InjectMocks
     private PhotoServiceImpl photoService;
 
-    private User signedUser;
     private UUID userId;
     private Photo photo;
     private byte[] compressedData;
@@ -52,12 +50,8 @@ class PhotoServiceImplTest {
     @BeforeEach
     void setUp() {
         userId = UUID.randomUUID();
-        signedUser = User.builder()
-                .id(userId)
-                .username("testuser")
-                .build();
 
-        compressedData = "compressed-image-data".getBytes();
+        compressedData = "compressed-image-data".getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
         photo = Photo.builder()
                 .id(UUID.randomUUID())
@@ -73,9 +67,9 @@ class PhotoServiceImplTest {
     @Test
     void uploadProfilePhoto_givenValidJpeg_shouldReturnPhotoName() throws IOException {
         MockMultipartFile file = new MockMultipartFile(
-                "image", "photo.jpg", "image/jpeg", "original-image-data".getBytes()
+                "image", "photo.jpg", "image/jpeg", "original-image-data".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
-        when(commonService.getSignedUser()).thenReturn(signedUser);
+        when(userProfile.currentUserId()).thenReturn(userId);
         when(imageCompressionUtil.compressImage(any(InputStream.class), anyInt())).thenReturn(compressedData);
         when(photoRepository.save(any(Photo.class))).thenReturn(photo);
 
@@ -95,7 +89,7 @@ class PhotoServiceImplTest {
         MockMultipartFile file = new MockMultipartFile(
                 "image", "large.jpg", "image/jpeg", new byte[3 * 1024 * 1024]
         );
-        when(commonService.getSignedUser()).thenReturn(signedUser);
+        when(userProfile.currentUserId()).thenReturn(userId);
 
         assertThatThrownBy(() -> photoService.uploadProfilePhoto(file))
                 .isInstanceOf(ImageUploadException.class)
@@ -105,9 +99,9 @@ class PhotoServiceImplTest {
     @Test
     void uploadProfilePhoto_givenUnsupportedContentType_shouldThrow() {
         MockMultipartFile file = new MockMultipartFile(
-                "image", "file.txt", "text/plain", "data".getBytes()
+                "image", "file.txt", "text/plain", "data".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
-        when(commonService.getSignedUser()).thenReturn(signedUser);
+        when(userProfile.currentUserId()).thenReturn(userId);
 
         assertThatThrownBy(() -> photoService.uploadProfilePhoto(file))
                 .isInstanceOf(UnsupportedImageTypeException.class)
@@ -117,9 +111,9 @@ class PhotoServiceImplTest {
     @Test
     void uploadProfilePhoto_givenNullContentType_shouldThrow() {
         MockMultipartFile file = new MockMultipartFile(
-                "image", "file.dat", null, "data".getBytes()
+                "image", "file.dat", null, "data".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
-        when(commonService.getSignedUser()).thenReturn(signedUser);
+        when(userProfile.currentUserId()).thenReturn(userId);
 
         assertThatThrownBy(() -> photoService.uploadProfilePhoto(file))
                 .isInstanceOf(UnsupportedImageTypeException.class)
@@ -129,9 +123,9 @@ class PhotoServiceImplTest {
     @Test
     void uploadPhoto_shouldPersistWithNullEntityType() throws IOException {
         MockMultipartFile file = new MockMultipartFile(
-                "image", "photo.jpg", "image/jpeg", "original-image-data".getBytes()
+                "image", "photo.jpg", "image/jpeg", "original-image-data".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
-        when(commonService.getSignedUser()).thenReturn(signedUser);
+        when(userProfile.currentUserId()).thenReturn(userId);
         when(imageCompressionUtil.compressImage(any(InputStream.class), anyInt())).thenReturn(compressedData);
         when(photoRepository.save(any(Photo.class))).thenReturn(photo);
 
@@ -149,9 +143,9 @@ class PhotoServiceImplTest {
     @Test
     void persistPhotoEntity_whenCompressionFails_shouldThrow() throws IOException {
         MockMultipartFile file = new MockMultipartFile(
-                "image", "photo.jpg", "image/jpeg", "data".getBytes()
+                "image", "photo.jpg", "image/jpeg", "data".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
-        when(commonService.getSignedUser()).thenReturn(signedUser);
+        when(userProfile.currentUserId()).thenReturn(userId);
         when(imageCompressionUtil.compressImage(any(InputStream.class), anyInt())).thenThrow(new IOException("compression failed"));
 
         assertThatThrownBy(() -> photoService.persistPhotoEntity(file, userId, EntityType.USER))

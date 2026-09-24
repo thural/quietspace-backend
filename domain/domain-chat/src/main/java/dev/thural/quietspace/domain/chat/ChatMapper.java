@@ -1,13 +1,14 @@
-package dev.thural.quietspace.chat;
+package dev.thural.quietspace.domain.chat;
 
-import dev.thural.quietspace.chat.dto.ChatResponse;
-import dev.thural.quietspace.chat.dto.CreateChatRequest;
-import dev.thural.quietspace.message.MessageService;
-import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserMapper;
-import dev.thural.quietspace.user.UserService;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.domain.chat.Chat;
+import dev.thural.quietspace.domain.chat.dto.ChatMessageView;
+import dev.thural.quietspace.domain.chat.dto.ChatResponse;
+import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
+import dev.thural.quietspace.domain.chat.port.ChatMessagePort;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserMapper;
+import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class ChatMapper {
     private final UserMapper userMapper;
     private final UserService userService;
-    private final MessageService messageService;
+    private final ChatMessagePort messagePort;
 
     public Chat chatRequestToEntity(CreateChatRequest chatRequest) {
         return Chat.builder()
@@ -38,8 +39,8 @@ public class ChatMapper {
                 .build();
     }
 
-    private MessageResponse getLastMessage(Chat chat) {
-        return messageService.getLastMessageByChat(chat).orElse(null);
+    private ChatMessageView getLastMessage(Chat chat) {
+        return messagePort.findLastMessage(chat.getId()).orElse(null);
     }
 
     private List<UUID> getUserIdsFromChat(Chat chat) {

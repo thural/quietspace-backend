@@ -1,12 +1,12 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.post.dto.*;
-import dev.thural.quietspace.reaction.ReactionService;
-import dev.thural.quietspace.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
+import dev.thural.quietspace.domain.post.dto.*;
+import dev.thural.quietspace.domain.reaction.ReactionService;
+import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static dev.thural.quietspace.reaction.ReactionType.DISLIKE;
-import static dev.thural.quietspace.reaction.ReactionType.LIKE;
+import static dev.thural.quietspace.core.shared.enums.ReactionType.DISLIKE;
+import static dev.thural.quietspace.core.shared.enums.ReactionType.LIKE;
 
 @Slf4j
 @Component

@@ -1,15 +1,15 @@
-package dev.thural.quietspace.photo;
+package dev.thural.quietspace.domain.photo;
 
-import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.shared.exception.ImageUploadException;
-import dev.thural.quietspace.shared.exception.UnsupportedImageTypeException;
-import dev.thural.quietspace.shared.service.CommonService;
-import dev.thural.quietspace.shared.util.ImageCompressionUtil;
-import dev.thural.quietspace.user.User;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.ports.UserProfilePort;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
+import dev.thural.quietspace.core.shared.exception.ImageUploadException;
+import dev.thural.quietspace.core.shared.exception.UnsupportedImageTypeException;
+import dev.thural.quietspace.core.shared.util.ImageCompressionUtil;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,12 +22,20 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
 
-    private final CommonService commonService;
+    private final UserProfilePort userProfile;
     private final PhotoRepository photoRepository;
     private final ImageCompressionUtil imageCompressionUtil;
+
+    @Autowired
+    public PhotoServiceImpl(@Lazy UserProfilePort userProfile,
+                            PhotoRepository photoRepository,
+                            ImageCompressionUtil imageCompressionUtil) {
+        this.userProfile = userProfile;
+        this.photoRepository = photoRepository;
+        this.imageCompressionUtil = imageCompressionUtil;
+    }
 
     private static final List<String> SUPPORTED_CONTENT_TYPES = Arrays.asList(
             "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"
@@ -47,17 +55,17 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     @Transactional
     public String uploadProfilePhoto(MultipartFile file) {
-        User signedUser = commonService.getSignedUser();
-        Photo savedPhoto = persistPhotoEntity(file, signedUser.getId(), EntityType.USER);
-        signedUser.setPhotoId(savedPhoto.getId());
+        UUID userId = userProfile.currentUserId();
+        Photo savedPhoto = persistPhotoEntity(file, userId, EntityType.USER);
+        userProfile.setProfilePhoto(userId, savedPhoto.getId());
         return savedPhoto.getName();
     }
 
     @Override
     @Transactional
     public PhotoResponse uploadPhoto(MultipartFile file) {
-        User signedUser = commonService.getSignedUser();
-        Photo savedPhoto = persistPhotoEntity(file, signedUser.getId(), null);
+        UUID userId = userProfile.currentUserId();
+        Photo savedPhoto = persistPhotoEntity(file, userId, null);
         return PhotoResponse.builder()
                 .id(savedPhoto.getId())
                 .name(savedPhoto.getName())
@@ -73,7 +81,7 @@ public class PhotoServiceImpl implements PhotoService {
         validatePhotoDataElseThrow(file, contentType);
 
         try {
-            UUID signedUserId = commonService.getSignedUser().getId();
+            UUID signedUserId = userProfile.currentUserId();
             String uniqueFileName = generateUniqueFileName(contentType);
 
             byte[] compressedImage = imageCompressionUtil.compressImage(

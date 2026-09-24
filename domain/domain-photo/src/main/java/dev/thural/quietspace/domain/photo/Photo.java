@@ -1,7 +1,8 @@
-package dev.thural.quietspace.photo;
-import dev.thural.quietspace.shared.entity.BaseEntity;
+package dev.thural.quietspace.domain.photo;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
 
-import dev.thural.quietspace.reaction.EntityType;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotNull;
@@ -25,8 +26,6 @@ public class Photo extends BaseEntity {
     @Lob
     private byte[] data;
 
-    @NotNull
-    private UUID userId;
-    private UUID entityId;
+    @NotNull    private UUID userId;    private UUID entityId;
     private EntityType entityType;
 }

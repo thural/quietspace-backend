@@ -1,9 +1,7 @@
-package dev.thural.quietspace.notification;
+package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.notification.dto.NotificationResponse;
-import dev.thural.quietspace.shared.exception.UserNotFoundException;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
+import dev.thural.quietspace.domain.notification.port.NotificationUserPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -12,14 +10,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NotificationMapper {
 
-    private final UserRepository userRepository;
+    private final NotificationUserPort userPort;
 
     public NotificationResponse toResponse(Notification notification) {
-        User foundUser = userRepository.findById(notification.getActorId()).orElseThrow(UserNotFoundException::new);
+        // Validates the actor still exists, as before (throws when unknown).
+        userPort.findUsernameById(notification.getActorId());
 
         var response = new NotificationResponse();
         BeanUtils.copyProperties(notification, response);
-        response.setActorId(foundUser.getId());
+        response.setActorId(notification.getActorId());
         response.setType(notification.getNotificationType());
         return response;
     }

@@ -1,11 +1,11 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.shared.entity.BaseEntity;
-import dev.thural.quietspace.user.User;
+import dev.thural.quietspace.domain.comment.Comment;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
+import dev.thural.quietspace.domain.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,8 +35,7 @@ public class Post extends BaseEntity implements Serializable {
     @Length(min = 1, max = 999)
     private String text;
 
-    @JsonIgnore
-    private UUID photoId;
+    @JsonIgnore    private UUID photoId;
 
     @NotNull
     @ManyToOne
@@ -49,12 +47,9 @@ public class Post extends BaseEntity implements Serializable {
     private Poll poll;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
     private List<Comment> comments;
-
-    @ManyToMany(mappedBy = "savedPosts")
-    @Builder.Default
-    private List<User> savedByUsers = new ArrayList<>();
 
     // Domain methods for poll voting
     public void votePoll(UUID userId, String optionLabel) {
@@ -74,17 +69,6 @@ public class Post extends BaseEntity implements Serializable {
         }
         
         option.getVotes().add(userId);
-    }
-
-    // Domain methods for save/unsave
-    public void saveBy(User userEntity) {
-        if (!userEntity.getSavedPosts().contains(this)) {
-            userEntity.getSavedPosts().add(this);
-        }
-    }
-
-    public void unsaveBy(User userEntity) {
-        userEntity.getSavedPosts().remove(this);
     }
 
     // Factory method for repost

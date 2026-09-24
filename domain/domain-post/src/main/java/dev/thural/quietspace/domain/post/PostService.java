@@ -1,9 +1,9 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.post.dto.PostRequest;
-import dev.thural.quietspace.post.dto.PostResponse;
-import dev.thural.quietspace.post.dto.RepostRequest;
-import dev.thural.quietspace.post.dto.VoteRequest;
+import dev.thural.quietspace.domain.post.dto.PostRequest;
+import dev.thural.quietspace.domain.post.dto.PostResponse;
+import dev.thural.quietspace.domain.post.dto.RepostRequest;
+import dev.thural.quietspace.domain.post.dto.VoteRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;

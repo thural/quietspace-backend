@@ -1,18 +1,16 @@
-package dev.thural.quietspace.comment;
+package dev.thural.quietspace.domain.comment;
 
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.comment.CommentMapper;
-import dev.thural.quietspace.comment.CommentRepository;
-import dev.thural.quietspace.comment.dto.CommentRequest;
-import dev.thural.quietspace.comment.dto.CommentResponse;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.reaction.ReactionRepository;
-import dev.thural.quietspace.reaction.ReactionService;
-import dev.thural.quietspace.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.reaction.ReactionType;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.comment.Comment;
+import dev.thural.quietspace.domain.comment.CommentMapper;
+import dev.thural.quietspace.domain.comment.CommentRepository;
+import dev.thural.quietspace.domain.comment.dto.CommentRequest;
+import dev.thural.quietspace.domain.comment.dto.CommentResponse;
+import dev.thural.quietspace.domain.reaction.ReactionRepository;
+import dev.thural.quietspace.domain.reaction.ReactionService;
+import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,9 +32,6 @@ class CommentMapperTest {
     private UserRepository userRepository;
 
     @Mock
-    private PostRepository postRepository;
-
-    @Mock
     private CommentRepository commentRepository;
 
     @Mock
@@ -51,7 +46,6 @@ class CommentMapperTest {
     private CommentRequest commentRequest;
     private Comment comment;
     private User user;
-    private Post post;
     private ReactionResponse userReaction;
     private UUID userId;
     private UUID postId;
@@ -71,13 +65,6 @@ class CommentMapperTest {
                 .email("test@test.com")
                 .build();
 
-        post = Post.builder()
-                .id(postId)
-                .title("Test Post")
-                .text("Test content")
-                .user(user)
-                .build();
-
         commentRequest = CommentRequest.builder()
                 .userId(userId)
                 .postId(postId)
@@ -90,7 +77,7 @@ class CommentMapperTest {
                 .parentId(parentId)
                 .text("This is a test comment")
                 .user(user)
-                .post(post)
+                .postId(postId)
                 .createDate(OffsetDateTime.now())
                 .updateDate(OffsetDateTime.now())
                 .build();
@@ -105,7 +92,6 @@ class CommentMapperTest {
     void commentRequestToEntity_shouldConvertRequestToEntity() {
         // Given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
 
         // When
         Comment result = commentMapper.commentRequestToEntity(commentRequest);
@@ -115,10 +101,9 @@ class CommentMapperTest {
         assertThat(result.getParentId()).isEqualTo(commentRequest.getParentId());
         assertThat(result.getText()).isEqualTo(commentRequest.getText());
         assertThat(result.getUser()).isEqualTo(user);
-        assertThat(result.getPost()).isEqualTo(post);
+        assertThat(result.getPostId()).isEqualTo(postId);
 
         verify(userRepository).findById(userId);
-        verify(postRepository).findById(postId);
     }
 
     @Test
@@ -132,7 +117,6 @@ class CommentMapperTest {
                 .build();
         
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
 
         // When
         Comment result = commentMapper.commentRequestToEntity(requestWithoutParent);
@@ -142,17 +126,15 @@ class CommentMapperTest {
         assertThat(result.getParentId()).isNull();
         assertThat(result.getText()).isEqualTo(requestWithoutParent.getText());
         assertThat(result.getUser()).isEqualTo(user);
-        assertThat(result.getPost()).isEqualTo(post);
+        assertThat(result.getPostId()).isEqualTo(postId);
 
         verify(userRepository).findById(userId);
-        verify(postRepository).findById(postId);
     }
 
     @Test
     void commentRequestToEntity_shouldHandleNonExistentUser() {
         // Given
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
-        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
 
         // When
         Comment result = commentMapper.commentRequestToEntity(commentRequest);
@@ -160,17 +142,15 @@ class CommentMapperTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getUser()).isNull();
-        assertThat(result.getPost()).isEqualTo(post);
+        assertThat(result.getPostId()).isEqualTo(postId);
 
         verify(userRepository).findById(userId);
-        verify(postRepository).findById(postId);
     }
 
     @Test
-    void commentRequestToEntity_shouldHandleNonExistentPost() {
+    void commentRequestToEntity_shouldSetPostIdDirectly() {
         // Given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(postRepository.findById(postId)).thenReturn(Optional.empty());
 
         // When
         Comment result = commentMapper.commentRequestToEntity(commentRequest);
@@ -178,10 +158,9 @@ class CommentMapperTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getUser()).isEqualTo(user);
-        assertThat(result.getPost()).isNull();
+        assertThat(result.getPostId()).isEqualTo(postId);
 
         verify(userRepository).findById(userId);
-        verify(postRepository).findById(postId);
     }
 
     @Test
@@ -190,7 +169,7 @@ class CommentMapperTest {
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.of(userReaction));
         when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
                 .thenReturn(5);
-        when(commentRepository.countByParentIdAndPost(commentId, post)).thenReturn(3);
+        when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(3);
 
         // When
         CommentResponse result = commentMapper.commentEntityToResponse(comment);
@@ -199,7 +178,7 @@ class CommentMapperTest {
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(comment.getId());
         assertThat(result.getParentId()).isEqualTo(comment.getParentId());
-        assertThat(result.getPostId()).isEqualTo(post.getId());
+        assertThat(result.getPostId()).isEqualTo(postId);
         assertThat(result.getUserId()).isEqualTo(user.getId());
         assertThat(result.getUsername()).isEqualTo(user.getUsername());
         assertThat(result.getText()).isEqualTo(comment.getText());
@@ -211,7 +190,7 @@ class CommentMapperTest {
 
         verify(reactionService).getUserReactionByContentId(commentId);
         verify(reactionRepository).countByContentIdAndReactionType(commentId, ReactionType.LIKE);
-        verify(commentRepository).countByParentIdAndPost(commentId, post);
+        verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 
     @Test
@@ -220,7 +199,7 @@ class CommentMapperTest {
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.empty());
         when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
                 .thenReturn(0);
-        when(commentRepository.countByParentIdAndPost(commentId, post)).thenReturn(0);
+        when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(0);
 
         // When
         CommentResponse result = commentMapper.commentEntityToResponse(comment);
@@ -231,7 +210,7 @@ class CommentMapperTest {
 
         verify(reactionService).getUserReactionByContentId(commentId);
         verify(reactionRepository).countByContentIdAndReactionType(commentId, ReactionType.LIKE);
-        verify(commentRepository).countByParentIdAndPost(commentId, post);
+        verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 
     @Test
@@ -240,7 +219,7 @@ class CommentMapperTest {
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.empty());
         when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
                 .thenReturn(0);
-        when(commentRepository.countByParentIdAndPost(commentId, post)).thenReturn(0);
+        when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(0);
 
         // When
         CommentResponse result = commentMapper.commentEntityToResponse(comment);
@@ -251,7 +230,7 @@ class CommentMapperTest {
         assertThat(result.getReplyCount()).isEqualTo(0);
 
         verify(reactionRepository).countByContentIdAndReactionType(commentId, ReactionType.LIKE);
-        verify(commentRepository).countByParentIdAndPost(commentId, post);
+        verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 
     @Test
@@ -261,7 +240,7 @@ class CommentMapperTest {
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.empty());
         when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
                 .thenReturn(0);
-        when(commentRepository.countByParentIdAndPost(commentId, post)).thenReturn(0);
+        when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(0);
 
         // When
         CommentResponse result = commentMapper.commentEntityToResponse(comment);
@@ -270,7 +249,7 @@ class CommentMapperTest {
         assertThat(result).isNotNull();
         assertThat(result.getParentId()).isNull();
 
-        verify(commentRepository).countByParentIdAndPost(commentId, post);
+        verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 
     @Test
@@ -284,7 +263,7 @@ class CommentMapperTest {
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.of(dislikeReaction));
         when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
                 .thenReturn(2);
-        when(commentRepository.countByParentIdAndPost(commentId, post)).thenReturn(1);
+        when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(1);
 
         // When
         CommentResponse result = commentMapper.commentEntityToResponse(comment);
@@ -296,6 +275,6 @@ class CommentMapperTest {
 
         verify(reactionService).getUserReactionByContentId(commentId);
         verify(reactionRepository).countByContentIdAndReactionType(commentId, ReactionType.LIKE);
-        verify(commentRepository).countByParentIdAndPost(commentId, post);
+        verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 }

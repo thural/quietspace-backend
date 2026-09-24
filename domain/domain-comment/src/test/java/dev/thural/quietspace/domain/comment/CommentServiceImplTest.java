@@ -1,16 +1,15 @@
-package dev.thural.quietspace.comment;
+package dev.thural.quietspace.domain.comment;
 
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.comment.CommentMapper;
-import dev.thural.quietspace.comment.CommentRepository;
-import dev.thural.quietspace.comment.CommentServiceImpl;
-import dev.thural.quietspace.comment.dto.CommentRequest;
-import dev.thural.quietspace.comment.dto.CommentResponse;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.shared.util.PagingProvider;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.comment.Comment;
+import dev.thural.quietspace.domain.comment.CommentMapper;
+import dev.thural.quietspace.domain.comment.CommentRepository;
+import dev.thural.quietspace.domain.comment.CommentServiceImpl;
+import dev.thural.quietspace.domain.comment.dto.CommentRequest;
+import dev.thural.quietspace.domain.comment.dto.CommentResponse;
+import dev.thural.quietspace.domain.comment.port.CommentPostPort;
+import dev.thural.quietspace.core.shared.util.PagingProvider;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,8 +22,8 @@ import org.springframework.data.domain.PageRequest;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.util.PagingProvider.BY_CREATED_DATE_ASC;
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.BY_CREATED_DATE_ASC;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -38,21 +37,22 @@ class CommentServiceImplTest {
     @Mock
     private CommentRepository commentRepository;
     @Mock
-    private PostRepository postRepository;
+    private CommentPostPort postPort;
 
     @InjectMocks
     private CommentServiceImpl commentService;
 
     private UUID userId;
+    private UUID postId;
     private User user;
     private Comment comment;
     private CommentResponse commentResponse;
     private CommentRequest commentRequest;
-    private Post post;
 
     @BeforeEach
     void setUp() {
         this.userId = UUID.randomUUID();
+        this.postId = UUID.randomUUID();
 
         this.user = User.builder()
                 .id(userId)
@@ -61,30 +61,24 @@ class CommentServiceImplTest {
                 .password("pAsSword")
                 .build();
 
-        this.post = Post.builder()
-                .id(UUID.randomUUID())
-                .user(user)
-                .text("sample text")
-                .build();
-
         this.comment = Comment.builder()
                 .id(UUID.randomUUID())
                 .parentId(UUID.randomUUID())
                 .user(user)
-                .post(post)
+                .postId(postId)
                 .text("sample text")
                 .build();
 
         this.commentRequest = CommentRequest.builder()
                 .userId(user.getId())
                 .text("sample text")
-                .postId(post.getId())
+                .postId(postId)
                 .build();
 
         this.commentResponse = CommentResponse.builder()
                 .id(UUID.randomUUID())
                 .text("sample text")
-                .postId(post.getId())
+                .postId(postId)
                 .username(user.getUsername())
                 .userId(user.getId())
                 .build();
@@ -94,12 +88,12 @@ class CommentServiceImplTest {
     void getCommentsByPost_shouldReturnComments() {
         PageRequest pageRequest = PagingProvider.buildPageRequest(1, 50, BY_CREATED_DATE_ASC);
 
-        when(commentRepository.findAllByPostId(post.getId(), pageRequest)).thenReturn(Page.empty());
+        when(commentRepository.findAllByPostId(postId, pageRequest)).thenReturn(Page.empty());
 
-        Page<CommentResponse> commentPage = commentService.getCommentsByPostId(post.getId(), 1, 50);
+        Page<CommentResponse> commentPage = commentService.getCommentsByPostId(postId, 1, 50);
 
         assertThat(commentPage).isEqualTo(Page.empty());
-        verify(commentRepository, times(1)).findAllByPostId(post.getId(), pageRequest);
+        verify(commentRepository, times(1)).findAllByPostId(postId, pageRequest);
     }
 
     @Test
@@ -118,7 +112,7 @@ class CommentServiceImplTest {
     void createComment_shouldReturnComment() {
         when(userService.getSignedUser()).thenReturn(user);
         when(commentRepository.save(comment)).thenReturn(comment);
-        when(postRepository.findById(comment.getPost().getId())).thenReturn(Optional.of(post));
+        when(postPort.postExists(comment.getPostId())).thenReturn(true);
         when(commentMapper.commentRequestToEntity(commentRequest)).thenReturn(comment);
         when(commentMapper.commentEntityToResponse(comment)).thenReturn(commentResponse);
 
@@ -126,7 +120,7 @@ class CommentServiceImplTest {
 
         assertThat(savedComment).isEqualTo(commentResponse);
         verify(commentRepository, times(1)).save(comment);
-        verify(postRepository, times(1)).findById(comment.getPost().getId());
+        verify(postPort, times(1)).postExists(comment.getPostId());
         verify(commentMapper, times(1)).commentRequestToEntity(commentRequest);
     }
 
@@ -194,11 +188,11 @@ class CommentServiceImplTest {
 
     @Test
     void getLatestCommentByUserIdAndPostId_givenExistingComment_shouldReturnResponse() {
-        when(commentRepository.findLatestCommentByPostAndUserByUpdateDate(post.getId(), userId))
+        when(commentRepository.findLatestCommentByPostAndUserByUpdateDate(postId, userId))
                 .thenReturn(Optional.of(comment));
         when(commentMapper.commentEntityToResponse(comment)).thenReturn(commentResponse);
 
-        Optional<CommentResponse> result = commentService.getLatestCommentByUserIdAndPostId(userId, post.getId());
+        Optional<CommentResponse> result = commentService.getLatestCommentByUserIdAndPostId(userId, postId);
 
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(commentResponse);
@@ -206,10 +200,10 @@ class CommentServiceImplTest {
 
     @Test
     void getLatestCommentByUserIdAndPostId_givenNoComment_shouldReturnEmpty() {
-        when(commentRepository.findLatestCommentByPostAndUserByUpdateDate(post.getId(), userId))
+        when(commentRepository.findLatestCommentByPostAndUserByUpdateDate(postId, userId))
                 .thenReturn(Optional.empty());
 
-        Optional<CommentResponse> result = commentService.getLatestCommentByUserIdAndPostId(userId, post.getId());
+        Optional<CommentResponse> result = commentService.getLatestCommentByUserIdAndPostId(userId, postId);
 
         assertThat(result).isEmpty();
     }

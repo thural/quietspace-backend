@@ -1,12 +1,10 @@
-package dev.thural.quietspace.auth.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.auth.AuthService;
-import dev.thural.quietspace.auth.dto.AuthRequest;
-import dev.thural.quietspace.auth.dto.AuthResponse;
-import dev.thural.quietspace.auth.dto.RegistrationRequest;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
+import dev.thural.quietspace.domain.auth.AuthService;
+import dev.thural.quietspace.domain.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.auth.dto.AuthResponse;
+import dev.thural.quietspace.domain.auth.dto.RegistrationRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -14,6 +12,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -47,7 +47,7 @@ class AuthControllerSliceTest {
     @MockitoBean
     private TokenRepository tokenRepository;
     @MockitoBean
-    private JwtService jwtService;
+    private JwtTokenService jwtTokenService;
     @MockitoBean
     private UserDetailsService userDetailsService;
 

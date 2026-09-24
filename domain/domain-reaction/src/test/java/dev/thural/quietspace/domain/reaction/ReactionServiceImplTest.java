@@ -1,16 +1,16 @@
-package dev.thural.quietspace.reaction;
+package dev.thural.quietspace.domain.reaction;
 
-import dev.thural.quietspace.reaction.Reaction;
-import dev.thural.quietspace.reaction.ReactionMapper;
-import dev.thural.quietspace.reaction.ReactionRepository;
-import dev.thural.quietspace.reaction.ReactionServiceImpl;
-import dev.thural.quietspace.reaction.dto.ReactionRequest;
-import dev.thural.quietspace.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
-import dev.thural.quietspace.shared.util.PageUtils;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.reaction.Reaction;
+import dev.thural.quietspace.domain.reaction.ReactionMapper;
+import dev.thural.quietspace.domain.reaction.ReactionRepository;
+import dev.thural.quietspace.domain.reaction.ReactionServiceImpl;
+import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
+import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.core.shared.util.PageUtils;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 

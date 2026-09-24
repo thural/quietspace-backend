@@ -1,7 +1,7 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import dev.thural.quietspace.shared.entity.BaseEntity;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Poll extends BaseEntity {
+public class Poll extends BaseEntity implements Serializable {
 
     private OffsetDateTime dueDate;
 

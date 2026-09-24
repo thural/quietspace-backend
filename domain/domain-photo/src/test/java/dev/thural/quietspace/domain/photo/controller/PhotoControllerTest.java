@@ -1,8 +1,8 @@
-package dev.thural.quietspace.photo.controller;
+package dev.thural.quietspace.domain.controller;
 
-import dev.thural.quietspace.photo.PhotoService;
-import dev.thural.quietspace.photo.dto.PhotoResponse;
-import dev.thural.quietspace.shared.exception.GlobalExceptionHandler;
+import dev.thural.quietspace.domain.photo.PhotoService;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
+import dev.thural.quietspace.core.shared.exception.GlobalExceptionHandler;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class PhotoControllerTest {
         when(photoService.uploadProfilePhoto(any())).thenReturn("photo-name.jpg");
 
         MockMultipartFile file = new MockMultipartFile(
-                "image", "photo.jpg", "image/jpeg", "data".getBytes()
+                "image", "photo.jpg", "image/jpeg", "data".getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
 
         mockMvc.perform(multipart("/api/v1/photos/profile")
@@ -58,14 +58,14 @@ class PhotoControllerTest {
         PhotoResponse photoResponse = PhotoResponse.builder()
                 .name("photo.jpg")
                 .type("image/jpeg")
-                .data("image-bytes".getBytes())
+                .data("image-bytes".getBytes(java.nio.charset.StandardCharsets.UTF_8))
                 .build();
         when(photoService.getPhotoByName("photo.jpg")).thenReturn(photoResponse);
 
         mockMvc.perform(get("/api/v1/photos/photo.jpg"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "image/jpeg"))
-                .andExpect(content().bytes("image-bytes".getBytes()));
+                .andExpect(content().bytes("image-bytes".getBytes(java.nio.charset.StandardCharsets.UTF_8)));
     }
 
     @Test

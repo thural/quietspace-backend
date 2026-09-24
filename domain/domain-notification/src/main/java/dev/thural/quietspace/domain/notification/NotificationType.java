@@ -1,4 +1,4 @@
-package dev.thural.quietspace.notification;
+package dev.thural.quietspace.domain.notification;
 
 import lombok.Getter;
 

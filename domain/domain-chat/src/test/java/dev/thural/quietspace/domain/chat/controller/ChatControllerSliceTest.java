@@ -1,24 +1,18 @@
-package dev.thural.quietspace.chat.controller;
+package dev.thural.quietspace.domain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.chat.Chat;
-import dev.thural.quietspace.chat.ChatService;
-import dev.thural.quietspace.chat.dto.ChatResponse;
-import dev.thural.quietspace.chat.dto.CreateChatRequest;
-import dev.thural.quietspace.chat.dto.UpdateChatRequest;
-import dev.thural.quietspace.message.Message;
-import dev.thural.quietspace.message.MessageRepository;
-import dev.thural.quietspace.message.MessageService;
-import dev.thural.quietspace.message.dto.MessageRequest;
-import dev.thural.quietspace.message.dto.MessageResponse;
-import dev.thural.quietspace.reaction.ReactionService;
-import dev.thural.quietspace.security.JwtService;
-import dev.thural.quietspace.security.TokenRepository;
-import dev.thural.quietspace.shared.enums.Role;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
-import dev.thural.quietspace.user.UserService;
-import dev.thural.quietspace.user.dto.UserResponse;
+import dev.thural.quietspace.domain.chat.Chat;
+import dev.thural.quietspace.domain.chat.ChatService;
+import dev.thural.quietspace.domain.chat.dto.ChatResponse;
+import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
+import dev.thural.quietspace.domain.chat.dto.UpdateChatRequest;
+import dev.thural.quietspace.domain.chat.dto.ChatMessageView;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.dto.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -28,7 +22,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -56,24 +49,13 @@ class ChatControllerSliceTest {
     @MockitoBean
     ChatService chatService;
     @MockitoBean
-    MessageService messageService;
-    @MockitoBean
-    SimpMessagingTemplate template;
-    @MockitoBean
-    ReactionService reactionService;
+    UserService userService;
     @MockitoBean
     TokenRepository tokenRepository;
     @MockitoBean
-    MessageRepository messageRepository;
-    @MockitoBean
-    JwtService jwtService;
+    JwtTokenService jwtTokenService;
     @MockitoBean
     UserDetailsService userDetailsService;
-    @MockitoBean
-    UserRepository userRepository;
-
-    @MockitoBean
-    UserService userService;
 
     @TestConfiguration
     static class TestConfig {
@@ -93,8 +75,7 @@ class ChatControllerSliceTest {
     private Chat chat;
     private CreateChatRequest chatRequest;
     private ChatResponse chatResponse;
-    private MessageRequest messageRequest;
-    private MessageResponse messageResponse;
+    private ChatMessageView messageResponse;
 
     @BeforeEach
     void setUp() {
@@ -129,24 +110,17 @@ class ChatControllerSliceTest {
         this.chat = Chat.builder()
                 .id(UUID.randomUUID())
                 .users(List.of(user1, user2))
-                .messages(List.of())
                 .build();
 
         this.chatRequest = CreateChatRequest.builder()
                 .userIds(List.of(user1.getId(), user2.getId()))
                 .build();
 
-        Message message = Message.builder()
+        this.messageResponse = ChatMessageView.builder()
                 .id(UUID.randomUUID())
-                .sender(user1)
-                .chat(chat)
-                .text("sample text")
-                .build();
-
-        this.messageResponse = MessageResponse.builder()
-                .id(message.getId())
                 .chatId(chat.getId())
-                .text(message.getText())
+                .senderId(user1.getId())
+                .text("sample text")
                 .build();
 
         this.chatResponse = ChatResponse.builder()

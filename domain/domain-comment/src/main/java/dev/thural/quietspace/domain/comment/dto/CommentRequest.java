@@ -1,4 +1,4 @@
-package dev.thural.quietspace.comment.dto;
+package dev.thural.quietspace.domain.comment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

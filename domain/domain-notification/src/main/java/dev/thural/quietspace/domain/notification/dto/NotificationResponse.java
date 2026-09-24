@@ -1,8 +1,8 @@
-package dev.thural.quietspace.notification.dto;
+package dev.thural.quietspace.domain.notification.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.thural.quietspace.notification.NotificationType;
-import dev.thural.quietspace.shared.model.BaseResponse;
+import dev.thural.quietspace.domain.notification.NotificationType;
+import dev.thural.quietspace.core.shared.model.BaseResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

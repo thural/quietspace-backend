@@ -1,8 +1,8 @@
-package dev.thural.quietspace.post;
+package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.post.dto.PostResponse;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserRepository;
+import dev.thural.quietspace.domain.post.dto.PostResponse;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

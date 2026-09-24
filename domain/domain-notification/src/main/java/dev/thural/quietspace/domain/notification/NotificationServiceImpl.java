@@ -1,16 +1,12 @@
-package dev.thural.quietspace.notification;
+package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.comment.Comment;
-import dev.thural.quietspace.comment.CommentRepository;
-import dev.thural.quietspace.notification.dto.NotificationResponse;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.notification.NotificationType;
-import dev.thural.quietspace.shared.exception.UserNotFoundException;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
-import dev.thural.quietspace.websocket.event.message.NotificationEvent;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.domain.notification.NotificationType;
+import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
+import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
+import dev.thural.quietspace.domain.notification.port.NotificationUserPort;
+import dev.thural.quietspace.core.messaging.event.message.NotificationEvent;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +20,12 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.util.UUID;
 
-import static dev.thural.quietspace.websocket.event.EventType.SEEN_NOTIFICATION;
-import static dev.thural.quietspace.notification.NotificationType.COMMENT_REACTION;
-import static dev.thural.quietspace.notification.NotificationType.POST_REACTION;
-import static dev.thural.quietspace.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
-import static dev.thural.quietspace.websocket.constant.WebSocketPaths.*;
+import static dev.thural.quietspace.core.messaging.event.EventType.SEEN_NOTIFICATION;
+import static dev.thural.quietspace.domain.notification.NotificationType.COMMENT_REACTION;
+import static dev.thural.quietspace.domain.notification.NotificationType.POST_REACTION;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.*;
 
 @Slf4j
 @Service
@@ -38,18 +34,18 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
-    private final UserService userService;
-    private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final NotificationUserPort userPort;
+    private final NotificationCommentPort commentPort;
+    private final NotificationPostPort postPort;
     private final SimpMessagingTemplate template;
 
     @Override
     @Transactional
     public void handleSeen(UUID notificationId) {
         log.info("setting notification with id {} as seen ...", notificationId);
-        User user = userService.getSignedUser();
+        UUID userId = userPort.currentUserId();
         var notification = notificationRepository.findById(notificationId).orElseThrow(EntityNotFoundException::new);
-        if (!notification.getUserId().equals(user.getId()))
+        if (!notification.getUserId().equals(userId))
             throw new ResourceAccessException("denied access for requested resource");
         if (!notification.getIsSeen()) notification.setIsSeen(true);
         var event = NotificationEvent.builder()
@@ -58,39 +54,39 @@ public class NotificationServiceImpl implements NotificationService {
                 .recipientId(notification.getUserId())
                 .type(SEEN_NOTIFICATION)
                 .build();
-        template.convertAndSendToUser(user.getId().toString(), NOTIFICATION_EVENT, event);
-        int unreadCount = notificationRepository.countByUserIdAndIsSeen(user.getId(), false);
-        template.convertAndSendToUser(user.getId().toString(), UNREAD_COUNT, unreadCount);
+        template.convertAndSendToUser(userId.toString(), NOTIFICATION_EVENT, event);
+        int unreadCount = notificationRepository.countByUserIdAndIsSeen(userId, false);
+        template.convertAndSendToUser(userId.toString(), UNREAD_COUNT, unreadCount);
     }
 
     @Override
     public Page<NotificationResponse> getAllNotifications(Integer pageNumber, Integer pageSize) {
-        User signedUser = userService.getSignedUser();
+        UUID signedUserId = userPort.currentUserId();
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, DEFAULT_SORT_OPTION);
-        return notificationRepository.findAllByUserId(signedUser.getId(), pageRequest)
+        return notificationRepository.findAllByUserId(signedUserId, pageRequest)
                 .map(notificationMapper::toResponse);
     }
 
     @Override
     public Page<NotificationResponse> getNotificationsByType(Integer pageNumber, Integer pageSize, String notificationType) {
         NotificationType type = NotificationType.valueOf(notificationType);
-        User signedUser = userService.getSignedUser();
+        UUID signedUserId = userPort.currentUserId();
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, DEFAULT_SORT_OPTION);
         return notificationRepository
-                .findAllByUserIdAndNotificationType(signedUser.getId(), type, pageRequest)
+                .findAllByUserIdAndNotificationType(signedUserId, type, pageRequest)
                 .map(notificationMapper::toResponse);
     }
 
     @Override
     public Integer getCountOfPendingNotifications() {
-        User signedUser = userService.getSignedUser();
-        return notificationRepository.countByUserIdAndIsSeen(signedUser.getId(), false);
+        UUID signedUserId = userPort.currentUserId();
+        return notificationRepository.countByUserIdAndIsSeen(signedUserId, false);
     }
 
     public void processNotification(NotificationType type, UUID contentId) {
-        UUID signedUserId = userService.getSignedUser().getId();
+        UUID signedUserId = userPort.currentUserId();
         UUID recipientId = getRecipientId(type, contentId);
-        userService.getUserById(recipientId).map(User::getUsername).orElseThrow(UserNotFoundException::new);
+        userPort.findUsernameById(recipientId);
         var notification = notificationRepository.save(
                 Notification
                         .builder()
@@ -129,10 +125,10 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private UUID getUserIdByPostId(UUID postId) {
-        return postRepository.findById(postId).map(Post::getUser).map(User::getId).orElseThrow();
+        return postPort.findPostOwnerId(postId);
     }
 
     private UUID getUserIdByCommentId(UUID commentId) {
-        return commentRepository.findById(commentId).map(Comment::getUser).map(User::getId).orElseThrow();
+        return commentPort.findCommentOwnerId(commentId);
     }
 }

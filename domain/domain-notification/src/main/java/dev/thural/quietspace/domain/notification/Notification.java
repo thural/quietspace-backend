@@ -1,8 +1,9 @@
-package dev.thural.quietspace.notification;
-import dev.thural.quietspace.shared.entity.BaseEntity;
+package dev.thural.quietspace.domain.notification;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
 
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.notification.NotificationType;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.domain.notification.NotificationType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,14 +25,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Notification extends BaseEntity {
 
-    @NotNull
-    private UUID userId;
+    @NotNull    private UUID userId;
 
-    @NotNull
-    private UUID actorId;
+    @NotNull    private UUID actorId;
 
-    @NotNull
-    private UUID contentId;
+    @NotNull    private UUID contentId;
 
     @NotNull
     private Boolean isSeen;

@@ -1,35 +1,14 @@
 plugins {
-    id("java")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
-    id("jacoco")
-    id("com.github.spotbugs")
-    id("pmd")
-    id("checkstyle")
+    id("quietspace.domain-conventions")
 }
 
 dependencies {
     implementation(project(":core:core-shared"))
     implementation(project(":core:core-data"))
-    implementation(project(":domain:domain-auth"))
-    implementation(project(":domain:domain-user"))
-    implementation(project(":domain:domain-post"))
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    // NOTE: no domain dependencies — photo is a leaf. User access goes
+    // through the shared-kernel UserProfilePort (implemented by domain-user).
+    implementation("net.coobird:thumbnailator:0.4.20")
 
-    implementation("org.mapstruct:mapstruct:1.6.3")
-
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
-    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // Test-only: exception advice for controller tests (core-web has no domain deps).
+    testImplementation(project(":core:core-web"))
 }

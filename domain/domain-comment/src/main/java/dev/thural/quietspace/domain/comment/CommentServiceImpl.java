@@ -1,12 +1,11 @@
-package dev.thural.quietspace.comment;
+package dev.thural.quietspace.domain.comment;
 
-import dev.thural.quietspace.comment.dto.CommentRequest;
-import dev.thural.quietspace.comment.dto.CommentResponse;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.post.PostRepository;
-import dev.thural.quietspace.shared.exception.UnauthorizedException;
-import dev.thural.quietspace.user.User;
-import dev.thural.quietspace.user.UserService;
+import dev.thural.quietspace.domain.comment.dto.CommentRequest;
+import dev.thural.quietspace.domain.comment.dto.CommentResponse;
+import dev.thural.quietspace.domain.comment.port.CommentPostPort;
+import dev.thural.quietspace.core.shared.exception.UnauthorizedException;
+import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,8 @@ import org.springframework.util.StringUtils;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.thural.quietspace.shared.util.PagingProvider.BY_CREATED_DATE_ASC;
-import static dev.thural.quietspace.shared.util.PagingProvider.buildPageRequest;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.BY_CREATED_DATE_ASC;
+import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
 
 @Slf4j
 @Service
@@ -31,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final UserService userService;
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final CommentPostPort postPort;
 
     @Override
     public Page<CommentResponse> getCommentsByPostId(UUID postId, Integer pageNumber, Integer pageSize) {
@@ -56,10 +55,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentResponse createComment(CommentRequest comment) {
         User loggedUser = userService.getSignedUser();
-        Optional<Post> foundPost = postRepository.findById(comment.getPostId());
         if (!loggedUser.getId().equals(comment.getUserId()))
             throw new UnauthorizedException("denied access to resource");
-        if (foundPost.isEmpty()) throw new EntityNotFoundException("post does not exist");
+        if (!postPort.postExists(comment.getPostId()))
+            throw new EntityNotFoundException("post does not exist");
         Comment commentEntity = commentMapper.commentRequestToEntity(comment);
         return commentMapper.commentEntityToResponse(commentRepository.save(commentEntity));
     }

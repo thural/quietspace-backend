@@ -1,14 +1,14 @@
-package dev.thural.quietspace.comment;
+package dev.thural.quietspace.domain.comment;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import dev.thural.quietspace.post.Post;
-import dev.thural.quietspace.shared.entity.BaseEntity;
-import dev.thural.quietspace.user.User;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
+import dev.thural.quietspace.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment extends BaseEntity {
+public class Comment extends BaseEntity implements Serializable {
 
     private UUID parentId;
 
@@ -36,9 +36,7 @@ public class Comment extends BaseEntity {
     @JsonBackReference
     private User user;
 
-    @NotNull
-    @ManyToOne
-    @JsonBackReference
-    private Post post;
+    @NotNull    @Column(name = "post_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID postId;
 
 }

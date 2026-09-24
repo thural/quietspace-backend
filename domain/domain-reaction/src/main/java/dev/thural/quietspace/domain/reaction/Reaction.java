@@ -1,9 +1,10 @@
-package dev.thural.quietspace.reaction;
+package dev.thural.quietspace.domain.reaction;
 
-import dev.thural.quietspace.shared.entity.BaseEntity;
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
 
-import dev.thural.quietspace.reaction.EntityType;
-import dev.thural.quietspace.reaction.ReactionType;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,14 +24,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Reaction extends BaseEntity {
 
-    @NotNull
-    private UUID userId;
+    @NotNull    private UUID userId;
 
     @NotNull
     private String username;
 
-    @NotNull
-    private UUID contentId;
+    @NotNull    private UUID contentId;
 
     @Enumerated(EnumType.STRING)
     private EntityType contentType;
