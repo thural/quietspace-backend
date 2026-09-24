@@ -2,13 +2,10 @@ package dev.thural.quietspace.chat.controller;
 
 import dev.thural.quietspace.chat.ChatService;
 import dev.thural.quietspace.chat.dto.TypingStatus;
-import dev.thural.quietspace.message.Message;
-import dev.thural.quietspace.message.MessageRepository;
 import dev.thural.quietspace.message.MessageService;
 import dev.thural.quietspace.message.dto.MessageRequest;
 import dev.thural.quietspace.message.dto.MessageResponse;
 import dev.thural.quietspace.shared.enums.EventType;
-import dev.thural.quietspace.user.UserRepository;
 import dev.thural.quietspace.websocket.event.message.ChatEvent;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +32,6 @@ public class ChatWebSocketController {
 
     private final ChatService chatService;
     private final MessageService messageService;
-    private final MessageRepository messageRepository;
-    private final UserRepository userRepository;
 
     @MessageMapping(PUBLIC_CHAT)
     @SendTo(PUBLIC_BROKER + "/chat")
@@ -56,17 +51,17 @@ public class ChatWebSocketController {
     @SendTo(CHAT_EVENT)
     ChatEvent deleteMessageById(@DestinationVariable UUID messageId) {
         log.info("deleting message with id {} ...", messageId);
-        Message foundMessage = messageRepository.findById(messageId).orElseThrow(EntityNotFoundException::new);
+        MessageResponse message = messageService.getMessageById(messageId);
         var chatevent = ChatEvent.builder()
-                .chatId(foundMessage.getChat().getId())
-                .actorId(foundMessage.getSender().getId())
-                .messageId(foundMessage.getId())
+                .chatId(message.getChatId())
+                .actorId(message.getSenderId())
+                .messageId(message.getId())
                 .type(EventType.DELETE_MESSAGE)
                 .build();
         try {
-            MessageResponse message = messageService.deleteMessage(messageId)
+            MessageResponse deletedMessage = messageService.deleteMessage(messageId)
                     .orElseThrow(RuntimeException::new);
-            chatevent.setChatId(message.getChatId());
+            chatevent.setChatId(deletedMessage.getChatId());
         } catch (Exception e) {
             chatevent.setMessage(e.getMessage());
             chatevent.setType(EXCEPTION);

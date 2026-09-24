@@ -94,6 +94,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public MessageResponse getMessageById(UUID messageId) {
+        Message message = findMessageOrElseThrow(messageId);
+        return messageMapper.toResponse(message);
+    }
+
+    @Override
     public MessageResponse getMessageById(UUID messageId, UUID chatId) {
         return messageRepository.findByMessageIdAndChatId(messageId, chatId)
                 .map(messageMapper::toResponse)

@@ -20,6 +20,8 @@ public interface MessageService {
 
     Optional<MessageResponse> setMessageSeen(UUID messageId);
 
+    MessageResponse getMessageById(UUID messageId);
+
     MessageResponse getMessageById(UUID messageId, UUID chatId);
 
     long getUnreadCount();

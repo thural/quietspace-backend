@@ -23,6 +23,11 @@ class ArchitectureRulesTest {
             .withImportOption(new ImportOption.DoNotIncludeJars())
             .importPackages("dev.thural.quietspace");
 
+    // Currently public repositories (to be made package-private in Phase 4)
+    private static final String PUBLIC_REPOSITORIES_PATTERN =
+        "ChatRepository|CommentRepository|MessageRepository|NotificationRepository|"
+        + "PhotoRepository|PostRepository|ReactionRepository|TokenRepository|UserRepository";
+
     @ArchTest
     static final ArchRule no_core_depends_on_domain = noClasses()
             .that().resideInAPackage("dev.thural.quietspace.core..")
@@ -39,14 +44,14 @@ class ArchitectureRulesTest {
             .allowEmptyShould(true)
             .because("domain modules must not access other domain modules' internal classes directly");
 
-    // TODO Phase 1.2: Enable when repositories are made package-private
-    // @ArchTest
-    // static final ArchRule repositories_must_be_package_private = noClasses()
-    //         .that().areInterfaces()
-    //         .and().resideInAPackage("dev.thural.quietspace..")
-    //         .and().haveSimpleNameEndingWith("Repository")
-    //         .should().bePublic()
-    //         .because("Repository interfaces must be package-private (not public)");
+    @ArchTest
+    static final ArchRule only_known_repositories_are_public = noClasses()
+            .that().areInterfaces()
+            .and().haveSimpleNameEndingWith("Repository")
+            .and().resideInAPackage("dev.thural.quietspace..")
+            .should().haveNameMatching(PUBLIC_REPOSITORIES_PATTERN)
+            .orShould().bePackagePrivate()
+            .because("Only explicitly listed repositories may be public; new repositories must be package-private");
 
     @ArchTest
     static final ArchRule repositories_exist = classes()
@@ -55,21 +60,12 @@ class ArchitectureRulesTest {
             .should().resideInAPackage("dev.thural.quietspace..")
             .because("Repository interfaces should exist for each aggregate");
 
-    // TODO Phase 1.1: Enable when ChatWebSocketController is fixed to use services
-    // @ArchTest
-    // static final ArchRule controllers_must_not_access_repositories_directly = noClasses()
-    //         .that().resideInAPackage("..controller..")
-    //         .should().dependOnClassesThat()
-    //         .haveSimpleNameEndingWith("Repository")
-    //         .because("Controllers must not access repositories directly; use services instead");
-
     @ArchTest
-    static final ArchRule rest_controllers_must_not_access_repositories_directly = noClasses()
+    static final ArchRule controllers_must_not_access_repositories_directly = noClasses()
             .that().resideInAPackage("..controller..")
-            .and().haveSimpleNameNotEndingWith("WebSocketController")
             .should().dependOnClassesThat()
             .haveSimpleNameEndingWith("Repository")
-            .because("REST Controllers must not access repositories directly; use services instead");
+            .because("Controllers must not access repositories directly; use services instead");
 
     @ArchTest
     static final ArchRule services_must_be_in_feature_package = classes()
