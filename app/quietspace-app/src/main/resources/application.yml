@@ -1,0 +1,124 @@
+custom:
+  cors:
+    allowed-origins: http://localhost:3000,http://localhost:5173,https://quietspace.app
+
+spring:
+  threads:
+    virtual:
+      enabled: true
+  config:
+    import: optional:file:.env
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 3MB
+      max-request-size: 10MB
+  custom:
+    admin-password: ${ADMIN_PASSWORD}
+  profiles:
+    default: default
+    active: dev
+  mail:
+    host: ${MAILDEV_HOST:mailpit}
+    port: ${MAILDEV_PORT:1025}
+    username: ${MAIL_USERNAME:thural}
+    password: ${MAIL_PASSWORD:thural}
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 3000
+          max-retries: 3
+          multiplier: 2
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST_NAME:database}:${DB_PORT_NUMBER:3306}/${DB_NAME:quietspace}
+    username: ${DB_USER_USERNAME:quietspace_user}
+    password: ${DB_USER_PASSWORD}
+    hikari:
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false
+      pool-name: RestDB-Pool
+      maximum-pool-size: 5
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    baseline-description: "init"
+    baseline-version: "0"
+    locations: classpath:db/migration/structure
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true
+  sql:
+    init:
+      mode: never
+  application:
+    name: quietspace-backend
+    security:
+      jwt:
+        secret-key: ${JWT_SECRET_KEY}
+        expiration: 600000
+        refresh-token:
+          expiration: 86400000
+    mailing:
+      frontend:
+        activation-url: ${ACTIVATION_URL}
+
+email:
+  provider:
+    url: ${EMAIL_PROVIDER_URL:}
+    key: ${EMAIL_API_KEY:}
+
+springwolf:
+  docket:
+    base-package: dev.thural.quietspace
+    info:
+      title: QuietSpace WebSocket API
+      version: 1.0.0
+
+springdoc:
+  use-fqn: true
+
+server:
+  port: ${SERVER_PORT_NUMBER:8080}
+  forward-headers-strategy: framework
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, auditevents, metrics
+  endpoint:
+    health:
+      show-details: when-authorized

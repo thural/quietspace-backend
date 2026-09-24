@@ -1,1 +1,17 @@
-rootProject.name = "quietspace"
+rootProject.name = "quietspace-platform"
+
+include("core:core-shared")
+include("core:core-data")
+include("core:core-web")
+include("core:core-security")
+include("core:core-messaging")
+include("domain:domain-auth")
+include("domain:domain-user")
+include("domain:domain-post")
+include("domain:domain-photo")
+include("domain:domain-comment")
+include("domain:domain-reaction")
+include("domain:domain-chat")
+include("domain:domain-message")
+include("domain:domain-notification")
+include("app:quietspace-app")

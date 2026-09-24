@@ -1,0 +1,67 @@
+custom:
+  cors:
+    allowed-origins: https://frontend-app.com,http://localhost:3000
+
+spring:
+  threads:
+    virtual:
+      enabled: true
+  servlet.multipart:
+    enabled: true
+    max-file-size: 3MB
+    max-request-size: 10MB
+  custom:
+    admin-password: admin123
+  profiles:
+    active: test
+  mail:
+    host: localhost
+    port: 1025
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+          auth: true
+        starttls:
+          enabled: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+  application:
+    name: quietspace-backend
+    security:
+      jwt:
+        secret-key: OLY8kXzmCJ6QTovj6BdaFHVaDGkAulLXXeZeUidysM/1+L8/AN5ko3NyXLZSRL9rShr/IaO85CV10vCs5k2MXg==
+        expiration: 600000
+        refresh-token:
+          expiration: 86400000
+    mailing:
+      frontend:
+        activation-url: http://localhost:3000/activate
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1;NON_KEYWORDS=user
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+  flyway:
+    enabled: false
+  sql:
+    init:
+      mode: never
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+
+logging:
+  level:
+    root: WARN
+    org.springframework: WARN
+    org.hibernate: WARN
