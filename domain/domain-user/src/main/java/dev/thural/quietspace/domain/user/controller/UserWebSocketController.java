@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.user.controller;
 
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;

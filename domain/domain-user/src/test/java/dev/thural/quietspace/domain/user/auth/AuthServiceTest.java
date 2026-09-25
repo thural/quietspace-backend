@@ -1,8 +1,8 @@
-package dev.thural.quietspace.domain.auth;
+package dev.thural.quietspace.domain.user.auth;
 
-import dev.thural.quietspace.domain.auth.dto.AuthRequest;
-import dev.thural.quietspace.domain.auth.dto.AuthResponse;
-import dev.thural.quietspace.domain.auth.dto.RegistrationRequest;
+import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.user.auth.dto.AuthResponse;
+import dev.thural.quietspace.domain.user.auth.dto.RegistrationRequest;
 import dev.thural.quietspace.core.shared.security.JwtTokenService;
 import dev.thural.quietspace.core.shared.security.Token;
 import dev.thural.quietspace.core.shared.security.TokenRepository;
@@ -16,6 +16,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import dev.thural.quietspace.domain.user.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,6 +74,11 @@ class AuthServiceTest {
     private AuthRequest authRequest;
     private User user;
     private UUID userId;
+
+    @AfterEach
+    void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
 
     @BeforeEach
     void setUp() {

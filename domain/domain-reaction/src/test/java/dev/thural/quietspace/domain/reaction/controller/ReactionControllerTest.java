@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.reaction.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.domain.notification.NotificationService;

@@ -1,12 +1,11 @@
 package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
+import dev.thural.quietspace.core.messaging.event.message.NotificationEvent;
 import dev.thural.quietspace.core.shared.enums.EntityType;
-import dev.thural.quietspace.domain.notification.NotificationType;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
 import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
 import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
 import dev.thural.quietspace.domain.notification.port.NotificationUserPort;
-import dev.thural.quietspace.core.messaging.event.message.NotificationEvent;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +19,12 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.util.UUID;
 
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.*;
 import static dev.thural.quietspace.core.messaging.event.EventType.SEEN_NOTIFICATION;
-import static dev.thural.quietspace.domain.notification.NotificationType.COMMENT_REACTION;
-import static dev.thural.quietspace.domain.notification.NotificationType.POST_REACTION;
 import static dev.thural.quietspace.core.shared.util.PagingProvider.DEFAULT_SORT_OPTION;
 import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;
-import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.*;
+import static dev.thural.quietspace.domain.notification.NotificationType.COMMENT_REACTION;
+import static dev.thural.quietspace.domain.notification.NotificationType.POST_REACTION;
 
 @Slf4j
 @Service

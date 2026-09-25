@@ -1,12 +1,12 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.message.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.message.Message;
 import dev.thural.quietspace.domain.message.MessageService;
 import dev.thural.quietspace.domain.message.dto.MessageRequest;
 import dev.thural.quietspace.domain.message.dto.MessageResponse;
-import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,9 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

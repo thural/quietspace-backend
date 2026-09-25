@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.notification.controller;
 
 import dev.thural.quietspace.domain.notification.NotificationService;
 import lombok.RequiredArgsConstructor;

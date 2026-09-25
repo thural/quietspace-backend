@@ -2,10 +2,6 @@ package dev.thural.quietspace.domain.message;
 
 import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.chat.ChatRepository;
-import dev.thural.quietspace.domain.message.Message;
-import dev.thural.quietspace.domain.message.MessageMapper;
-import dev.thural.quietspace.domain.message.MessageRepository;
-import dev.thural.quietspace.domain.message.MessageServiceImpl;
 import dev.thural.quietspace.domain.message.dto.MessageRequest;
 import dev.thural.quietspace.domain.message.dto.MessageResponse;
 import dev.thural.quietspace.domain.photo.PhotoService;

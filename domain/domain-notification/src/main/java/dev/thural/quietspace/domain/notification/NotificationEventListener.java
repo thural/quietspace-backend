@@ -1,27 +1,22 @@
 package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
 import dev.thural.quietspace.core.shared.enums.EntityType;
-import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.core.shared.event.*;
 import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
 import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
-import dev.thural.quietspace.core.shared.event.*;
-import dev.thural.quietspace.core.messaging.event.message.NotificationEvent;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static dev.thural.quietspace.core.messaging.event.EventType.SEEN_NOTIFICATION;
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.NOTIFICATION_SUBJECT;
+import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.UNREAD_COUNT;
 import static dev.thural.quietspace.domain.notification.NotificationType.COMMENT_REACTION;
 import static dev.thural.quietspace.domain.notification.NotificationType.POST_REACTION;
-import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.*;
 
 @Slf4j
 @Component

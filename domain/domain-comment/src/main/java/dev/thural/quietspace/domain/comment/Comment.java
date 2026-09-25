@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -25,6 +27,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Comment extends BaseEntity implements Serializable {
 
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "parent_id", columnDefinition = "varchar(36)")
     private UUID parentId;
 
     @NotBlank
@@ -36,7 +40,9 @@ public class Comment extends BaseEntity implements Serializable {
     @JsonBackReference
     private User user;
 
-    @NotNull    @Column(name = "post_id", nullable = false, columnDefinition = "varchar(36)")
+    @NotNull
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "post_id", nullable = false, columnDefinition = "varchar(36)")
     private UUID postId;
 
 }

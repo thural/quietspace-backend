@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.user.service.impl;
+package dev.thural.quietspace.domain.user.service;
 
 import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
 import dev.thural.quietspace.domain.user.service.CommonService;

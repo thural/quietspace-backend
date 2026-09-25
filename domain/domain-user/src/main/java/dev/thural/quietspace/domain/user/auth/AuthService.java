@@ -1,8 +1,8 @@
-package dev.thural.quietspace.domain.auth;
+package dev.thural.quietspace.domain.user.auth;
 
-import dev.thural.quietspace.domain.auth.dto.AuthRequest;
-import dev.thural.quietspace.domain.auth.dto.AuthResponse;
-import dev.thural.quietspace.domain.auth.dto.RegistrationRequest;
+import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.user.auth.dto.AuthResponse;
+import dev.thural.quietspace.domain.user.auth.dto.RegistrationRequest;
 import dev.thural.quietspace.core.shared.security.JwtTokenService;
 import dev.thural.quietspace.core.shared.security.Token;
 import dev.thural.quietspace.core.shared.security.TokenRepository;

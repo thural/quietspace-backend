@@ -2,8 +2,8 @@ package dev.thural.quietspace.domain.message;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.core.shared.entity.BaseEntity;
+import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -45,6 +47,8 @@ public class Message extends BaseEntity {
     private String text;
 
     @JsonIgnore
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "photo_id", columnDefinition = "varchar(36)")
     private UUID photoId;
 
     @NotNull

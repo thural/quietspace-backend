@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.config;
+package dev.thural.quietspace.domain.user;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

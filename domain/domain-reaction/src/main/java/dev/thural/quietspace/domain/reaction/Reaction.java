@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -24,12 +26,18 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Reaction extends BaseEntity {
 
-    @NotNull    private UUID userId;
+    @NotNull
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "user_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID userId;
 
     @NotNull
     private String username;
 
-    @NotNull    private UUID contentId;
+    @NotNull
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "content_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID contentId;
 
     @Enumerated(EnumType.STRING)
     private EntityType contentType;

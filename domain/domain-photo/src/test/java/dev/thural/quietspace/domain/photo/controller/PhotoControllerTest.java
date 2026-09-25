@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.photo.controller;
 
 import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.photo.dto.PhotoResponse;

@@ -1,9 +1,10 @@
 package dev.thural.quietspace.core.shared.event;
 
-import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -17,11 +18,11 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProcessedEvent extends BaseEntity {
+public class ProcessedEvent {
 
-    @Id    private UUID id;
-
-    @Column(name = "event_id", nullable = false, unique = true, columnDefinition = "BINARY(16)")
+    @Id
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "event_id", nullable = false, unique = true, columnDefinition = "varchar(36)")
     private UUID eventId;
 
     @Column(name = "event_type", nullable = false, length = 255)

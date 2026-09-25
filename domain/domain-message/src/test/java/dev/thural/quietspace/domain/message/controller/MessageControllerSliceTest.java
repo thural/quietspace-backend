@@ -1,13 +1,13 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.message.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
 import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.message.Message;
 import dev.thural.quietspace.domain.message.MessageService;
 import dev.thural.quietspace.domain.message.dto.MessageRequest;
 import dev.thural.quietspace.domain.message.dto.MessageResponse;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
 import dev.thural.quietspace.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

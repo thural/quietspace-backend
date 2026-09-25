@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -25,11 +27,20 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Notification extends BaseEntity {
 
-    @NotNull    private UUID userId;
+    @NotNull
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "user_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID userId;
 
-    @NotNull    private UUID actorId;
+    @NotNull
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "actor_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID actorId;
 
-    @NotNull    private UUID contentId;
+    @NotNull
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "content_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID contentId;
 
     @NotNull
     private Boolean isSeen;

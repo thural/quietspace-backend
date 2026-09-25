@@ -1,9 +1,9 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.user.auth.controller;
 
-import dev.thural.quietspace.domain.auth.AuthService;
-import dev.thural.quietspace.domain.auth.dto.AuthRequest;
-import dev.thural.quietspace.domain.auth.dto.AuthResponse;
-import dev.thural.quietspace.domain.auth.dto.RegistrationRequest;
+import dev.thural.quietspace.domain.user.auth.AuthService;
+import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.user.auth.dto.AuthResponse;
+import dev.thural.quietspace.domain.user.auth.dto.RegistrationRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.auth.dto;
+package dev.thural.quietspace.domain.user.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.thural.quietspace.core.shared.model.BaseResponse;

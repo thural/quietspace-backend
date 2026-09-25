@@ -10,4 +10,5 @@ dependencies {
     // arrives via consumer-owned ports (adapters live in provider modules).
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework:spring-messaging")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 }

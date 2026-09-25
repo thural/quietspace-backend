@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.chat.controller;
 
 import dev.thural.quietspace.domain.chat.ChatService;
 import dev.thural.quietspace.domain.chat.dto.ChatResponse;

@@ -1,6 +1,5 @@
 package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.domain.notification.NotificationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.comment.controller;
 
 import dev.thural.quietspace.domain.comment.CommentService;
 import dev.thural.quietspace.domain.comment.dto.CommentRequest;

@@ -1,9 +1,10 @@
 package dev.thural.quietspace.core.shared.event;
 
-import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -15,14 +16,19 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OutboxEvent extends BaseEntity {
+public class OutboxEvent {
 
-    @Id    private UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(name = "aggregate_type", nullable = false, length = 255)
     private String aggregateType;
 
-    @Column(name = "aggregate_id", nullable = false, columnDefinition = "BINARY(16)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "aggregate_id", nullable = false, columnDefinition = "varchar(36)")
     private UUID aggregateId;
 
     @Column(name = "event_type", nullable = false, length = 255)

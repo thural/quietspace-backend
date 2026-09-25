@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -35,7 +37,8 @@ public class Token extends BaseEntity {
     @NotBlank
     private String email;
 
-    @Column(name = "user_id", nullable = false)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "user_id", nullable = false, columnDefinition = "varchar(36)")
     private UUID userId;
 
     private OffsetDateTime expireDate;

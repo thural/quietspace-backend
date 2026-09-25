@@ -11,6 +11,14 @@ allprojects {
 }
 
 subprojects {
+    apply(plugin = "java")
+    apply(plugin = "org.springframework.boot")
+    apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "jacoco")
+    apply(plugin = "com.github.spotbugs")
+    apply(plugin = "pmd")
+    apply(plugin = "checkstyle")
+
     group = "dev.thural.quietspace"
     version = "0.0.1-SNAPSHOT"
 
@@ -18,70 +26,56 @@ subprojects {
         mavenCentral()
     }
 
-    // NOTE: intermediate container projects (:app, :core, :domain) hold no
-    // sources. Tooling is applied to leaf (source-owning) projects only so
-    // empty parents don't gain tasks like bootJar that can never resolve.
-    if (childProjects.isEmpty()) {
-        apply(plugin = "java")
-        apply(plugin = "org.springframework.boot")
-        apply(plugin = "io.spring.dependency-management")
-        apply(plugin = "jacoco")
-        apply(plugin = "com.github.spotbugs")
-        apply(plugin = "pmd")
-        apply(plugin = "checkstyle")
+    tasks.withType<JavaCompile> {
+        options.compilerArgs.add("-Amapstruct.defaultComponentModel=spring")
+        // Compile with Java 21, target Java 25
+        options.release = 21
+    }
 
-        tasks.withType<JavaCompile> {
-            options.compilerArgs.add("-Amapstruct.defaultComponentModel=spring")
-        }
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 
-        tasks.withType<Test> {
-            useJUnitPlatform()
-        }
+    configure<com.github.spotbugs.snom.SpotBugsExtension> {
+        toolVersion = "4.9.0"
+        ignoreFailures = false
+        showStackTraces = true
+        excludeFilter = file("$rootDir/config/spotbugs/exclude.xml")
+    }
 
-        // Only the deployable app module produces a bootable jar; library
-        // modules must not attempt bootJar (no resolvable main class).
-        if (project.name != "quietspace-app") {
-            tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
-                enabled = false
-            }
-        }
+    tasks.named<com.github.spotbugs.snom.SpotBugsTask>("spotbugsMain") {
+        dependsOn("compileJava")
+    }
 
-        configure<com.github.spotbugs.snom.SpotBugsExtension> {
-            // 4.9.0 bundles ASM without Java 25 (major 69) support; 4.9.8+ parses it.
-            toolVersion = "4.9.8"
-            ignoreFailures = false
-            showStackTraces = true
-            excludeFilter = file("$rootDir/config/spotbugs/exclude.xml")
-        }
+    tasks.named<com.github.spotbugs.snom.SpotBugsTask>("spotbugsTest") {
+        dependsOn("compileTestJava")
+    }
 
-        tasks.named<com.github.spotbugs.snom.SpotBugsTask>("spotbugsMain") {
-            dependsOn("compileJava")
-        }
+    configure<PmdExtension> {
+        toolVersion = "6.55.0"
+    }
 
-        tasks.named<com.github.spotbugs.snom.SpotBugsTask>("spotbugsTest") {
-            dependsOn("compileTestJava")
-        }
+    configure<CheckstyleExtension> {
+        toolVersion = "10.17.0"
+        configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
+    }
 
-        configure<PmdExtension> {
-            toolVersion = "6.55.0"
-        }
+    tasks.named<Checkstyle>("checkstyleMain") {
+        configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
+    }
 
-        configure<CheckstyleExtension> {
-            toolVersion = "10.17.0"
-            configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
-        }
+    tasks.named<Checkstyle>("checkstyleTest") {
+        configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
+    }
 
-        tasks.named<Checkstyle>("checkstyleMain") {
-            configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
-        }
+    tasks.named("check") {
+        dependsOn("spotbugsMain", "pmdMain", "checkstyleMain")
+    }
 
-        tasks.named<Checkstyle>("checkstyleTest") {
-            configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
-        }
-
-        tasks.named("check") {
-            dependsOn("spotbugsMain", "pmdMain", "checkstyleMain")
-        }
+    // Only the deployable app module produces a bootable jar; library and
+    // intermediate container projects must not attempt bootJar resolution.
+    tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+        enabled = project.name == "quietspace-app"
     }
 }
 

@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +43,10 @@ public class User extends BaseEntity implements UserDetails, Principal {
     @JsonIgnore
     private String password;
 
-    @JsonIgnore    private UUID photoId;
+    @JsonIgnore
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "photo_id", columnDefinition = "varchar(36)")
+    private UUID photoId;
 
     @JsonIgnore
     @Builder.Default
@@ -50,6 +55,7 @@ public class User extends BaseEntity implements UserDetails, Principal {
             name = "user_saved_posts",
             joinColumns = @JoinColumn(name = "user_id")
     )
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "post_id", columnDefinition = "varchar(36)")
     private List<UUID> savedPostIds = new ArrayList<>();
 

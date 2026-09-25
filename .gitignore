@@ -56,3 +56,6 @@ build/
 
 ### Temporal files ###
 /temp/
+
+# buildSrc Kotlin DSL cache
+buildSrc/.kotlin/

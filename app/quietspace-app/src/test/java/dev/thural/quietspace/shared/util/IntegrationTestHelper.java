@@ -1,16 +1,13 @@
 package dev.thural.quietspace.core.shared.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.domain.auth.dto.AuthRequest;
-import dev.thural.quietspace.domain.auth.dto.AuthResponse;
+import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.user.auth.dto.AuthResponse;
 import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.ProfileSettings;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * UUID string serialization is configured globally via Spring Boot's
  * {@code spring.jackson.serialization.write-uuids-as-strings=true}.</p>
  */
-@Configuration
 public class IntegrationTestHelper {
 
     public static void cleanDatabase(EntityManager entityManager) {
@@ -57,12 +53,6 @@ public class IntegrationTestHelper {
         this.objectMapper = objectMapper;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Bean
-    @Primary
-    public ObjectMapper testObjectMapper() {
-        return new ObjectMapper();
     }
 
     public String registerAndLogin(String email, String password) throws Exception {

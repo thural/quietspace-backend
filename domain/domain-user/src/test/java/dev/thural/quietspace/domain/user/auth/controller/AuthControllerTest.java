@@ -1,10 +1,10 @@
-package dev.thural.quietspace.domain.controller;
+package dev.thural.quietspace.domain.user.auth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.domain.auth.AuthService;
-import dev.thural.quietspace.domain.auth.dto.AuthRequest;
-import dev.thural.quietspace.domain.auth.dto.AuthResponse;
-import dev.thural.quietspace.domain.auth.dto.RegistrationRequest;
+import dev.thural.quietspace.domain.user.auth.AuthService;
+import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.user.auth.dto.AuthResponse;
+import dev.thural.quietspace.domain.user.auth.dto.RegistrationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

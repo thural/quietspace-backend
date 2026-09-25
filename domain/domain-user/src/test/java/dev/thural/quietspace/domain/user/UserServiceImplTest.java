@@ -11,6 +11,7 @@ import dev.thural.quietspace.domain.user.dto.ProfileSettingsRequest;
 import dev.thural.quietspace.domain.user.dto.ProfileSettingsResponse;
 import dev.thural.quietspace.domain.user.dto.UserRequest;
 import dev.thural.quietspace.domain.user.dto.UserResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,6 +59,11 @@ class UserServiceImplTest {
     private User user;
     private UserRequest registerRequest;
     private ProfileSettings profileSettings;
+
+    @AfterEach
+    void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
 
     @BeforeEach
     void initMockData() {
