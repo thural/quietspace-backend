@@ -102,4 +102,33 @@ class JwtServiceTest {
 
         assertThat(subject).isEqualTo("testuser");
     }
+
+    @Test
+    void isTokenValid_givenIssuerMismatch_shouldReturnFalse() {
+        String token = jwtService.generateToken(userDetails);
+        ReflectionTestUtils.setField(jwtService, "issuer", "other-issuer");
+
+        assertThat(jwtService.isTokenValid(token, userDetails)).isFalse();
+    }
+
+    @Test
+    void isTokenValid_givenAudienceMismatch_shouldReturnFalse() {
+        String token = jwtService.generateToken(userDetails);
+        ReflectionTestUtils.setField(jwtService, "audience", "other-audience");
+
+        assertThat(jwtService.isTokenValid(token, userDetails)).isFalse();
+    }
+
+    @Test
+    void isTokenValid_givenMalformedToken_shouldReturnFalse() {
+        assertThat(jwtService.isTokenValid("not-a-jwt", userDetails)).isFalse();
+    }
+
+    @Test
+    void isTokenExpired_givenExpiredToken_shouldReturnTrue() {
+        ReflectionTestUtils.setField(jwtService, "jwtExpiration", -1000L);
+        String token = jwtService.generateToken(userDetails);
+
+        assertThat(jwtService.isTokenExpired(token)).isTrue();
+    }
 }

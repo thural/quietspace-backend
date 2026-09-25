@@ -109,6 +109,19 @@ class JwtFilterTest {
     }
 
     @Test
+    void doFilter_givenMalformedToken_shouldSkipAndContinueChain() throws Exception {
+        when(request.getHeader("Authorization")).thenReturn("Bearer malformed-token");
+        when(tokenRepository.existsByToken("malformed-token")).thenReturn(false);
+        when(jwtTokenService.extractJti("malformed-token"))
+                .thenThrow(new io.jsonwebtoken.MalformedJwtException("bad token"));
+
+        jwtFilter.doFilterInternal(request, response, filterChain);
+
+        verify(filterChain).doFilter(request, response);
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+    }
+
+    @Test
     void doFilter_givenValidToken_shouldSetAuthenticationAndContinue() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer valid-token");
         when(tokenRepository.existsByToken("valid-token")).thenReturn(false);
