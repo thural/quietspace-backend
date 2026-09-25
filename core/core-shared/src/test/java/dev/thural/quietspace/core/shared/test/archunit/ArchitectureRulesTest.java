@@ -15,7 +15,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
     ImportOption.DoNotIncludeArchives.class,
     ImportOption.DoNotIncludeJars.class
 })
-class ArchitectureRulesTest {
+public class ArchitectureRulesTest {
 
     private static final JavaClasses CLASSES = new ClassFileImporter()
             .withImportOption(new ImportOption.DoNotIncludeTests())
