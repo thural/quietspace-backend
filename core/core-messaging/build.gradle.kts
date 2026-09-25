@@ -36,4 +36,6 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.21.4")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter:1.21.4")
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
