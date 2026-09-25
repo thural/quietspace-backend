@@ -214,4 +214,17 @@ class MessageControllerSliceTest {
         verify(messageService).getMessagesByChatId(1, 10, messageResponse.getId());
     }
 
+    @Test
+    void getMessageById() throws Exception {
+        when(messageService.getMessageById(any(), any())).thenReturn(messageResponse);
+
+        mockMvc.perform(get(MessageController.MESSAGE_PATH + "/chat/" + messageResponse.getChatId()
+                                + "/message/" + messageResponse.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(messageResponse.getId().toString())))
+                .andExpect(status().isOk());
+
+        verify(messageService).getMessageById(messageResponse.getId(), messageResponse.getChatId());
+    }
+
 }
