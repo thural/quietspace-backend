@@ -62,6 +62,16 @@ spring:
       repositories:
         bootstrap-mode: default
 
+management:
+  # Infra-dependent indicators have no backing services in tests (no mailpit,
+  # no broker unless a test imports TestcontainersConfig): keep the endpoint
+  # focused on app health so security-posture tests stay deterministic.
+  health:
+    mail:
+      enabled: false
+    rabbit:
+      enabled: false
+
 logging:
   level:
     root: WARN

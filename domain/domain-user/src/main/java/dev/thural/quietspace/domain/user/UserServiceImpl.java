@@ -127,8 +127,19 @@ public class UserServiceImpl implements UserService {
     public User getSignedUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) throw new UnauthorizedException("no authenticated user");
-        String username = authentication.getName();
-        return userRepository.findUserByUsername(username).orElseThrow(UserNotFoundException::new);
+        String name = authentication.getName();
+        // The STOMP principal carries the user id (see WebSocketConfig.handleConnect),
+        // while HTTP authentication carries the username: resolve either form.
+        return userRepository.findUserByUsername(name).orElseGet(() -> findUserById(name));
+    }
+
+    private User findUserById(String name) {
+        try {
+            return userRepository.findById(UUID.fromString(name))
+                    .orElseThrow(UserNotFoundException::new);
+        } catch (IllegalArgumentException e) {
+            throw new UserNotFoundException("user not found: " + name);
+        }
     }
 
     @Override
