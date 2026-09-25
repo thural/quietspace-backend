@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -102,5 +104,16 @@ class NotificationControllerTest {
                         .param("type", "POST")
                         .param("contentId", UUID.randomUUID().toString()))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void processNotification_shouldReturn200() throws Exception {
+        mockMvc.perform(post(NotificationController.NOTIFICATION_PATH + "/process")
+                        .param("type", "FOLLOW_REQUEST")
+                        .param("contentId", UUID.randomUUID().toString()))
+                .andExpect(status().isOk());
+
+        verify(notificationService).processNotification(
+                eq(NotificationType.FOLLOW_REQUEST), any(UUID.class));
     }
 }
