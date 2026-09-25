@@ -14,6 +14,9 @@ import dev.thural.quietspace.domain.user.dto.ProfileSettingsRequest;
 import dev.thural.quietspace.domain.user.dto.ProfileSettingsResponse;
 import dev.thural.quietspace.domain.user.dto.UserRequest;
 import dev.thural.quietspace.domain.user.dto.UserResponse;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -46,6 +50,25 @@ public class UserServiceImpl implements UserService {
     private final UserQuery userQuery;
     private final PhotoService photoService;
     private final TransactionalEventPublisher eventPublisher;
+    private final MeterRegistry meterRegistry;
+    private final Counter followCounter;
+    private final Counter unfollowCounter;
+    private final Timer followTimer;
+
+    @Autowired
+    public UserServiceImpl(UserMapper userMapper, UserRepository userRepository, UserQuery userQuery,
+                           PhotoService photoService, TransactionalEventPublisher eventPublisher,
+                           MeterRegistry meterRegistry) {
+        this.userMapper = userMapper;
+        this.userRepository = userRepository;
+        this.userQuery = userQuery;
+        this.photoService = photoService;
+        this.eventPublisher = eventPublisher;
+        this.meterRegistry = meterRegistry;
+        this.followCounter = Counter.builder("domain.user.follow.total").register(meterRegistry);
+        this.unfollowCounter = Counter.builder("domain.user.unfollow.total").register(meterRegistry);
+        this.followTimer = Timer.builder("domain.user.follow.duration").register(meterRegistry);
+    }
 
     @Override
     @Transactional
@@ -217,37 +240,47 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void toggleFollow(UUID followedUserId) {
-        User signedUser = getSignedUser();
-        if (signedUser.getId().equals(followedUserId))
-            throw new CustomErrorException(HttpStatus.BAD_REQUEST, "users can't unfollow themselves");
-        User followedUser = userRepository.findById(followedUserId).orElseThrow(UserNotFoundException::new);
-        if (signedUser.getFollowings().contains(followedUser)) {
-            signedUser.unfollow(followedUser);
-        } else {
-            signedUser.follow(followedUser);
-        }
-        eventPublisher.publish(new UserFollowedEvent(signedUser.getId(), followedUserId));
+        followTimer.record(() -> {
+            User signedUser = getSignedUser();
+            if (signedUser.getId().equals(followedUserId))
+                throw new CustomErrorException(HttpStatus.BAD_REQUEST, "users can't unfollow themselves");
+            User followedUser = userRepository.findById(followedUserId).orElseThrow(UserNotFoundException::new);
+            if (signedUser.getFollowings().contains(followedUser)) {
+                signedUser.unfollow(followedUser);
+                unfollowCounter.increment();
+            } else {
+                signedUser.follow(followedUser);
+                followCounter.increment();
+            }
+            eventPublisher.publish(new UserFollowedEvent(signedUser.getId(), followedUserId));
+        });
     }
 
     @Override
     @Transactional
     public void followUser(UUID userId) {
-        User signedUser = getSignedUser();
-        if (signedUser.getId().equals(userId))
-            throw new CustomErrorException(HttpStatus.BAD_REQUEST, "cannot follow yourself");
-        User target = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        signedUser.follow(target);
-        eventPublisher.publish(new UserFollowedEvent(signedUser.getId(), userId));
+        followTimer.record(() -> {
+            User signedUser = getSignedUser();
+            if (signedUser.getId().equals(userId))
+                throw new CustomErrorException(HttpStatus.BAD_REQUEST, "cannot follow yourself");
+            User target = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+            signedUser.follow(target);
+            eventPublisher.publish(new UserFollowedEvent(signedUser.getId(), userId));
+            followCounter.increment();
+        });
     }
 
     @Override
     @Transactional
     public void unfollowUser(UUID userId) {
-        User signedUser = getSignedUser();
-        if (signedUser.getId().equals(userId))
-            throw new CustomErrorException(HttpStatus.BAD_REQUEST, "cannot unfollow yourself");
-        User target = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        signedUser.unfollow(target);
+        followTimer.record(() -> {
+            User signedUser = getSignedUser();
+            if (signedUser.getId().equals(userId))
+                throw new CustomErrorException(HttpStatus.BAD_REQUEST, "cannot unfollow yourself");
+            User target = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+            signedUser.unfollow(target);
+            unfollowCounter.increment();
+        });
     }
 
     @Override

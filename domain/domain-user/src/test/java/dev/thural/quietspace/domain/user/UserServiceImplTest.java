@@ -11,6 +11,8 @@ import dev.thural.quietspace.domain.user.dto.ProfileSettingsRequest;
 import dev.thural.quietspace.domain.user.dto.ProfileSettingsResponse;
 import dev.thural.quietspace.domain.user.dto.UserRequest;
 import dev.thural.quietspace.domain.user.dto.UserResponse;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,8 +54,15 @@ class UserServiceImplTest {
     @Mock
     private TransactionalEventPublisher eventPublisher;
 
+    private final MeterRegistry meterRegistry = new SimpleMeterRegistry();
+
     @InjectMocks
     UserServiceImpl userService;
+
+    @BeforeEach
+    void initMocks() {
+        userService = new UserServiceImpl(userMapper, userRepository, userQuery, photoService, eventPublisher, meterRegistry);
+    }
 
     private UUID userId;
     private User user;

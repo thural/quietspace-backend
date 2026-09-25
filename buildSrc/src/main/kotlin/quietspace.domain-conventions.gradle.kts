@@ -18,6 +18,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     api("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-core")
+    implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.projectlombok:lombok:1.18.46")
