@@ -1,46 +1,49 @@
 package dev.thural.quietspace.core.shared.util;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 class PageUtilsTest {
 
     @Test
-    void pageFromList_givenFullPage_returnsSubListWithTotalCount() {
-        List<String> list = List.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j");
-        Pageable pageable = PageRequest.of(0, 5);
+    void pageFromList_givenListAndPageable_returnsPage() {
+        List<String> list = List.of("a", "b", "c", "d", "e");
+        PageRequest pageable = PageRequest.of(0, 2);
 
         Page<String> page = PageUtils.pageFromList(list, pageable);
 
-        assertThat(page.getContent()).hasSize(5);
-        assertThat(page.getTotalElements()).isEqualTo(10);
+        assertThat(page.getContent()).containsExactly("a", "b");
+        assertThat(page.getTotalElements()).isEqualTo(5);
+        assertThat(page.getTotalPages()).isEqualTo(3);
     }
 
     @Test
-    void pageFromList_givenLastPartialPage_returnsRemaining() {
-        List<String> list = List.of("a", "b", "c", "d", "e", "f", "g");
-        Pageable pageable = PageRequest.of(1, 5);
-
-        Page<String> page = PageUtils.pageFromList(list, pageable);
-
-        assertThat(page.getContent()).hasSize(2);
-        assertThat(page.getTotalElements()).isEqualTo(7);
-    }
-
-    @Test
-    void pageFromList_givenEmptyList_returnsEmptyPage() {
-        List<String> list = List.of();
-        Pageable pageable = PageRequest.of(0, 5);
+    void pageFromList_givenOffsetBeyondSize_returnsEmptyPage() {
+        List<String> list = List.of("a", "b");
+        PageRequest pageable = PageRequest.of(2, 2);
 
         Page<String> page = PageUtils.pageFromList(list, pageable);
 
         assertThat(page.getContent()).isEmpty();
-        assertThat(page.getTotalElements()).isZero();
+        assertThat(page.getTotalElements()).isEqualTo(0);
+    }
+
+    @Test
+    void pageFromList_givenLastPage_returnsRemainingElements() {
+        List<String> list = List.of("a", "b", "c", "d", "e");
+        PageRequest pageable = PageRequest.of(2, 2);
+
+        Page<String> page = PageUtils.pageFromList(list, pageable);
+
+        assertThat(page.getContent()).containsExactly("e");
+        assertThat(page.getTotalElements()).isEqualTo(5);
     }
 }

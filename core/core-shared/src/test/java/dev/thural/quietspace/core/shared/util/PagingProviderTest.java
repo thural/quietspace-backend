@@ -1,53 +1,54 @@
 package dev.thural.quietspace.core.shared.util;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 class PagingProviderTest {
 
+    private final PagingProvider provider = new PagingProvider();
+
     @Test
-    void buildPageRequest_givenNullPageNumber_returnsPage0() {
-        PageRequest pr = PagingProvider.buildPageRequest(null, 25, null);
-        assertThat(pr.getPageNumber()).isZero();
+    void buildPageRequest_defaultsToFirstPageSize25() {
+        var pageRequest = provider.buildPageRequest(null, null, null);
+
+        assertThat(pageRequest.getPageNumber()).isEqualTo(0);
+        assertThat(pageRequest.getPageSize()).isEqualTo(25);
+        assertThat(pageRequest.getSort()).isEqualTo(PagingProvider.DEFAULT_SORT_OPTION);
     }
 
     @Test
-    void buildPageRequest_givenPageNumber3_returnsPage3() {
-        PageRequest pr = PagingProvider.buildPageRequest(3, 25, null);
-        assertThat(pr.getPageNumber()).isEqualTo(3);
+    void buildPageRequest_customParams() {
+        var pageRequest = provider.buildPageRequest(2, 50, Sort.by("name").ascending());
+
+        assertThat(pageRequest.getPageNumber()).isEqualTo(2);
+        assertThat(pageRequest.getPageSize()).isEqualTo(50);
+        assertThat(pageRequest.getSort()).isEqualTo(Sort.by("name").ascending());
     }
 
     @Test
-    void buildPageRequest_givenNullPageSize_returnsSize25() {
-        PageRequest pr = PagingProvider.buildPageRequest(0, null, null);
-        assertThat(pr.getPageSize()).isEqualTo(25);
+    void buildPageRequest_boundsPageSize() {
+        var pageRequest = provider.buildPageRequest(0, 2000, Sort.by("id").ascending());
+
+        assertThat(pageRequest.getPageSize()).isEqualTo(1000);
     }
 
     @Test
-    void buildPageRequest_givenPageSize2000_capsAt1000() {
-        PageRequest pr = PagingProvider.buildPageRequest(0, 2000, null);
-        assertThat(pr.getPageSize()).isEqualTo(1000);
+    void buildPageRequest_givenZeroPage_usesDefault() {
+        var pageRequest = provider.buildPageRequest(0, 10, Sort.by("id").ascending());
+
+        assertThat(pageRequest.getPageNumber()).isEqualTo(0);
     }
 
     @Test
-    void buildPageRequest_givenValidPageSize_usesIt() {
-        PageRequest pr = PagingProvider.buildPageRequest(0, 10, null);
-        assertThat(pr.getPageSize()).isEqualTo(10);
-    }
+    void buildPageRequest_givenNegativePage_usesDefault() {
+        var pageRequest = provider.buildPageRequest(-1, 10, Sort.by("id").ascending());
 
-    @Test
-    void buildPageRequest_givenNullSort_usesDefaultDescending() {
-        PageRequest pr = PagingProvider.buildPageRequest(0, 25, null);
-        assertThat(pr.getSort()).isEqualTo(Sort.by("createDate").descending());
-    }
-
-    @Test
-    void buildPageRequest_givenCustomSort_usesIt() {
-        Sort customSort = Sort.by("text").ascending();
-        PageRequest pr = PagingProvider.buildPageRequest(0, 25, customSort);
-        assertThat(pr.getSort()).isEqualTo(customSort);
+        assertThat(pageRequest.getPageNumber()).isEqualTo(0);
     }
 }
