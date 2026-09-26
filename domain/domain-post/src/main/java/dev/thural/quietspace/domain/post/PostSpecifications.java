@@ -4,6 +4,7 @@ import dev.thural.quietspace.domain.comment.Comment;
 import dev.thural.quietspace.domain.user.ProfileSettings;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.api.UserQueryPort;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class PostSpecifications {
 
     private final UserService userService;
+    private final UserQueryPort userQueryPort;
 
     public Specification<Post> visibleToUser() {
         return (root, query, criteriaBuilder) -> {
@@ -40,6 +42,15 @@ public class PostSpecifications {
 
             String likePattern = "%" + searchText.toLowerCase() + "%";
 
+            // Author-username matching goes through the user query port so the
+            // database filter stays an IN predicate (pagination-safe, no join).
+            // An empty id set must yield no rows: render an always-false predicate
+            // instead of an empty IN list.
+            var authorIds = userQueryPort.searchUserIds(searchText);
+            var authorMatch = authorIds.isEmpty()
+                    ? criteriaBuilder.disjunction()
+                    : root.get("authorId").in(authorIds);
+
             return criteriaBuilder.or(
                     criteriaBuilder.like(
                             criteriaBuilder.lower(root.get("title")),
@@ -49,10 +60,7 @@ public class PostSpecifications {
                             criteriaBuilder.lower(root.get("text")),
                             likePattern
                     ),
-                    criteriaBuilder.like(
-                            criteriaBuilder.lower(root.get("user").get("username")),
-                            likePattern
-                    )
+                    authorMatch
             );
         };
     }

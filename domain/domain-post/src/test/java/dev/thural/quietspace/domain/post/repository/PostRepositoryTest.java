@@ -4,9 +4,12 @@ import dev.thural.quietspace.domain.comment.Comment;
 import dev.thural.quietspace.domain.comment.CommentRepository;
 import dev.thural.quietspace.domain.post.Post;
 import dev.thural.quietspace.domain.post.PostRepository;
+import dev.thural.quietspace.domain.post.PostSpecifications;
 import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.api.UserQueryAdapter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -80,6 +84,24 @@ class PostRepositoryTest {
         Page<Post> list = postRepository.findAllByQuery("sample", null);
         assertThat(list.toList().size()).isEqualTo(1);
         assertThat(list.toList().get(0)).isEqualTo(savedPost);
+    }
+
+    @Test
+    void testContainsText_shouldMatchTitle() {
+        var specs = new PostSpecifications(
+                org.mockito.Mockito.mock(UserService.class),
+                new UserQueryAdapter(userRepository));
+        Page<Post> list = postRepository.findAll(specs.containsText("sample"), Pageable.unpaged());
+        assertThat(list.toList()).hasSize(1);
+    }
+
+    @Test
+    void testContainsText_givenUnknownTerm_shouldReturnEmpty() {
+        var specs = new PostSpecifications(
+                org.mockito.Mockito.mock(UserService.class),
+                new UserQueryAdapter(userRepository));
+        Page<Post> list = postRepository.findAll(specs.containsText("zzz-no-match"), Pageable.unpaged());
+        assertThat(list.toList()).isEmpty();
     }
 
     @Test

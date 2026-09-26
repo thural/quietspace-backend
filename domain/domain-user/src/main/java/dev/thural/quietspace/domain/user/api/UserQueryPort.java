@@ -36,4 +36,12 @@ public interface UserQueryPort {
      * @return user id, or empty if no user matches
      */
     Optional<UUID> findUserIdByUsernameOrEmail(String usernameOrEmail);
+
+    /**
+     * Cross-module search support (e.g. post text search matching author names).
+     * Pagination-safe: callers use the ids in an SQL {@code IN} predicate.
+     *
+     * @return ids of users whose username/email/firstname/lastname match; empty if none
+     */
+    Set<UUID> searchUserIds(String keyword);
 }

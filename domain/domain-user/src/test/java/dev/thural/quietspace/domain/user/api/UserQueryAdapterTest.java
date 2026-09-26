@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -120,5 +121,20 @@ class UserQueryAdapterTest {
         when(userRepository.findUserByUsername("ghost")).thenReturn(Optional.empty());
 
         assertThat(adapter.findUserIdByUsernameOrEmail("ghost")).isEmpty();
+    }
+
+    @Test
+    void searchUserIds_givenKeyword_shouldReturnMatchingIds() {
+        UUID id = UUID.randomUUID();
+        User match = user(id, "jdoe", "John", "Doe");
+        when(userRepository.findAllBySearchTerm("doe", Pageable.unpaged()))
+                .thenReturn(new org.springframework.data.domain.PageImpl<>(List.of(match)));
+
+        assertThat(adapter.searchUserIds("doe")).containsExactly(id);
+    }
+
+    @Test
+    void searchUserIds_givenBlankKeyword_shouldReturnEmptyWithoutQuery() {
+        assertThat(adapter.searchUserIds(" ")).isEmpty();
     }
 }

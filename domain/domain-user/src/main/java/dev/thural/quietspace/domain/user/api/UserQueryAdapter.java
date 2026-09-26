@@ -4,6 +4,7 @@ import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -44,6 +45,16 @@ public class UserQueryAdapter implements UserQueryPort {
         return userRepository.findUserEntityByEmail(usernameOrEmail)
                 .or(() -> userRepository.findUserByUsername(usernameOrEmail))
                 .map(User::getId);
+    }
+
+    @Override
+    public Set<UUID> searchUserIds(String keyword) {
+        if (!StringUtils.hasText(keyword)) {
+            return Collections.emptySet();
+        }
+        return userRepository.findAllBySearchTerm(keyword, Pageable.unpaged()).stream()
+                .map(User::getId)
+                .collect(Collectors.toSet());
     }
 
     private UserSummaryDTO toSummary(User user) {
