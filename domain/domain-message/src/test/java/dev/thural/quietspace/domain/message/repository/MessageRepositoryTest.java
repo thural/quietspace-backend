@@ -67,8 +67,8 @@ class MessageRepositoryTest {
     private final Message message = Message.builder()
             .text("sample text")
             .chat(chat)
-            .sender(user1)
-            .recipient(user2)
+            .senderId(UUID.randomUUID())
+            .recipientId(UUID.randomUUID())
             .createDate(OffsetDateTime.now())
             .updateDate(OffsetDateTime.now())
             .build();

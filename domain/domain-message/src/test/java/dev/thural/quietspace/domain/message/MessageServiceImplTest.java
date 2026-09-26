@@ -73,8 +73,8 @@ class MessageServiceImplTest {
 
         this.message = Message.builder()
                 .id(UUID.randomUUID())
-                .sender(user)
-                .recipient(user)
+                .senderId(user.getId())
+                .recipientId(user.getId())
                 .chat(chat)
                 .text("sample text")
                 .build();

@@ -1,6 +1,7 @@
 package dev.thural.quietspace.domain.message.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
@@ -77,252 +78,53 @@ class DomainMessageArchitectureRulesTest {
     }
 
     @Test
-    void has_no_domain_post_adapter_dependency() {
+    void has_no_domain_post_dependency() {
         ArchRule rule = noClasses()
                 .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.post.adapter..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.post.adapter");
+                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.post..")
+                .because("DomainMessage must not depend on domain post (allowed edges: domain-user, domain-chat, domain-photo)");
         rule.check(CLASSES);
     }
 
     @Test
-    void has_no_domain_post_service_dependency() {
+    void has_no_domain_comment_dependency() {
         ArchRule rule = noClasses()
                 .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.post.service..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.post.service");
+                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.comment..")
+                .because("DomainMessage must not depend on domain comment (allowed edges: domain-user, domain-chat, domain-photo)");
         rule.check(CLASSES);
     }
 
     @Test
-    void has_no_domain_post_controller_dependency() {
+    void has_no_domain_reaction_dependency() {
         ArchRule rule = noClasses()
                 .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.post.controller..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.post.controller");
+                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.reaction..")
+                .because("DomainMessage must not depend on domain reaction (allowed edges: domain-user, domain-chat, domain-photo)");
         rule.check(CLASSES);
     }
 
     @Test
-    void has_no_domain_post_model_dependency() {
+    void has_no_domain_notification_dependency() {
         ArchRule rule = noClasses()
                 .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.post.model..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.post.model");
+                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.notification..")
+                .because("DomainMessage must not depend on domain notification (allowed edges: domain-user, domain-chat, domain-photo)");
         rule.check(CLASSES);
     }
 
     @Test
-    void has_no_domain_post_repository_dependency() {
+    void has_no_foreign_repository_dependency() {
         ArchRule rule = noClasses()
                 .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.post.repository..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.post.repository");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_photo_adapter_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.photo.adapter..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.photo.adapter");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_photo_service_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.photo.service..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.photo.service");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_photo_controller_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.photo.controller..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.photo.controller");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_photo_model_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.photo.model..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.photo.model");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_photo_repository_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.photo.repository..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.photo.repository");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_comment_adapter_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.comment.adapter..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.comment.adapter");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_comment_service_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.comment.service..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.comment.service");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_comment_controller_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.comment.controller..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.comment.controller");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_comment_model_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.comment.model..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.comment.model");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_comment_repository_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.comment.repository..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.comment.repository");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_reaction_adapter_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.reaction.adapter..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.reaction.adapter");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_reaction_service_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.reaction.service..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.reaction.service");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_reaction_controller_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.reaction.controller..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.reaction.controller");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_reaction_model_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.reaction.model..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.reaction.model");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_reaction_repository_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.reaction.repository..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.reaction.repository");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_notification_adapter_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.notification.adapter..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.notification.adapter");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_notification_service_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.notification.service..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.notification.service");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_notification_controller_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.notification.controller..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.notification.controller");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_notification_model_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.notification.model..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.notification.model");
-        rule.check(CLASSES);
-    }
-
-    @Test
-    void has_no_domain_notification_repository_dependency() {
-        ArchRule rule = noClasses()
-                .that().resideInAPackage("dev.thural.quietspace.domain.message..")
-                .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.notification.repository..")
-                .allowEmptyShould(true)
-                .because("DomainMessageArchitectureRulesTest must not depend on domain.notification.repository");
+                .should().dependOnClassesThat(JavaClass.Predicates.simpleNameEndingWith("Repository")
+                        .and(JavaClass.Predicates.resideInAPackage("dev.thural.quietspace.domain.user..")
+                                .or(JavaClass.Predicates.resideInAPackage("dev.thural.quietspace.domain.post.."))
+                                .or(JavaClass.Predicates.resideInAPackage("dev.thural.quietspace.domain.photo.."))
+                                .or(JavaClass.Predicates.resideInAPackage("dev.thural.quietspace.domain.comment.."))
+                                .or(JavaClass.Predicates.resideInAPackage("dev.thural.quietspace.domain.reaction.."))
+                                .or(JavaClass.Predicates.resideInAPackage("dev.thural.quietspace.domain.notification.."))))
+                .because("DomainMessage repositories are module-internal (ChatRepository excepted: chat owns message); cross-domain reads go through api query ports");
         rule.check(CLASSES);
     }
 }

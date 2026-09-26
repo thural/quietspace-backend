@@ -41,8 +41,8 @@ class MessageChatAdapterTest {
         return Message.builder()
                 .id(UUID.randomUUID())
                 .chat(Chat.builder().id(chatId).build())
-                .sender(User.builder().id(userId).username("u").build())
-                .recipient(User.builder().id(UUID.randomUUID()).username("r").build())
+                .senderId(userId)
+                .recipientId(UUID.randomUUID())
                 .text("hello")
                 .isSeen(false)
                 .build();

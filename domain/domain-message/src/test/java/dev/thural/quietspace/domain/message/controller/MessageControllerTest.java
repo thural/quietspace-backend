@@ -91,7 +91,7 @@ class MessageControllerTest {
                 .id(UUID.randomUUID())
                 .text("sample text")
                 .chat(chat)
-                .sender(user)
+                .senderId(user.getId())
                 .build();
         this.messageResponse = MessageResponse.builder()
                 .id(UUID.randomUUID())
@@ -103,7 +103,7 @@ class MessageControllerTest {
 
         this.messageRequest = MessageRequest.builder()
                 .chatId(message.getChat().getId())
-                .senderId(message.getSender().getId())
+                .senderId(message.getSenderId())
                 .recipientId(user2.getId())
                 .text(message.getText())
                 .build();

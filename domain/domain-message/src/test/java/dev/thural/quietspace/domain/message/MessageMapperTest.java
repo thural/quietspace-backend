@@ -7,7 +7,8 @@ import dev.thural.quietspace.domain.message.dto.MessageResponse;
 import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
 import dev.thural.quietspace.domain.user.User;
-import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.api.UserQueryPort;
+import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.*;
 class MessageMapperTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserQueryPort userQueryPort;
 
     @Mock
     private ChatRepository chatRepository;
@@ -87,8 +88,8 @@ class MessageMapperTest {
         message = Message.builder()
                 .id(messageId)
                 .chat(chat)
-                .sender(sender)
-                .recipient(recipient)
+                .senderId(senderId)
+                .recipientId(recipientId)
                 .text("Hello, this is a test message")
                 .photoId(photoId)
                 .isSeen(false)
@@ -108,8 +109,8 @@ class MessageMapperTest {
     void toEntity_shouldConvertRequestToEntity() {
         // Given
         when(chatRepository.findById(chatId)).thenReturn(Optional.of(chat));
-        when(userRepository.findById(senderId)).thenReturn(Optional.of(sender));
-        when(userRepository.findById(recipientId)).thenReturn(Optional.of(recipient));
+        when(userQueryPort.getUserSummary(senderId)).thenReturn(Optional.of(new UserSummaryDTO(senderId, "sender", "Sender", null, null)));
+        when(userQueryPort.getUserSummary(recipientId)).thenReturn(Optional.of(new UserSummaryDTO(recipientId, "recipient", "Recipient", null, null)));
 
         // When
         Message result = messageMapper.toEntity(messageRequest);
@@ -118,13 +119,13 @@ class MessageMapperTest {
         assertThat(result).isNotNull();
         assertThat(result.getText()).isEqualTo(messageRequest.getText());
         assertThat(result.getChat()).isEqualTo(chat);
-        assertThat(result.getSender()).isEqualTo(sender);
-        assertThat(result.getRecipient()).isEqualTo(recipient);
+        assertThat(result.getSenderId()).isEqualTo(senderId);
+        assertThat(result.getRecipientId()).isEqualTo(recipientId);
 
         verify(chatRepository).findById(chatId);
-        verify(userRepository, times(2)).findById(any(UUID.class));
-        verify(userRepository).findById(senderId);
-        verify(userRepository).findById(recipientId);
+        verify(userQueryPort, times(2)).getUserSummary(any(UUID.class));
+        verify(userQueryPort).getUserSummary(senderId);
+        verify(userQueryPort).getUserSummary(recipientId);
     }
 
     @Test
@@ -137,38 +138,38 @@ class MessageMapperTest {
                 .isInstanceOf(EntityNotFoundException.class);
 
         verify(chatRepository).findById(chatId);
-        verify(userRepository, never()).findById(any());
+        verify(userQueryPort, never()).getUserSummary(any());
     }
 
     @Test
     void toEntity_shouldThrowExceptionWhenSenderNotFound() {
         // Given
         when(chatRepository.findById(chatId)).thenReturn(Optional.of(chat));
-        when(userRepository.findById(senderId)).thenReturn(Optional.empty());
+        when(userQueryPort.getUserSummary(senderId)).thenReturn(Optional.empty());
 
         // When & Then
         assertThatThrownBy(() -> messageMapper.toEntity(messageRequest))
                 .isInstanceOf(EntityNotFoundException.class);
 
         verify(chatRepository).findById(chatId);
-        verify(userRepository).findById(senderId);
-        verify(userRepository, never()).findById(recipientId);
+        verify(userQueryPort).getUserSummary(senderId);
+        verify(userQueryPort, never()).getUserSummary(recipientId);
     }
 
     @Test
     void toEntity_shouldThrowExceptionWhenRecipientNotFound() {
         // Given
         when(chatRepository.findById(chatId)).thenReturn(Optional.of(chat));
-        when(userRepository.findById(senderId)).thenReturn(Optional.of(sender));
-        when(userRepository.findById(recipientId)).thenReturn(Optional.empty());
+        when(userQueryPort.getUserSummary(senderId)).thenReturn(Optional.of(new UserSummaryDTO(senderId, "sender", "Sender", null, null)));
+        when(userQueryPort.getUserSummary(recipientId)).thenReturn(Optional.empty());
 
         // When & Then
         assertThatThrownBy(() -> messageMapper.toEntity(messageRequest))
                 .isInstanceOf(EntityNotFoundException.class);
 
         verify(chatRepository).findById(chatId);
-        verify(userRepository).findById(senderId);
-        verify(userRepository).findById(recipientId);
+        verify(userQueryPort).getUserSummary(senderId);
+        verify(userQueryPort).getUserSummary(recipientId);
     }
 
     @Test
@@ -277,8 +278,8 @@ class MessageMapperTest {
     void toEntity_shouldCopyAllRequestFields() {
         // Given
         when(chatRepository.findById(chatId)).thenReturn(Optional.of(chat));
-        when(userRepository.findById(senderId)).thenReturn(Optional.of(sender));
-        when(userRepository.findById(recipientId)).thenReturn(Optional.of(recipient));
+        when(userQueryPort.getUserSummary(senderId)).thenReturn(Optional.of(new UserSummaryDTO(senderId, "sender", "Sender", null, null)));
+        when(userQueryPort.getUserSummary(recipientId)).thenReturn(Optional.of(new UserSummaryDTO(recipientId, "recipient", "Recipient", null, null)));
 
         // When
         Message result = messageMapper.toEntity(messageRequest);
@@ -290,7 +291,7 @@ class MessageMapperTest {
         // The relationships are set separately in the mapper
 
         verify(chatRepository).findById(chatId);
-        verify(userRepository, times(2)).findById(any(UUID.class));
+        verify(userQueryPort, times(2)).getUserSummary(any(UUID.class));
     }
 
     @Test

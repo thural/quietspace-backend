@@ -43,7 +43,7 @@ public class MessageServiceImpl implements MessageService {
         User loggedUser = userService.getSignedUser();
         Chat parentChat = chatRepository.findById(messageRequest.getChatId()).orElseThrow(EntityNotFoundException::new);
         Message newMessage = messageMapper.toEntity(messageRequest);
-        newMessage.setSender(loggedUser);
+        newMessage.setSenderId(loggedUser.getId());
         newMessage.setChat(parentChat);
         Message savedMessage = messageRepository.save(newMessage);
         if (messageRequest.getPhotoData() != null) saveMessagePhoto(messageRequest, newMessage);
@@ -54,7 +54,7 @@ public class MessageServiceImpl implements MessageService {
     @Transactional
     public Optional<MessageResponse> deleteMessage(UUID messageId) {
         Message existingMessage = findMessageOrElseThrow(messageId);
-        checkResourceAccess(existingMessage.getSender().getId());
+        checkResourceAccess(existingMessage.getSenderId());
         messageRepository.deleteById(messageId);
         photoService.deletePhotoByEntityId(messageId);
         return Optional.of(messageMapper.toResponse(existingMessage));
@@ -87,9 +87,9 @@ public class MessageServiceImpl implements MessageService {
         existingMessage.setIsSeen(true);
         Message savedMessage = messageRepository.save(existingMessage);
         long unreadCount = messageRepository.countByRecipientIdAndIsSeen(
-                existingMessage.getRecipient().getId(), false);
+                existingMessage.getRecipientId(), false);
         template.convertAndSendToUser(
-                existingMessage.getRecipient().getId().toString(), UNREAD_COUNT, unreadCount);
+                existingMessage.getRecipientId().toString(), UNREAD_COUNT, unreadCount);
         return Optional.ofNullable(messageMapper.toResponse(savedMessage));
     }
 

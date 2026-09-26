@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import dev.thural.quietspace.domain.chat.Chat;
-import dev.thural.quietspace.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -34,13 +33,14 @@ public class Message extends BaseEntity {
     private Chat chat;
 
     @NotNull
-    @ManyToOne
-    @JsonBackReference
-    private User sender;
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "sender_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID senderId;
 
     @NotNull
-    @ManyToOne
-    private User recipient;
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "recipient_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID recipientId;
 
     @NotBlank
     @Column(length = 999)
@@ -60,20 +60,20 @@ public class Message extends BaseEntity {
     }
 
     // Factory method with validation
-    public static Message create(User sender, User recipient, Chat chat, String text) {
-        if (sender == null || recipient == null || chat == null) {
+    public static Message create(UUID senderId, UUID recipientId, Chat chat, String text) {
+        if (senderId == null || recipientId == null || chat == null) {
             throw new IllegalArgumentException("Sender, recipient, and chat are required");
         }
         if (text == null || text.trim().isEmpty()) {
             throw new IllegalArgumentException("Message text cannot be empty");
         }
-        if (sender.equals(recipient)) {
+        if (senderId.equals(recipientId)) {
             throw new IllegalArgumentException("Sender and recipient cannot be the same user");
         }
-        
+
         Message message = new Message();
-        message.setSender(sender);
-        message.setRecipient(recipient);
+        message.setSenderId(senderId);
+        message.setRecipientId(recipientId);
         message.setChat(chat);
         message.setText(text);
         message.setIsSeen(false);
