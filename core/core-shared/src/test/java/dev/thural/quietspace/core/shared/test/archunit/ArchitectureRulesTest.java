@@ -1,6 +1,7 @@
 package dev.thural.quietspace.core.shared.test.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
@@ -34,6 +35,21 @@ public class ArchitectureRulesTest {
             .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain..")
             .allowEmptyShould(true)
             .because("core modules must not depend on domain modules");
+
+    @ArchTest
+    static final ArchRule no_core_user_entity_dependency = noClasses()
+            .that().resideInAPackage("dev.thural.quietspace.core..")
+            .should().dependOnClassesThat(JavaClass.Predicates.simpleName("User")
+                    .and(JavaClass.Predicates.resideInAPackage("dev.thural.quietspace.domain.user")))
+            .allowEmptyShould(true)
+            .because("IAM bounded context lives in domain-user: core must have zero knowledge of the User entity (Phase A.1)");
+
+    @ArchTest
+    static final ArchRule no_core_auth_dependency = noClasses()
+            .that().resideInAPackage("dev.thural.quietspace.core..")
+            .should().dependOnClassesThat().resideInAPackage("dev.thural.quietspace.domain.user.auth..")
+            .allowEmptyShould(true)
+            .because("authentication is part of the domain-user IAM context: core must not depend on it (Phase A.1)");
 
     @ArchTest
     static final ArchRule no_domain_internal_access = noClasses()
