@@ -1,12 +1,11 @@
 package dev.thural.quietspace.domain.post;
 
 import dev.thural.quietspace.domain.comment.api.CommentQueryPort;
-import dev.thural.quietspace.domain.user.ProfileSettings;
-import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
 import dev.thural.quietspace.domain.user.api.UserQueryPort;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -24,15 +23,28 @@ public class PostSpecifications {
 
     public Specification<Post> visibleToUser() {
         return (root, query, criteriaBuilder) -> {
-            User signedUser = userService.getSignedUser();
-            Join<Post, User> userJoin = root.join("user");
-            Join<User, ProfileSettings> settingsJoin = userJoin.join("profileSettings");
+            // Feed visibility resolves against the denormalized read model
+            // (post_author_visibility, viewer_author_access — see ADR 005) so
+            // filtering stays inside SQL and pagination stays dense. Authors
+            // without a visibility row default to public.
+            UUID viewerId = userService.getSignedUser().getId();
 
-            Predicate publicAccount = criteriaBuilder.equal(settingsJoin.get("isPrivateAccount"), false);
-            Predicate isFollower = criteriaBuilder.isMember(signedUser, userJoin.get("followers"));
-            Predicate isOwner = criteriaBuilder.equal(userJoin.get("id"), signedUser.getId());
+            Subquery<UUID> privateAuthors = query.subquery(UUID.class);
+            Root<PostAuthorVisibility> visibility = privateAuthors.from(PostAuthorVisibility.class);
+            privateAuthors.select(visibility.get("authorId"))
+                    .where(criteriaBuilder.isTrue(visibility.get("isPrivate")));
+            Predicate isPublic = criteriaBuilder.not(root.get("authorId").in(privateAuthors));
 
-            return criteriaBuilder.or(publicAccount, isFollower, isOwner);
+            Predicate isOwner = criteriaBuilder.equal(root.get("authorId"), viewerId);
+
+            Subquery<UUID> access = query.subquery(UUID.class);
+            Root<ViewerAuthorAccess> edge = access.from(ViewerAuthorAccess.class);
+            access.select(edge.get("authorId")).where(
+                    criteriaBuilder.equal(edge.get("viewerId"), viewerId),
+                    criteriaBuilder.equal(edge.get("authorId"), root.get("authorId")));
+            Predicate isGranted = criteriaBuilder.exists(access);
+
+            return criteriaBuilder.or(isPublic, isOwner, isGranted);
         };
     }
 
@@ -83,11 +95,6 @@ public class PostSpecifications {
 
     public Specification<Post> savedWithIds(java.util.List<UUID> savedIds) {
         return (root, query, criteriaBuilder) -> root.get("id").in(savedIds);
-    }
-
-    public Specification<Post> byUser(User user) {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("user"), user);
     }
 }
 

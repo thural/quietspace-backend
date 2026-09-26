@@ -127,7 +127,42 @@ public abstract class DomainEvent {
 
 ---
 
-### 7. EmailEvent
+### 7. UserUnfollowedEvent
+| Property | Type | Description |
+|----------|------|-------------|
+| `eventId` | UUID | Unique event identifier |
+| `timestamp` | OffsetDateTime | Event creation time |
+| `aggregateType` | String | "User" |
+| `aggregateId` | UUID | Unfollowed user ID |
+| `eventType` | String | "UserUnfollowed" |
+| `followerId` | UUID | User who unfollowed |
+| `followedId` | UUID | User who was unfollowed |
+
+**Publisher**: `domain-user` → `UserService.unfollowUser()`, `removeFollower()`
+**Consumers**: `domain-post` → `PostVisibilityProjector` (removes viewer→author access edge)
+**Routing Key**: `domain.user.unfollowed`
+
+---
+
+### 8. UserPrivacyChangedEvent
+| Property | Type | Description |
+|----------|------|-------------|
+| `eventId` | UUID | Unique event identifier |
+| `timestamp` | OffsetDateTime | Event creation time |
+| `aggregateType` | String | "User" |
+| `aggregateId` | UUID | User ID |
+| `eventType` | String | "UserPrivacyChanged" |
+| `userId` | UUID | User ID |
+| `isPrivate` | Boolean | New privacy state |
+
+**Publisher**: `domain-user` → `UserService.saveProfileSettings()` (only on change)
+**Consumers**: `domain-post` → `PostVisibilityProjector` (upserts author visibility row)
+**Routing Key**: `domain.user.privacy-changed`
+**Consistency note**: see ADR 005 — sub-second propagation window accepted by product sign-off.
+
+---
+
+### 9. EmailEvent
 | Property | Type | Description |
 |----------|------|-------------|
 | `to` | String | Recipient email |
