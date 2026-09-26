@@ -348,15 +348,15 @@ App module currently declares many Spring Boot starters that domain modules alre
 
 ## Success Criteria
 
-- [ ] All 15 modules have `src/test` with unit, slice, and integration tests
-- [ ] App module has only cross-cutting tests (< 10 tests)
-- [ ] Each module has `ArchitectureRulesTest` with module-specific rules
-- [ ] All repositories package-private
-- [ ] All domain modules have `api` package with immutable DTO records
-- [ ] All cross-domain communication via ports (no direct repo/service access)
-- [ ] Full test suite passes: `./gradlew test`
-- [ ] All ArchUnit rules pass: `./gradlew test --tests "*ArchitectureRulesTest*"`
-- [ ] Static analysis clean: `./gradlew spotbugsMain pmdMain checkstyleMain`
+- [x] All 15 modules have `src/test` with unit and slice tests (integration FlowITs live in `app` by definition — see Phase 6.1 amendment)
+- [x] App module hosts only cross-cutting + FlowIT tests; **zero unit/slice tests** (amended from "< 10 tests": FlowITs/security tests require the composition-root context and cannot move to domain modules without circular Gradle deps)
+- [x] Each module has `ArchitectureRulesTest` with module-specific rules
+- [ ] All repositories package-private — **superseded**: enforce "no cross-module repository imports" via rewritten ArchUnit rules instead (Java package-private is package-exact and would break same-module `adapter/health/api/security` subpackages; see refactoring plan Phase B)
+- [x] Query-port `api` packages with immutable DTO records in user/photo/post/comment/reaction (chat owns message context, notification is a sink, message needs no query port — no `api` required there)
+- [ ] All cross-domain communication via ports — with documented exceptions: `UserProfilePort`/`WebSocketUserPort` stay in `core-shared` (outbound SPI; move would create a user↔photo cycle), message→chat (aggregate ownership), entity-graph navigation pending JPA decoupling (Phase E)
+- [x] Full test suite passes: `./gradlew test`
+- [x] All ArchUnit rules pass: `./gradlew test --tests "*ArchitectureRulesTest*"`
+- [x] Static analysis clean: `./gradlew spotbugsMain pmdMain checkstyleMain`
 
 ---
 
