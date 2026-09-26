@@ -24,6 +24,10 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.46")
 
     implementation("org.mapstruct:mapstruct:1.6.3")
+    // Phase 3.5: SpringWolf WebSocket API docs live with WebSocket infrastructure.
+    implementation("io.github.springwolf:springwolf-stomp:2.5.0")
+    implementation("io.github.springwolf:springwolf-ui:2.5.0")
+    runtimeOnly("io.github.springwolf:springwolf-stomp-binding:2.5.0")
 
     annotationProcessor("org.projectlombok:lombok:1.18.46")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")

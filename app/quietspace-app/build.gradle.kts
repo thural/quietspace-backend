@@ -41,9 +41,6 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql")
 
     implementation("org.mapstruct:mapstruct:1.6.3")
-    implementation("io.github.springwolf:springwolf-stomp:2.5.0")
-    implementation("io.github.springwolf:springwolf-ui:2.5.0")
-    runtimeOnly("io.github.springwolf:springwolf-stomp-binding:2.5.0")
     implementation("net.coobird:thumbnailator:0.4.20")
 
     implementation("com.fasterxml.jackson.core:jackson-core")
