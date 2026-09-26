@@ -368,6 +368,39 @@ class UserServiceImplTest {
     }
 
     @Test
+    void saveProfileSettings_givenPrivacyChange_shouldPublishEvent() {
+        ProfileSettings settings = ProfileSettings.builder().isPrivateAccount(false).build();
+        user.setProfileSettings(settings);
+        ProfileSettingsRequest request = ProfileSettingsRequest.builder().isPrivateAccount(true).build();
+        when(userRepository.findUserByUsername(any())).thenReturn(Optional.of(user));
+        when(userMapper.toSettingsResponse(user)).thenReturn(new ProfileSettingsResponse());
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        userService.saveProfileSettings(request);
+
+        verify(eventPublisher).publish(argThat(event ->
+                event instanceof dev.thural.quietspace.core.shared.event.UserPrivacyChangedEvent changed
+                        && changed.getUserId().equals(user.getId())
+                        && changed.isPrivate()));
+    }
+
+    @Test
+    void saveProfileSettings_givenNoPrivacyChange_shouldNotPublish() {
+        ProfileSettings settings = ProfileSettings.builder().isPrivateAccount(false).build();
+        user.setProfileSettings(settings);
+        ProfileSettingsRequest request = ProfileSettingsRequest.builder().bio("bio").build();
+        when(userRepository.findUserByUsername(any())).thenReturn(Optional.of(user));
+        when(userMapper.toSettingsResponse(user)).thenReturn(new ProfileSettingsResponse());
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        userService.saveProfileSettings(request);
+
+        verify(eventPublisher, never()).publish(any());
+    }
+
+    @Test
     void followUser_shouldFollowUser() {
         User signedUser = User.builder().id(UUID.randomUUID()).followers(new ArrayList<>()).followings(new ArrayList<>()).build();
         User target = User.builder().id(UUID.randomUUID()).followers(new ArrayList<>()).followings(new ArrayList<>()).build();
@@ -426,6 +459,10 @@ class UserServiceImplTest {
 
         assertThat(signedUser.getFollowings()).doesNotContain(target);
         assertThat(target.getFollowers()).doesNotContain(signedUser);
+        verify(eventPublisher).publish(argThat(event ->
+                event instanceof dev.thural.quietspace.core.shared.event.UserUnfollowedEvent unfollowed
+                        && unfollowed.getFollowerId().equals(signedUser.getId())
+                        && unfollowed.getFollowedId().equals(target.getId())));
     }
 
     @Test

@@ -4,6 +4,8 @@ import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.core.shared.event.TransactionalEventPublisher;
 import dev.thural.quietspace.core.shared.event.UserFollowedEvent;
+import dev.thural.quietspace.core.shared.event.UserPrivacyChangedEvent;
+import dev.thural.quietspace.core.shared.event.UserUnfollowedEvent;
 import dev.thural.quietspace.core.shared.enums.StatusType;
 import dev.thural.quietspace.core.shared.exception.CustomErrorException;
 import dev.thural.quietspace.core.shared.exception.UnauthorizedException;
@@ -93,7 +95,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public ProfileSettingsResponse saveProfileSettings(ProfileSettingsRequest request) {
         User signedUser = getSignedUser();
+        Boolean wasPrivate = signedUser.getProfileSettings().getIsPrivateAccount();
         BeanUtils.copyProperties(request, signedUser.getProfileSettings());
+        Boolean isPrivate = signedUser.getProfileSettings().getIsPrivateAccount();
+        if (!java.util.Objects.equals(wasPrivate, isPrivate) && isPrivate != null) {
+            eventPublisher.publish(new UserPrivacyChangedEvent(signedUser.getId(), isPrivate));
+        }
         return userMapper.toSettingsResponse(signedUser);
     }
 
@@ -279,6 +286,7 @@ public class UserServiceImpl implements UserService {
                 throw new CustomErrorException(HttpStatus.BAD_REQUEST, "cannot unfollow yourself");
             User target = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
             signedUser.unfollow(target);
+            eventPublisher.publish(new UserUnfollowedEvent(signedUser.getId(), userId));
             unfollowCounter.increment();
         });
     }
@@ -295,6 +303,7 @@ public class UserServiceImpl implements UserService {
         }
         signedUser.removeFollower(followingUser);
         followingUser.unfollow(signedUser);
+        eventPublisher.publish(new UserUnfollowedEvent(followingUserId, signedUser.getId()));
     }
 
     @Override
