@@ -1,4 +1,4 @@
-package dev.thural.quietspace.chat;
+package dev.thural.quietspace.domain.chat.repository;
 
 import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.chat.ChatRepository;

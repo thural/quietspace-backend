@@ -1,4 +1,4 @@
-package dev.thural.quietspace.security;
+package dev.thural.quietspace.domain.user.repository;
 
 import dev.thural.quietspace.core.shared.security.Token;
 import dev.thural.quietspace.core.shared.security.TokenRepository;

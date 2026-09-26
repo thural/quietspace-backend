@@ -1,4 +1,4 @@
-package dev.thural.quietspace.comment;
+package dev.thural.quietspace.domain.comment.repository;
 
 import dev.thural.quietspace.domain.comment.Comment;
 import dev.thural.quietspace.domain.comment.CommentRepository;

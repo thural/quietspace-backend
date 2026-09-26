@@ -1,4 +1,4 @@
-package dev.thural.quietspace.notification;
+package dev.thural.quietspace.domain.notification.repository;
 
 import dev.thural.quietspace.domain.notification.Notification;
 import dev.thural.quietspace.domain.notification.NotificationRepository;

@@ -1,4 +1,4 @@
-package dev.thural.quietspace.reaction;
+package dev.thural.quietspace.domain.reaction.repository;
 
 import dev.thural.quietspace.domain.post.Post;
 import dev.thural.quietspace.domain.post.PostRepository;

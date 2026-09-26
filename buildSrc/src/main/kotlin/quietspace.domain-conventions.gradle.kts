@@ -46,4 +46,6 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers:1.21.4")
     testImplementation("org.testcontainers:mysql:1.21.4")
     testImplementation("org.testcontainers:junit-jupiter:1.21.4")
+    // Embedded DB for @DataJpaTest slice tests (repository tests run on H2 by default)
+    testRuntimeOnly("com.h2database:h2")
 }

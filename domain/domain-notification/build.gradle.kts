@@ -8,6 +8,8 @@ dependencies {
     implementation(project(":core:core-messaging"))
     // NOTE: no domain dependencies — notification is a sink. Cross-domain data
     // arrives via consumer-owned ports (adapters live in provider modules).
+    // Test-only: NotificationRepositoryTest persists a User fixture.
+    testImplementation(project(":domain:domain-user"))
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework:spring-messaging")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

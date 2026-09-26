@@ -1,4 +1,4 @@
-package dev.thural.quietspace.user;
+package dev.thural.quietspace.domain.user.repository;
 
 import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.User;

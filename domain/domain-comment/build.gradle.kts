@@ -8,4 +8,6 @@ dependencies {
     implementation(project(":domain:domain-user"))
     implementation(project(":domain:domain-reaction"))
     implementation(project(":domain:domain-notification"))
+    // Test-only: CommentRepositoryTest exercises Post association.
+    testImplementation(project(":domain:domain-post"))
 }

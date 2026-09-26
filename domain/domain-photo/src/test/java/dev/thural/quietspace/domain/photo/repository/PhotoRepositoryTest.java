@@ -1,4 +1,4 @@
-package dev.thural.quietspace.photo;
+package dev.thural.quietspace.domain.photo.repository;
 
 import dev.thural.quietspace.domain.photo.Photo;
 import dev.thural.quietspace.domain.photo.PhotoRepository;
