@@ -52,7 +52,6 @@ class CommentRepositoryTest {
             .build();
 
     private final Comment comment = Comment.builder()
-            .user(user)
             .text("sample text")
             .parentId(UUID.randomUUID())
             .build();
@@ -65,6 +64,7 @@ class CommentRepositoryTest {
     void setUp() {
         this.savedUser = userRepository.save(user);
         this.savedPost = postRepository.save(post);
+        comment.setUserId(savedUser.getId());
         comment.setPostId(savedPost.getId());
         this.savedComment = commentRepository.save(comment);
     }

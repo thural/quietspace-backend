@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponse updateComment(UUID commentId, CommentRequest comment) {
         User loggedUser = userService.getSignedUser();
         Comment existingComment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
-        if (existingComment.getUser().equals(loggedUser))
+        if (existingComment.getUserId().equals(loggedUser.getId()))
             throw new AccessDeniedException("comment author does not belong to current user");
         existingComment.setText(comment.getText());
         return commentMapper.commentEntityToResponse(existingComment);
@@ -84,7 +84,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(UUID commentId) {
         User loggedUser = userService.getSignedUser();
         Comment existingComment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
-        if (!existingComment.getUser().getId().equals(loggedUser.getId()))
+        if (!existingComment.getUserId().equals(loggedUser.getId()))
             throw new AccessDeniedException("comment author does not belong to current user");
         if (existingComment.getParentId() == null)
             commentRepository.deleteAllByParentId(commentId);
@@ -102,7 +102,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponse patchComment(UUID commentId, CommentRequest comment) {
         User loggedUser = userService.getSignedUser();
         Comment existingComment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
-        if (!existingComment.getUser().equals(loggedUser))
+        if (!existingComment.getUserId().equals(loggedUser.getId()))
             throw new AccessDeniedException("comment author does not belong to current user");
         if (StringUtils.hasText(comment.getText())) existingComment.setText(comment.getText());
         return commentMapper.commentEntityToResponse(existingComment);

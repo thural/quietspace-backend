@@ -34,7 +34,7 @@ class CommentQueryAdapterTest {
         return Comment.builder()
                 .id(id)
                 .postId(postId)
-                .user(author)
+                .userId(author.getId())
                 .text("sample text")
                 .parentId(UUID.randomUUID())
                 .build();

@@ -1,11 +1,8 @@
 package dev.thural.quietspace.domain.comment;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import dev.thural.quietspace.core.shared.entity.BaseEntity;
-import dev.thural.quietspace.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -36,9 +33,9 @@ public class Comment extends BaseEntity implements Serializable {
     private String text;
 
     @NotNull
-    @ManyToOne
-    @JsonBackReference
-    private User user;
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "user_id", nullable = false, columnDefinition = "varchar(36)")
+    private UUID userId;
 
     @NotNull
     @JdbcTypeCode(SqlTypes.CHAR)

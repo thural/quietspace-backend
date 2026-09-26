@@ -24,7 +24,7 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
     @Query("SELECT c FROM Comment c " +
             "WHERE c.postId = :postId " +
-            "AND c.user.id = :userId " +
+            "AND c.userId = :userId " +
             "ORDER BY c.updateDate DESC, c.createDate DESC " +
             "LIMIT 1")
     Optional<Comment> findLatestCommentByPostAndUserByUpdateDate(@Param("postId") UUID postId, @Param("userId") UUID userId);

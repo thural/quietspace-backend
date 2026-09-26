@@ -43,11 +43,10 @@ public class CommentQueryAdapter implements CommentQueryPort {
     }
 
     private CommentSummaryDTO toSummary(Comment comment) {
-        UUID authorId = comment.getUser() != null ? comment.getUser().getId() : null;
         return new CommentSummaryDTO(
                 comment.getId(),
                 comment.getPostId(),
-                authorId,
+                comment.getUserId(),
                 comment.getParentId(),
                 comment.getText()
         );

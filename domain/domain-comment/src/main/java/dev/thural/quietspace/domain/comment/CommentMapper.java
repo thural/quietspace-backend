@@ -5,8 +5,8 @@ import dev.thural.quietspace.domain.comment.dto.CommentResponse;
 import dev.thural.quietspace.domain.reaction.ReactionService;
 import dev.thural.quietspace.domain.reaction.api.ReactionQueryPort;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.domain.user.User;
-import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.api.UserQueryPort;
+import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +18,17 @@ import static dev.thural.quietspace.core.shared.enums.ReactionType.LIKE;
 @RequiredArgsConstructor
 public class CommentMapper {
 
-    private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final ReactionQueryPort reactionQueryPort;
     private final ReactionService reactionService;
+    private final UserQueryPort userQueryPort;
 
 
     public Comment commentRequestToEntity(CommentRequest comment) {
         return Comment.builder()
                 .parentId(comment.getParentId())
                 .text(comment.getText())
-                .user(getUserById(comment.getUserId()))
+                .userId(comment.getUserId())
                 .postId(comment.getPostId())
                 .build();
     }
@@ -38,8 +38,8 @@ public class CommentMapper {
                 .id(comment.getId())
                 .parentId(comment.getParentId())
                 .postId(comment.getPostId())
-                .userId(comment.getUser().getId())
-                .username(comment.getUser().getUsername())
+                .userId(comment.getUserId())
+                .username(resolveUsername(comment.getUserId()))
                 .text(comment.getText())
                 .userReaction(getUserReaction(comment.getId()))
                 .createDate(comment.getCreateDate())
@@ -49,8 +49,11 @@ public class CommentMapper {
                 .build();
     }
 
-    private User getUserById(UUID userId) {
-        return userRepository.findById(userId).orElse(null);
+    private String resolveUsername(UUID userId) {
+        if (userId == null) {
+            return null;
+        }
+        return userQueryPort.getUserSummary(userId).map(UserSummaryDTO::username).orElse(null);
     }
 
     private Integer getReplyCount(UUID parentId, UUID postId) {

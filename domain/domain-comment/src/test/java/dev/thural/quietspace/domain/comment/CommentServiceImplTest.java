@@ -64,7 +64,7 @@ class CommentServiceImplTest {
         this.comment = Comment.builder()
                 .id(UUID.randomUUID())
                 .parentId(UUID.randomUUID())
-                .user(user)
+                .userId(userId)
                 .postId(postId)
                 .text("sample text")
                 .build();
@@ -139,7 +139,7 @@ class CommentServiceImplTest {
     @Test
     void updateComment_shouldReturnComment() {
         User otherUser = User.builder().id(UUID.randomUUID()).username("other").build();
-        comment.setUser(otherUser);
+        comment.setUserId(otherUser.getId());
         when(userService.getSignedUser()).thenReturn(user);
         when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
         when(commentMapper.commentEntityToResponse(any(Comment.class))).thenReturn(commentResponse);

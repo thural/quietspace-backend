@@ -1,5 +1,6 @@
 package dev.thural.quietspace.domain.comment.adapter;
 
+import dev.thural.quietspace.domain.comment.Comment;
 import dev.thural.quietspace.domain.comment.CommentRepository;
 import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,7 +21,7 @@ public class CommentNotificationAdapter implements NotificationCommentPort {
     @Override
     public UUID findCommentOwnerId(UUID commentId) {
         return commentRepository.findById(commentId)
-                .map(comment -> comment.getUser().getId())
+                .map(Comment::getUserId)
                 .orElseThrow(EntityNotFoundException::new);
     }
 }

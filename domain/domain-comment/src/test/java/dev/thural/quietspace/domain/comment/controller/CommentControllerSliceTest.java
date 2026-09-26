@@ -89,7 +89,7 @@ class CommentControllerSliceTest {
                 .id(UUID.randomUUID())
                 .text("sample text")
                 .postId(postId)
-                .user(user)
+                .userId(user.getId())
                 .build();
 
         this.commentRequest = CommentRequest.builder()
@@ -101,7 +101,7 @@ class CommentControllerSliceTest {
         this.commentResponse = CommentResponse.builder()
                 .id(comment.getId())
                 .text(comment.getText())
-                .username(comment.getUser().getUsername())
+                .username(user.getUsername())
                 .userId(user.getId())
                 .postId(postId)
                 .build();

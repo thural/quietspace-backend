@@ -91,7 +91,7 @@ class PostRepositoryTest {
     void testFindByCommentsUserId() {
         Comment comment = Comment.builder()
                 .text("test comment")
-                .user(savedUser)
+                .userId(savedUser.getId())
                 .postId(savedPost.getId())
                 .createDate(OffsetDateTime.now())
                 .updateDate(OffsetDateTime.now())
