@@ -191,6 +191,27 @@ Each domain module is a **self-contained vertical slice** owning a single aggreg
 
 ---
 
+## Cross-Domain Query Ports (`api` packages, Phase 3.1/3.4)
+
+Each domain exposes lightweight immutable read-models for cross-domain display
+needs. Ports live in `<domain>.api`, DTOs in `<domain>.api.dto` (Java records),
+adapters delegate to the owning repository. Authentication (`getSignedUser`)
+stays on `UserService`; these ports are display data only.
+
+| Port | Owner Module | Methods | DTO |
+|------|--------------|---------|-----|
+| `UserQueryPort` | domain-user | `getUserSummary(UUID)`, `getUsersSummary(Set<UUID>)` | `UserSummaryDTO(id, username, displayName, photoId, statusType)` |
+| `PhotoQueryPort` | domain-photo | `getPhotoSummary(UUID)`, `getPhotoSummaryByEntityId(UUID)`, `getPhotosSummary(Set<UUID>)` | `PhotoSummaryDTO(id, name, type, userId, entityId, entityType)` |
+| `PostQueryPort` | domain-post | `getPostSummary(UUID)`, `getPostsSummary(Set<UUID>)` | `PostSummaryDTO(id, authorId, title, text, photoId)` |
+| `CommentQueryPort` | domain-comment | `getCommentSummary(UUID)`, `getCommentsSummary(Set<UUID>)`, `countCommentsByPostId(UUID)` | `CommentSummaryDTO(id, postId, authorId, parentId, text)` |
+| `ReactionQueryPort` | domain-reaction | `getReactionSummary(UUID)`, `getReactionsSummary(Set<UUID>)`, `countReactions(UUID, ReactionType)` | `ReactionSummaryDTO(id, userId, username, contentId, contentType, reactionType)` |
+
+First consumer migration (Phase 5.1): `CommentMapper` uses `ReactionQueryPort.countReactions`
+instead of `ReactionRepository`. Intentionally retained direct access: message→chat
+(chat owns message), entity-graph navigation (`Comment.user`, `Message.sender`,
+`PostSecurityService` authorization lookups), and shared-kernel `UserProfilePort`
+(photo must not depend on user — see `core-shared.ports`).
+
 ## Consumer-Owned Ports Pattern
 
 ```
