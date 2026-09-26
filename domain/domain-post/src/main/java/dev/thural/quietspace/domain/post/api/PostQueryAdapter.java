@@ -37,10 +37,9 @@ public class PostQueryAdapter implements PostQueryPort {
     }
 
     private PostSummaryDTO toSummary(Post post) {
-        UUID authorId = post.getUser() != null ? post.getUser().getId() : null;
         return new PostSummaryDTO(
                 post.getId(),
-                authorId,
+                post.getAuthorId(),
                 post.getTitle(),
                 post.getText(),
                 post.getPhotoId()

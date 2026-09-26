@@ -189,7 +189,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private boolean isPostExistsByLoggedUser(Post existingPost, User loggedUser) {
-        return existingPost.getUser().equals(loggedUser);
+        return existingPost.getAuthorId().equals(loggedUser.getId());
     }
 
     private Post findPostEntityById(UUID postId) {

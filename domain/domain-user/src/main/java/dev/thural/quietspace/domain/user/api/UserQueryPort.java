@@ -28,4 +28,12 @@ public interface UserQueryPort {
      * @return summaries keyed by user id; missing ids are absent from the map
      */
     Map<UUID, UserSummaryDTO> getUsersSummary(Set<UUID> userIds);
+
+    /**
+     * Authorization-support lookup: resolve a user id from either the email
+     * (STOMP/HTTP principal form) or the username.
+     *
+     * @return user id, or empty if no user matches
+     */
+    Optional<UUID> findUserIdByUsernameOrEmail(String usernameOrEmail);
 }

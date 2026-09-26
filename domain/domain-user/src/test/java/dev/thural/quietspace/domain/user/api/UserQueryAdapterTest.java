@@ -94,4 +94,31 @@ class UserQueryAdapterTest {
 
         assertThat(result).isEmpty();
     }
+
+    @Test
+    void findUserIdByUsernameOrEmail_givenEmail_shouldReturnId() {
+        UUID id = UUID.randomUUID();
+        User user = user(id, "jdoe", "John", "Doe");
+        when(userRepository.findUserEntityByEmail("jdoe@test.com")).thenReturn(Optional.of(user));
+
+        assertThat(adapter.findUserIdByUsernameOrEmail("jdoe@test.com")).contains(id);
+    }
+
+    @Test
+    void findUserIdByUsernameOrEmail_givenUsername_shouldFallBackToUsernameLookup() {
+        UUID id = UUID.randomUUID();
+        User user = user(id, "jdoe", "John", "Doe");
+        when(userRepository.findUserEntityByEmail("jdoe")).thenReturn(Optional.empty());
+        when(userRepository.findUserByUsername("jdoe")).thenReturn(Optional.of(user));
+
+        assertThat(adapter.findUserIdByUsernameOrEmail("jdoe")).contains(id);
+    }
+
+    @Test
+    void findUserIdByUsernameOrEmail_givenUnknown_shouldReturnEmpty() {
+        when(userRepository.findUserEntityByEmail("ghost")).thenReturn(Optional.empty());
+        when(userRepository.findUserByUsername("ghost")).thenReturn(Optional.empty());
+
+        assertThat(adapter.findUserIdByUsernameOrEmail("ghost")).isEmpty();
+    }
 }

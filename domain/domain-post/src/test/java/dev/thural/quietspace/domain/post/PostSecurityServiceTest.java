@@ -1,8 +1,7 @@
 package dev.thural.quietspace.domain.post;
 
 import dev.thural.quietspace.domain.post.dto.PostResponse;
-import dev.thural.quietspace.domain.user.User;
-import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.api.UserQueryPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +20,7 @@ class PostSecurityServiceTest {
     @Mock
     private PostService postService;
     @Mock
-    private UserRepository userRepository;
+    private UserQueryPort userQueryPort;
 
     @InjectMocks
     private PostSecurityService postSecurityService;
@@ -32,8 +31,8 @@ class PostSecurityServiceTest {
 
     @Test
     void canAccess_whenUserIsOwner_shouldReturnTrue() {
-        when(userRepository.findUserEntityByEmail("owner@test.com"))
-                .thenReturn(Optional.of(User.builder().id(ownerId).build()));
+        when(userQueryPort.findUserIdByUsernameOrEmail("owner@test.com"))
+                .thenReturn(Optional.of(ownerId));
         when(postService.getPostById(postId))
                 .thenReturn(Optional.of(PostResponse.builder().userId(ownerId.toString()).build()));
 
@@ -44,8 +43,8 @@ class PostSecurityServiceTest {
 
     @Test
     void canAccess_whenUserIsNotOwner_shouldReturnFalse() {
-        when(userRepository.findUserEntityByEmail("other@test.com"))
-                .thenReturn(Optional.of(User.builder().id(otherUserId).build()));
+        when(userQueryPort.findUserIdByUsernameOrEmail("other@test.com"))
+                .thenReturn(Optional.of(otherUserId));
         when(postService.getPostById(postId))
                 .thenReturn(Optional.of(PostResponse.builder().userId(ownerId.toString()).build()));
 
@@ -56,8 +55,8 @@ class PostSecurityServiceTest {
 
     @Test
     void canAccess_whenPostDoesNotExist_shouldReturnFalse() {
-        when(userRepository.findUserEntityByEmail("owner@test.com"))
-                .thenReturn(Optional.of(User.builder().id(ownerId).build()));
+        when(userQueryPort.findUserIdByUsernameOrEmail("owner@test.com"))
+                .thenReturn(Optional.of(ownerId));
         when(postService.getPostById(postId)).thenReturn(Optional.empty());
 
         boolean result = postSecurityService.canAccess(postId, "owner@test.com");
@@ -67,7 +66,7 @@ class PostSecurityServiceTest {
 
     @Test
     void canAccess_whenUserDoesNotExist_shouldReturnFalse() {
-        when(userRepository.findUserEntityByEmail("unknown@test.com")).thenReturn(Optional.empty());
+        when(userQueryPort.findUserIdByUsernameOrEmail("unknown@test.com")).thenReturn(Optional.empty());
 
         boolean result = postSecurityService.canAccess(postId, "unknown@test.com");
 

@@ -45,7 +45,18 @@ public class Post extends BaseEntity implements Serializable {
     @NotNull
     @ManyToOne
     @JsonBackReference
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    /**
+     * Transitional read-only view of the {@code user_id} FK column (Phase E.3).
+     * New code must use this id instead of navigating the {@code user} association;
+     * the association stays as the single writer until feed-privacy specifications
+     * ({@code PostSpecifications.visibleToUser}) can be redesigned without SQL joins.
+     */
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "user_id", insertable = false, updatable = false, columnDefinition = "varchar(36)")
+    private UUID authorId;
 
     @JsonIgnore
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -77,9 +88,9 @@ public class Post extends BaseEntity implements Serializable {
     }
 
     // Factory method for repost
-    public static Post repostBy(User user, String text, String originalPostId) {
+    public static Post repostBy(UUID authorId, String text, String originalPostId) {
         Post repost = new Post();
-        repost.setUser(user);
+        repost.setAuthorId(authorId);
         repost.setText(text);
         repost.setRepostId(originalPostId);
         return repost;

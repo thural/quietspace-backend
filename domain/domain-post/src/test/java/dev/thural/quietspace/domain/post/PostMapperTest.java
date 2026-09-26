@@ -9,6 +9,8 @@ import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
 import dev.thural.quietspace.core.shared.enums.ReactionType;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.api.UserQueryPort;
+import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +42,9 @@ class PostMapperTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private UserQueryPort userQueryPort;
 
     @InjectMocks
     private PostMapper postMapper;
@@ -120,7 +125,7 @@ class PostMapperTest {
                 .id(postId)
                 .title("Original Post")
                 .text("Original content")
-                .user(user)
+                .authorId(user.getId())
                 .poll(poll)
                 .comments(List.of())
                 .photoId(photoId)
@@ -132,7 +137,7 @@ class PostMapperTest {
                 .id(UUID.randomUUID())
                 .title("Test Post")
                 .text("This is a test post")
-                .user(user)
+                .authorId(user.getId())
                 .comments(List.of())
                 .photoId(photoId)
                 .createDate(OffsetDateTime.now())
@@ -164,7 +169,7 @@ class PostMapperTest {
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo(postRequest.getTitle());
         assertThat(result.getText()).isEqualTo(postRequest.getText());
-        assertThat(result.getUser()).isEqualTo(loggedUser);
+        assertThat(result.getAuthorId()).isEqualTo(loggedUser.getId());
         assertThat(result.getPoll()).isNotNull();
         assertThat(result.getPoll().getDueDate()).isEqualTo(postRequest.getPoll().getDueDate());
         assertThat(result.getPoll().getOptions()).hasSize(3);
@@ -227,6 +232,10 @@ class PostMapperTest {
                 .thenReturn(Optional.of(userReaction));
         when(photoService.getPhotoById(photoId)).thenReturn(photoResponse);
 
+        // Given username resolution
+        when(userQueryPort.getUserSummary(userId))
+                .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
+
         // When
         PostResponse result = postMapper.postEntityToResponse(post);
 
@@ -262,6 +271,10 @@ class PostMapperTest {
         when(reactionService.getUserReactionByContentId(post.getId()))
                 .thenReturn(Optional.empty());
 
+        // Given username resolution
+        when(userQueryPort.getUserSummary(userId))
+                .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
+
         // When
         PostResponse result = postMapper.postEntityToResponse(post);
 
@@ -278,7 +291,7 @@ class PostMapperTest {
                 .id(UUID.randomUUID())
                 .repostId(postId.toString())
                 .repostText("Repost text")
-                .user(loggedUser)
+                .authorId(loggedUser.getId())
                 .createDate(OffsetDateTime.now())
                 .updateDate(OffsetDateTime.now())
                 .build();
@@ -293,6 +306,11 @@ class PostMapperTest {
                 .thenReturn(Optional.empty());
         when(photoService.getPhotoById(photoId)).thenReturn(photoResponse);
 
+        // Given username resolution
+        when(userQueryPort.getUserSummary(userId))
+                .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
+        when(userQueryPort.getUserSummary(loggedUser.getId()))
+                .thenReturn(Optional.of(new UserSummaryDTO(loggedUser.getId(), "loggeduser", "Logged User", null, null)));
         // When
         PostResponse result = postMapper.postEntityToResponse(repost);
 
@@ -319,7 +337,7 @@ class PostMapperTest {
                 .id(UUID.randomUUID())
                 .repostId(postId.toString())
                 .repostText("Repost text")
-                .user(loggedUser)
+                .authorId(loggedUser.getId())
                 .createDate(OffsetDateTime.now())
                 .updateDate(OffsetDateTime.now())
                 .build();
@@ -345,6 +363,10 @@ class PostMapperTest {
         when(reactionService.getUserReactionByContentId(originalPost.getId()))
                 .thenReturn(Optional.empty());
         when(photoService.getPhotoById(photoId)).thenReturn(null);
+
+        // Given username resolution
+        when(userQueryPort.getUserSummary(userId))
+                .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
         PostResponse result = postMapper.postEntityToResponse(originalPost);
@@ -376,7 +398,7 @@ class PostMapperTest {
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result.getUser()).isEqualTo(loggedUser);
+        assertThat(result.getAuthorId()).isEqualTo(loggedUser.getId());
         assertThat(result.getRepostId()).isEqualTo(repostRequest.getPostId().toString());
         assertThat(result.getRepostText()).isEqualTo(repostRequest.getText());
         
@@ -413,6 +435,10 @@ class PostMapperTest {
                 .thenReturn(Optional.empty());
         when(photoService.getPhotoById(photoId)).thenReturn(null);
 
+        // Given username resolution
+        when(userQueryPort.getUserSummary(userId))
+                .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
+
         // When
         PostResponse result = postMapper.postEntityToResponse(originalPost);
 
@@ -438,6 +464,10 @@ class PostMapperTest {
         when(reactionService.getUserReactionByContentId(originalPost.getId()))
                 .thenReturn(Optional.empty());
         when(photoService.getPhotoById(photoId)).thenReturn(null);
+
+        // Given username resolution
+        when(userQueryPort.getUserSummary(userId))
+                .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
         PostResponse result = postMapper.postEntityToResponse(originalPost);

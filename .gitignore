@@ -59,3 +59,6 @@ build/
 
 # buildSrc Kotlin DSL cache
 buildSrc/.kotlin/
+
+### Eclipse JDT (local IDE output, Gradle uses build/) ###
+**/bin/

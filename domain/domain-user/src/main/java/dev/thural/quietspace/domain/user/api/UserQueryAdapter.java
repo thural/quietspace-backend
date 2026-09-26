@@ -39,6 +39,13 @@ public class UserQueryAdapter implements UserQueryPort {
                 .collect(Collectors.toMap(User::getId, this::toSummary));
     }
 
+    @Override
+    public Optional<UUID> findUserIdByUsernameOrEmail(String usernameOrEmail) {
+        return userRepository.findUserEntityByEmail(usernameOrEmail)
+                .or(() -> userRepository.findUserByUsername(usernameOrEmail))
+                .map(User::getId);
+    }
+
     private UserSummaryDTO toSummary(User user) {
         String displayName = Stream.of(user.getFirstname(), user.getLastname())
                 .filter(StringUtils::hasText)

@@ -16,6 +16,7 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.data.domain.Page;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,7 +46,7 @@ class PostRepositoryTest {
 
     private final Post post = Post.builder()
             .text("sample text")
-            .user(user)
+            .authorId(UUID.randomUUID())
             .createDate(OffsetDateTime.now())
             .updateDate(OffsetDateTime.now())
             .build();
@@ -56,6 +57,8 @@ class PostRepositoryTest {
     @BeforeEach
     void setUp() {
         this.savedUser = userRepository.save(user);
+        post.setUser(savedUser);
+        post.setAuthorId(savedUser.getId());
         this.savedPost = postRepository.save(post);
     }
 
@@ -106,6 +109,7 @@ class PostRepositoryTest {
         Post repost = Post.builder()
                 .text("repost")
                 .user(savedUser)
+                .authorId(savedUser.getId())
                 .repostId(savedPost.getId().toString())
                 .createDate(OffsetDateTime.now())
                 .updateDate(OffsetDateTime.now())

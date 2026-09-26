@@ -7,6 +7,8 @@ import dev.thural.quietspace.domain.reaction.ReactionService;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
+import dev.thural.quietspace.domain.user.api.UserQueryPort;
+import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,10 +30,11 @@ public class PostMapper {
     private final PostRepository postRepository;
     private final PhotoService photoService;
     private final UserService userService;
+    private final UserQueryPort userQueryPort;
 
     public Post postRequestToEntity(PostRequest postRequest) {
         Post post = Post.builder()
-                .user(getLoggedUser())
+                .authorId(getLoggedUser().getId())
                 .title(postRequest.getTitle())
                 .text(postRequest.getText())
                 .build();
@@ -84,8 +87,8 @@ public class PostMapper {
                 .commentCount(commentCount)
                 .likeCount(likeCount)
                 .dislikeCount(dislikeCount)
-                .userId(post.getUser().getId().toString())
-                .username(post.getUser().getUsername())
+                .userId(post.getAuthorId().toString())
+                .username(resolveUsername(post.getAuthorId()))
                 .userReaction(userReaction)
                 .createDate(post.getCreateDate())
                 .updateDate(post.getUpdateDate())
@@ -95,8 +98,8 @@ public class PostMapper {
             var repost = PostResponse.builder()
                     .id(entity.getId())
                     .text(entity.getRepostText())
-                    .userId(entity.getUser().getId().toString())
-                    .username(entity.getUser().getUsername())
+                    .userId(entity.getAuthorId().toString())
+                    .username(resolveUsername(entity.getAuthorId()))
                     .parentId(entity.getRepostId())
                     .isRepost(true)
                     .build();
@@ -116,7 +119,7 @@ public class PostMapper {
         PollResponse pollResponse = PollResponse.builder()
                 .id(post.getPoll().getId())
                 .options(options)
-                .votedOption(getVotedPollOptionLabel(post.getPoll(), post.getUser().getId()))
+                .votedOption(getVotedPollOptionLabel(post.getPoll(), post.getAuthorId()))
                 .voteCount(getVoteCount(post.getPoll()))
                 .build();
 
@@ -150,9 +153,16 @@ public class PostMapper {
         return userService.getSignedUser();
     }
 
+    private String resolveUsername(UUID authorId) {
+        if (authorId == null) {
+            return null;
+        }
+        return userQueryPort.getUserSummary(authorId).map(UserSummaryDTO::username).orElse(null);
+    }
+
     public Post repostRequestToEntity(RepostRequest repost) {
         return Post.builder()
-                .user(getLoggedUser())
+                .authorId(getLoggedUser().getId())
                 .repostId(repost.getPostId().toString())
                 .repostText(repost.getText())
                 .build();

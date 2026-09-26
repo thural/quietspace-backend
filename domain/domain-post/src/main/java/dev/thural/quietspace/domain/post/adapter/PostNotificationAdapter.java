@@ -1,6 +1,7 @@
 package dev.thural.quietspace.domain.post.adapter;
 
 import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
+import dev.thural.quietspace.domain.post.Post;
 import dev.thural.quietspace.domain.post.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class PostNotificationAdapter implements NotificationPostPort {
     @Override
     public UUID findPostOwnerId(UUID postId) {
         return postRepository.findById(postId)
-                .map(post -> post.getUser().getId())
+                .map(Post::getAuthorId)
                 .orElseThrow(EntityNotFoundException::new);
     }
 }

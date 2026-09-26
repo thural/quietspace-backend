@@ -31,7 +31,7 @@ class PostQueryAdapterTest {
     private static Post post(UUID id, User author) {
         return Post.builder()
                 .id(id)
-                .user(author)
+                .authorId(author.getId())
                 .title("title")
                 .text("sample text")
                 .build();

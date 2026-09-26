@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,6 +50,7 @@ class ReactionRepositoryTest {
     private final Post post = Post.builder()
             .text("sample text")
             .user(user)
+            .authorId(UUID.randomUUID())
             .createDate(OffsetDateTime.now())
             .updateDate(OffsetDateTime.now())
             .build();

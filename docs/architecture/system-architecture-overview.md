@@ -155,9 +155,12 @@ stays on `UserService` — ports carry display data only.
 
 - Entities use Lombok `@SuperBuilder` over `core-shared/entity/BaseEntity.java`
   (id, audit fields). Cross-aggregate JPA associations exist and are load-bearing:
-  `Message.chat/sender/recipient` (`@ManyToOne`), `Comment.user` (`@ManyToOne`),
-  `Post.user`, `Chat.users`. Any port/event redesign must account for these —
-  ports return detached snapshots and **cannot** populate associations.
+  `Message.chat` (ownership, kept), `Message.sender/recipient` → decoupled to plain
+  `senderId`/`recipientId` UUID columns (E.2), `Comment.user` → plain `userId` (E.1),
+  `Post.user` → transitional dual mapping: association retained as single writer for
+  feed-privacy SQL joins (`PostSpecifications.visibleToUser`), plus read-only `authorId`
+  FK view used by all new code (E.3). Ports return detached snapshots and **cannot**
+  populate associations — which is why the remaining joins stay.
 - Response DTOs (`*Response`) are mutable Lombok `@SuperBuilder` hierarchies extending
   `BaseResponse`, built by hand-written `@Component` mappers (no MapStruct `@Mapper`
   interfaces in domains). Records are used only for the new `api.dto` summaries.

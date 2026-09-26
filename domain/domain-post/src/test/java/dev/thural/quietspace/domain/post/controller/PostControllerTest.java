@@ -75,7 +75,7 @@ class PostControllerTest {
 
         Post post = Post.builder()
                 .id(UUID.randomUUID())
-                .user(user)
+                .authorId(user.getId())
                 .text("sample text")
                 .title("sample title")
                 .build();
@@ -90,7 +90,7 @@ class PostControllerTest {
         this.postResponse = PostResponse.builder()
                 .id(post.getId())
                 .text(post.getText())
-                .username(post.getUser().getUsername())
+                .username(user.getUsername())
                 .title(post.getTitle())
                 .build();
 

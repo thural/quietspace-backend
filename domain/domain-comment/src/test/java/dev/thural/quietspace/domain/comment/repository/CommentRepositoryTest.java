@@ -47,6 +47,7 @@ class CommentRepositoryTest {
     private final Post post = Post.builder()
             .text("sample text")
             .user(user)
+            .authorId(UUID.randomUUID())
             .createDate(OffsetDateTime.now())
             .updateDate(OffsetDateTime.now())
             .build();

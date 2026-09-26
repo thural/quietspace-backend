@@ -71,7 +71,7 @@ public class PostServiceImplTest {
 
         this.post = Post.builder()
                 .id(UUID.randomUUID())
-                .user(user)
+                .authorId(user.getId())
                 .text("sample text")
                 .poll(poll)
                 .build();
@@ -101,7 +101,7 @@ public class PostServiceImplTest {
         this.postResponse = PostResponse.builder()
                 .id(post.getId())
                 .text(post.getText())
-                .username(post.getUser().getUsername())
+                .username(user.getUsername())
                 .title(post.getTitle())
                 .build();
 
@@ -219,7 +219,7 @@ public class PostServiceImplTest {
     @Test
     void patchPost_givenNonAuthor_shouldThrow() {
         User otherUser = User.builder().id(UUID.randomUUID()).build();
-        Post otherPost = Post.builder().id(UUID.randomUUID()).user(otherUser).build();
+        Post otherPost = Post.builder().id(UUID.randomUUID()).authorId(otherUser.getId()).build();
         when(userService.getSignedUser()).thenReturn(user);
         when(postRepository.findById(otherPost.getId())).thenReturn(Optional.of(otherPost));
 

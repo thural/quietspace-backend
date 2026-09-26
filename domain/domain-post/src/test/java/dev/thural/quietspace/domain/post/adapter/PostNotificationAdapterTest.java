@@ -32,7 +32,7 @@ class PostNotificationAdapterTest {
         UUID ownerId = UUID.randomUUID();
         Post post = Post.builder()
                 .id(postId)
-                .user(User.builder().id(ownerId).username("owner").build())
+                .authorId(ownerId)
                 .text("hello")
                 .build();
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
