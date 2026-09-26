@@ -103,4 +103,19 @@ class CommentQueryAdapterTest {
 
         assertThat(adapter.countCommentsByPostId(postId)).isEqualTo(2);
     }
+
+    @Test
+    void findPostIdsByUserId_shouldReturnDistinctPostIds() {
+        UUID userId = UUID.randomUUID();
+        UUID postId = UUID.randomUUID();
+        when(commentRepository.findDistinctPostIdsByUserId(userId))
+                .thenReturn(Set.of(postId));
+
+        assertThat(adapter.findPostIdsByUserId(userId)).containsExactly(postId);
+    }
+
+    @Test
+    void findPostIdsByUserId_givenNull_shouldReturnEmptyWithoutQuery() {
+        assertThat(adapter.findPostIdsByUserId(null)).isEmpty();
+    }
 }

@@ -8,6 +8,7 @@ import dev.thural.quietspace.domain.reaction.ReactionService;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
 import dev.thural.quietspace.core.shared.enums.ReactionType;
 import dev.thural.quietspace.domain.user.User;
+import dev.thural.quietspace.domain.comment.api.CommentQueryPort;
 import dev.thural.quietspace.domain.user.UserService;
 import dev.thural.quietspace.domain.user.api.UserQueryPort;
 import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
@@ -39,6 +40,9 @@ class PostMapperTest {
 
     @Mock
     private PhotoService photoService;
+
+    @Mock
+    private CommentQueryPort commentQueryPort;
 
     @Mock
     private UserService userService;
@@ -127,7 +131,6 @@ class PostMapperTest {
                 .text("Original content")
                 .authorId(user.getId())
                 .poll(poll)
-                .comments(List.of())
                 .photoId(photoId)
                 .createDate(OffsetDateTime.now())
                 .updateDate(OffsetDateTime.now())
@@ -138,7 +141,6 @@ class PostMapperTest {
                 .title("Test Post")
                 .text("This is a test post")
                 .authorId(user.getId())
-                .comments(List.of())
                 .photoId(photoId)
                 .createDate(OffsetDateTime.now())
                 .updateDate(OffsetDateTime.now())
@@ -237,6 +239,7 @@ class PostMapperTest {
                 .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
+        when(commentQueryPort.countCommentsByPostId(post.getId())).thenReturn(0L);
         PostResponse result = postMapper.postEntityToResponse(post);
 
         // Then
@@ -276,6 +279,7 @@ class PostMapperTest {
                 .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
+        when(commentQueryPort.countCommentsByPostId(post.getId())).thenReturn(0L);
         PostResponse result = postMapper.postEntityToResponse(post);
 
         // Then
@@ -312,6 +316,7 @@ class PostMapperTest {
         when(userQueryPort.getUserSummary(loggedUser.getId()))
                 .thenReturn(Optional.of(new UserSummaryDTO(loggedUser.getId(), "loggeduser", "Logged User", null, null)));
         // When
+        when(commentQueryPort.countCommentsByPostId(originalPost.getId())).thenReturn(0L);
         PostResponse result = postMapper.postEntityToResponse(repost);
 
         // Then
@@ -369,6 +374,7 @@ class PostMapperTest {
                 .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
+        when(commentQueryPort.countCommentsByPostId(originalPost.getId())).thenReturn(0L);
         PostResponse result = postMapper.postEntityToResponse(originalPost);
 
         // Then
@@ -440,6 +446,7 @@ class PostMapperTest {
                 .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
+        when(commentQueryPort.countCommentsByPostId(originalPost.getId())).thenReturn(0L);
         PostResponse result = postMapper.postEntityToResponse(originalPost);
 
         // Then
@@ -470,6 +477,7 @@ class PostMapperTest {
                 .thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
+        when(commentQueryPort.countCommentsByPostId(originalPost.getId())).thenReturn(0L);
         PostResponse result = postMapper.postEntityToResponse(originalPost);
 
         // Then

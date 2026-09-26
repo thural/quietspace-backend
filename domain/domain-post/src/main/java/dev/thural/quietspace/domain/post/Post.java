@@ -2,8 +2,6 @@ package dev.thural.quietspace.domain.post;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import dev.thural.quietspace.domain.comment.Comment;
 import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import dev.thural.quietspace.domain.user.User;
 import jakarta.persistence.*;
@@ -61,11 +59,6 @@ public class Post extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Poll poll;
-
-    @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private List<Comment> comments;
 
     // Domain methods for poll voting
     public void votePoll(UUID userId, String optionLabel) {

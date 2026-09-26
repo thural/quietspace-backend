@@ -90,7 +90,8 @@ class PostRepositoryTest {
     void testContainsText_shouldMatchTitle() {
         var specs = new PostSpecifications(
                 org.mockito.Mockito.mock(UserService.class),
-                new UserQueryAdapter(userRepository));
+                new UserQueryAdapter(userRepository),
+                org.mockito.Mockito.mock(dev.thural.quietspace.domain.comment.api.CommentQueryPort.class));
         Page<Post> list = postRepository.findAll(specs.containsText("sample"), Pageable.unpaged());
         assertThat(list.toList()).hasSize(1);
     }
@@ -99,7 +100,8 @@ class PostRepositoryTest {
     void testContainsText_givenUnknownTerm_shouldReturnEmpty() {
         var specs = new PostSpecifications(
                 org.mockito.Mockito.mock(UserService.class),
-                new UserQueryAdapter(userRepository));
+                new UserQueryAdapter(userRepository),
+                org.mockito.Mockito.mock(dev.thural.quietspace.domain.comment.api.CommentQueryPort.class));
         Page<Post> list = postRepository.findAll(specs.containsText("zzz-no-match"), Pageable.unpaged());
         assertThat(list.toList()).isEmpty();
     }

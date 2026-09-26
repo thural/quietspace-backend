@@ -3,6 +3,7 @@ package dev.thural.quietspace.domain.post;
 import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
 import dev.thural.quietspace.domain.post.dto.*;
+import dev.thural.quietspace.domain.comment.api.CommentQueryPort;
 import dev.thural.quietspace.domain.reaction.ReactionService;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
 import dev.thural.quietspace.domain.user.User;
@@ -27,6 +28,7 @@ import static dev.thural.quietspace.core.shared.enums.ReactionType.LIKE;
 public class PostMapper {
 
     private final ReactionService reactionService;
+    private final CommentQueryPort commentQueryPort;
     private final PostRepository postRepository;
     private final PhotoService photoService;
     private final UserService userService;
@@ -70,7 +72,7 @@ public class PostMapper {
 
         if (post == null) return null;
 
-        Integer commentCount = post.getComments() != null ? post.getComments().size() : 0;
+        Integer commentCount = Math.toIntExact(commentQueryPort.countCommentsByPostId(post.getId()));
         Integer likeCount = reactionService.countByContentIdAndReactionType(post.getId(), LIKE);
         Integer dislikeCount = reactionService.countByContentIdAndReactionType(post.getId(), DISLIKE);
         ReactionResponse userReaction = reactionService.getUserReactionByContentId(post.getId())

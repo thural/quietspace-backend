@@ -42,6 +42,14 @@ public class CommentQueryAdapter implements CommentQueryPort {
         return commentRepository.findAllByPostId(postId, Pageable.unpaged()).getTotalElements();
     }
 
+    @Override
+    public Set<UUID> findPostIdsByUserId(UUID userId) {
+        if (userId == null) {
+            return Collections.emptySet();
+        }
+        return commentRepository.findDistinctPostIdsByUserId(userId);
+    }
+
     private CommentSummaryDTO toSummary(Comment comment) {
         return new CommentSummaryDTO(
                 comment.getId(),

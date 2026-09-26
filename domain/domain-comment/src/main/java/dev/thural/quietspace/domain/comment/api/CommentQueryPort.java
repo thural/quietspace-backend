@@ -31,4 +31,11 @@ public interface CommentQueryPort {
      * @return number of comments on the post
      */
     long countCommentsByPostId(UUID postId);
+
+    /**
+     * Feed-support query (e.g. "posts commented by user"): distinct post ids
+     * with at least one comment by the user. Callers use the ids in an SQL
+     * {@code IN} predicate (pagination-safe, no join).
+     */
+    Set<UUID> findPostIdsByUserId(UUID userId);
 }

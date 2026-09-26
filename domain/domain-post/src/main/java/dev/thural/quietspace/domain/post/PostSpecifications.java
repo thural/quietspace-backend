@@ -1,6 +1,6 @@
 package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.domain.comment.Comment;
+import dev.thural.quietspace.domain.comment.api.CommentQueryPort;
 import dev.thural.quietspace.domain.user.ProfileSettings;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
@@ -20,6 +20,7 @@ public class PostSpecifications {
 
     private final UserService userService;
     private final UserQueryPort userQueryPort;
+    private final CommentQueryPort commentQueryPort;
 
     public Specification<Post> visibleToUser() {
         return (root, query, criteriaBuilder) -> {
@@ -68,9 +69,11 @@ public class PostSpecifications {
     public Specification<Post> commentedByUser(UUID userId) {
         return (root, query, criteriaBuilder) -> {
             query.distinct(true);
-            Join<Post, Comment> commentJoin = root.join("comments");
-
-            return criteriaBuilder.equal(commentJoin.get("user").get("id"), userId);
+            // Port-resolved id set keeps filtering in SQL (pagination-safe, no join).
+            var postIds = commentQueryPort.findPostIdsByUserId(userId);
+            return postIds.isEmpty()
+                    ? criteriaBuilder.disjunction()
+                    : root.get("id").in(postIds);
         };
     }
 

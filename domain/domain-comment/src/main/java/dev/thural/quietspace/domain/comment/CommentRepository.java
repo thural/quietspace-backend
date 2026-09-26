@@ -13,6 +13,12 @@ import java.util.UUID;
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
     Page<Comment> findAllByPostId(UUID postId, Pageable pageable);
 
+    /**
+     * Synchronous cascade support for post deletion (called within the post
+     * service transaction — see {@code PostServiceImpl.deletePost}).
+     */
+    void deleteAllByPostId(UUID postId);
+
     Integer countByParentIdAndPostId(UUID parentId, UUID postId);
 
     @Transactional
@@ -21,6 +27,9 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
     Page<Comment> findAllByParentId(UUID commentId, Pageable pageable);
 
     Page<Comment> findAllByUserId(UUID userId, Pageable pageable);
+
+    @Query("SELECT DISTINCT c.postId FROM Comment c WHERE c.userId = :userId")
+    java.util.Set<UUID> findDistinctPostIdsByUserId(@Param("userId") UUID userId);
 
     @Query("SELECT c FROM Comment c " +
             "WHERE c.postId = :postId " +

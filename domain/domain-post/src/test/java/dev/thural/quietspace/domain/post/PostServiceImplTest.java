@@ -41,6 +41,8 @@ public class PostServiceImplTest {
     private PostSpecifications postSpecifications;
     @Mock
     private PhotoService photoService;
+    @Mock
+    private dev.thural.quietspace.domain.comment.api.CommentCommandPort commentCommandPort;
 
     @InjectMocks
     private PostServiceImpl postService;
@@ -202,6 +204,7 @@ public class PostServiceImplTest {
         postService.deletePost(post.getId());
 
         verify(postRepository, times(1)).findById(post.getId());
+        verify(commentCommandPort, times(1)).deleteAllByPostId(post.getId());
         verify(postRepository, times(1)).deleteById(post.getId());
     }
 

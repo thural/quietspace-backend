@@ -1,5 +1,6 @@
 package dev.thural.quietspace.domain.post;
 
+import dev.thural.quietspace.domain.comment.api.CommentCommandPort;
 import dev.thural.quietspace.domain.photo.Photo;
 import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.post.dto.PostRequest;
@@ -33,6 +34,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostSpecifications postSpecifications;
     private final PostRepository postRepository;
+    private final CommentCommandPort commentCommandPort;
     private final PhotoService photoService;
     private final UserService userService;
     private final PostMapper postMapper;
@@ -110,6 +112,7 @@ public class PostServiceImpl implements PostService {
         Post existingPost = findPostEntityById(postId);
         boolean postExistsByLoggedUser = isPostExistsByLoggedUser(existingPost, loggedUser);
         if (!postExistsByLoggedUser) throw new AccessDeniedException(AUTHOR_MISMATCH_MESSAGE);
+        commentCommandPort.deleteAllByPostId(postId);
         postRepository.deleteByRepostId(existingPost.getId().toString());
         postRepository.deleteById(postId);
         photoService.deletePhotoByEntityId(postId);

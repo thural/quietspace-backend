@@ -119,4 +119,17 @@ class CommentRepositoryTest {
         assertThat(latestComment).isPresent();
         assertThat(latestComment.get().getText()).isEqualTo("sample text");
     }
+
+    @Test
+    void deleteAllByPostId_shouldRemovePostComments() {
+        commentRepository.deleteAllByPostId(savedPost.getId());
+        var commentPage = commentRepository.findAllByPostId(savedPost.getId(), null);
+        assertThat(commentPage.toList()).isEmpty();
+    }
+
+    @Test
+    void findDistinctPostIdsByUserId_shouldReturnCommentedPostIds() {
+        var postIds = commentRepository.findDistinctPostIdsByUserId(savedUser.getId());
+        assertThat(postIds).containsExactly(savedPost.getId());
+    }
 }
