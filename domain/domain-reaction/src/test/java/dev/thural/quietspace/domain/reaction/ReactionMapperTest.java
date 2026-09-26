@@ -7,7 +7,8 @@ import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
 import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.core.shared.enums.ReactionType;
 import dev.thural.quietspace.domain.user.User;
-import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.api.UserQueryPort;
+import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.*;
 class ReactionMapperTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserQueryPort userQueryPort;
 
     @InjectMocks
     private ReactionMapper reactionMapper;
@@ -72,7 +73,7 @@ class ReactionMapperTest {
     @Test
     void reactionRequestToEntity_shouldConvertRequestToEntity() {
         // Given
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
         Reaction result = reactionMapper.reactionRequestToEntity(reactionRequest);
@@ -85,13 +86,13 @@ class ReactionMapperTest {
         assertThat(result.getReactionType()).isEqualTo(reactionRequest.getReactionType());
         assertThat(result.getUsername()).isEqualTo(user.getUsername());
 
-        verify(userRepository).findById(userId);
+        verify(userQueryPort).getUserSummary(userId);
     }
 
     @Test
     void reactionRequestToEntity_shouldHandleNullUsernameWhenUserNotFound() {
         // Given
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.empty());
 
         // When
         Reaction result = reactionMapper.reactionRequestToEntity(reactionRequest);
@@ -104,7 +105,7 @@ class ReactionMapperTest {
         assertThat(result.getReactionType()).isEqualTo(reactionRequest.getReactionType());
         assertThat(result.getUsername()).isNull();
 
-        verify(userRepository).findById(userId);
+        verify(userQueryPort).getUserSummary(userId);
     }
 
     @Test
@@ -115,7 +116,7 @@ class ReactionMapperTest {
         for (ReactionType type : reactionTypes) {
             // Given
             reactionRequest.setReactionType(type);
-            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
             // When
             Reaction result = reactionMapper.reactionRequestToEntity(reactionRequest);
@@ -125,7 +126,7 @@ class ReactionMapperTest {
             assertThat(result.getReactionType()).isEqualTo(type);
 
             // Reset for next iteration
-            reset(userRepository);
+            reset(userQueryPort);
         }
     }
 
@@ -137,7 +138,7 @@ class ReactionMapperTest {
         for (EntityType type : entityTypes) {
             // Given
             reactionRequest.setContentType(type);
-            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
             // When
             Reaction result = reactionMapper.reactionRequestToEntity(reactionRequest);
@@ -147,7 +148,7 @@ class ReactionMapperTest {
             assertThat(result.getContentType()).isEqualTo(type);
 
             // Reset for next iteration
-            reset(userRepository);
+            reset(userQueryPort);
         }
     }
 
@@ -211,33 +212,33 @@ class ReactionMapperTest {
     @Test
     void getUserNameById_shouldReturnUsernameWhenUserFound() {
         // Given
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
         String result = reactionMapper.getUserNameById(userId);
 
         // Then
         assertThat(result).isEqualTo(user.getUsername());
-        verify(userRepository).findById(userId);
+        verify(userQueryPort).getUserSummary(userId);
     }
 
     @Test
     void getUserNameById_shouldReturnNullWhenUserNotFound() {
         // Given
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.empty());
 
         // When
         String result = reactionMapper.getUserNameById(userId);
 
         // Then
         assertThat(result).isNull();
-        verify(userRepository).findById(userId);
+        verify(userQueryPort).getUserSummary(userId);
     }
 
     @Test
     void reactionRequestToEntity_shouldCopyAllRequestFields() {
         // Given
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
         Reaction result = reactionMapper.reactionRequestToEntity(reactionRequest);
@@ -251,7 +252,7 @@ class ReactionMapperTest {
         // BeanUtils.copyProperties should copy all matching fields
         // Username is set separately
 
-        verify(userRepository).findById(userId);
+        verify(userQueryPort).getUserSummary(userId);
     }
 
     @Test
@@ -275,7 +276,7 @@ class ReactionMapperTest {
     void reactionRequestToEntity_shouldHandlePostReaction() {
         // Given
         reactionRequest.setContentType(EntityType.POST);
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
         Reaction result = reactionMapper.reactionRequestToEntity(reactionRequest);
@@ -284,14 +285,14 @@ class ReactionMapperTest {
         assertThat(result).isNotNull();
         assertThat(result.getContentType()).isEqualTo(EntityType.POST);
 
-        verify(userRepository).findById(userId);
+        verify(userQueryPort).getUserSummary(userId);
     }
 
     @Test
     void reactionRequestToEntity_shouldHandleCommentReaction() {
         // Given
         reactionRequest.setContentType(EntityType.COMMENT);
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
         Reaction result = reactionMapper.reactionRequestToEntity(reactionRequest);
@@ -300,14 +301,14 @@ class ReactionMapperTest {
         assertThat(result).isNotNull();
         assertThat(result.getContentType()).isEqualTo(EntityType.COMMENT);
 
-        verify(userRepository).findById(userId);
+        verify(userQueryPort).getUserSummary(userId);
     }
 
     @Test
     void reactionRequestToEntity_shouldHandleMessageReaction() {
         // Given
         reactionRequest.setContentType(EntityType.MESSAGE);
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userQueryPort.getUserSummary(userId)).thenReturn(Optional.of(new UserSummaryDTO(userId, "testuser", "Test User", null, null)));
 
         // When
         Reaction result = reactionMapper.reactionRequestToEntity(reactionRequest);
@@ -316,7 +317,7 @@ class ReactionMapperTest {
         assertThat(result).isNotNull();
         assertThat(result.getContentType()).isEqualTo(EntityType.MESSAGE);
 
-        verify(userRepository).findById(userId);
+        verify(userQueryPort).getUserSummary(userId);
     }
 
     @Test

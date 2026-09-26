@@ -2,8 +2,8 @@ package dev.thural.quietspace.domain.reaction;
 
 import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.domain.user.User;
-import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.api.UserQueryPort;
+import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReactionMapper {
 
-    private final UserRepository userRepository;
+    private final UserQueryPort userQueryPort;
 
     public Reaction reactionRequestToEntity(ReactionRequest request) {
         Reaction reaction = new Reaction();
@@ -30,7 +30,7 @@ public class ReactionMapper {
     }
 
     String getUserNameById(UUID userId) {
-        return userRepository.findById(userId).map(User::getUsername).orElse(null);
+        return userQueryPort.getUserSummary(userId).map(UserSummaryDTO::username).orElse(null);
     }
 
 }
