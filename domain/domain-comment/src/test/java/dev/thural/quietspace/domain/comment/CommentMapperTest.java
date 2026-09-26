@@ -5,7 +5,7 @@ import dev.thural.quietspace.domain.comment.CommentMapper;
 import dev.thural.quietspace.domain.comment.CommentRepository;
 import dev.thural.quietspace.domain.comment.dto.CommentRequest;
 import dev.thural.quietspace.domain.comment.dto.CommentResponse;
-import dev.thural.quietspace.domain.reaction.ReactionRepository;
+import dev.thural.quietspace.domain.reaction.api.ReactionQueryPort;
 import dev.thural.quietspace.domain.reaction.ReactionService;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
 import dev.thural.quietspace.core.shared.enums.ReactionType;
@@ -35,7 +35,7 @@ class CommentMapperTest {
     private CommentRepository commentRepository;
 
     @Mock
-    private ReactionRepository reactionRepository;
+    private ReactionQueryPort reactionQueryPort;
 
     @Mock
     private ReactionService reactionService;
@@ -167,8 +167,8 @@ class CommentMapperTest {
     void commentEntityToResponse_shouldConvertEntityToResponse() {
         // Given
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.of(userReaction));
-        when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
-                .thenReturn(5);
+        when(reactionQueryPort.countReactions(commentId, ReactionType.LIKE))
+                .thenReturn(5L);
         when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(3);
 
         // When
@@ -189,7 +189,7 @@ class CommentMapperTest {
         assertThat(result.getUpdateDate()).isEqualTo(comment.getUpdateDate());
 
         verify(reactionService).getUserReactionByContentId(commentId);
-        verify(reactionRepository).countByContentIdAndReactionType(commentId, ReactionType.LIKE);
+        verify(reactionQueryPort).countReactions(commentId, ReactionType.LIKE);
         verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 
@@ -197,8 +197,8 @@ class CommentMapperTest {
     void commentEntityToResponse_shouldHandleNullUserReaction() {
         // Given
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.empty());
-        when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
-                .thenReturn(0);
+        when(reactionQueryPort.countReactions(commentId, ReactionType.LIKE))
+                .thenReturn(0L);
         when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(0);
 
         // When
@@ -209,7 +209,7 @@ class CommentMapperTest {
         assertThat(result.getUserReaction()).isNull();
 
         verify(reactionService).getUserReactionByContentId(commentId);
-        verify(reactionRepository).countByContentIdAndReactionType(commentId, ReactionType.LIKE);
+        verify(reactionQueryPort).countReactions(commentId, ReactionType.LIKE);
         verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 
@@ -217,8 +217,8 @@ class CommentMapperTest {
     void commentEntityToResponse_shouldHandleZeroCounts() {
         // Given
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.empty());
-        when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
-                .thenReturn(0);
+        when(reactionQueryPort.countReactions(commentId, ReactionType.LIKE))
+                .thenReturn(0L);
         when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(0);
 
         // When
@@ -229,7 +229,7 @@ class CommentMapperTest {
         assertThat(result.getLikeCount()).isEqualTo(0);
         assertThat(result.getReplyCount()).isEqualTo(0);
 
-        verify(reactionRepository).countByContentIdAndReactionType(commentId, ReactionType.LIKE);
+        verify(reactionQueryPort).countReactions(commentId, ReactionType.LIKE);
         verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 
@@ -238,8 +238,8 @@ class CommentMapperTest {
         // Given
         comment.setParentId(null);
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.empty());
-        when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
-                .thenReturn(0);
+        when(reactionQueryPort.countReactions(commentId, ReactionType.LIKE))
+                .thenReturn(0L);
         when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(0);
 
         // When
@@ -261,8 +261,8 @@ class CommentMapperTest {
                 .build();
         
         when(reactionService.getUserReactionByContentId(commentId)).thenReturn(Optional.of(dislikeReaction));
-        when(reactionRepository.countByContentIdAndReactionType(commentId, ReactionType.LIKE))
-                .thenReturn(2);
+        when(reactionQueryPort.countReactions(commentId, ReactionType.LIKE))
+                .thenReturn(2L);
         when(commentRepository.countByParentIdAndPostId(commentId, postId)).thenReturn(1);
 
         // When
@@ -274,7 +274,7 @@ class CommentMapperTest {
         assertThat(result.getUserReaction().getReactionType()).isEqualTo(ReactionType.DISLIKE);
 
         verify(reactionService).getUserReactionByContentId(commentId);
-        verify(reactionRepository).countByContentIdAndReactionType(commentId, ReactionType.LIKE);
+        verify(reactionQueryPort).countReactions(commentId, ReactionType.LIKE);
         verify(commentRepository).countByParentIdAndPostId(commentId, postId);
     }
 }

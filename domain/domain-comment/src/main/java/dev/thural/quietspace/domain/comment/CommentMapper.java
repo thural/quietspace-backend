@@ -2,8 +2,8 @@ package dev.thural.quietspace.domain.comment;
 
 import dev.thural.quietspace.domain.comment.dto.CommentRequest;
 import dev.thural.quietspace.domain.comment.dto.CommentResponse;
-import dev.thural.quietspace.domain.reaction.ReactionRepository;
 import dev.thural.quietspace.domain.reaction.ReactionService;
+import dev.thural.quietspace.domain.reaction.api.ReactionQueryPort;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
@@ -20,7 +20,7 @@ public class CommentMapper {
 
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final ReactionRepository reactionRepository;
+    private final ReactionQueryPort reactionQueryPort;
     private final ReactionService reactionService;
 
 
@@ -58,7 +58,7 @@ public class CommentMapper {
     }
 
     private Integer getLikeCount(UUID commentId) {
-        return reactionRepository.countByContentIdAndReactionType(commentId, LIKE);
+        return Math.toIntExact(reactionQueryPort.countReactions(commentId, LIKE));
     }
 
     private ReactionResponse getUserReaction(UUID commentId) {
