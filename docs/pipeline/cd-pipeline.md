@@ -44,8 +44,8 @@ The Continuous Deployment (CD) pipeline runs only on the `prod` branch. It build
 
 **Docker Build:**
 - **Base image:** `eclipse-temurin:25-jre-alpine`
-- **Build context:** Project root (`../architecture`)
-- **Dockerfile:** `infrastructure/docker/Dockerfile`
+- **Build context:** Project root (`.`)
+- **Dockerfile:** `Dockerfile`
 - **Platform:** `linux/amd64`
 - **Tags:**
   - `ghcr.io/<repo>/quietspace:monolith-<version>`
@@ -74,7 +74,7 @@ The Continuous Deployment (CD) pipeline runs only on the `prod` branch. It build
 ssh $VPS_USERNAME@$VPS_IP "mkdir -p deployment"
 
 # Copy Docker Compose file
-scp infrastructure/docker/docker-compose.yaml $VPS_USERNAME@$VPS_IP:deployment/docker-compose.yaml
+scp docker-compose.yaml $VPS_USERNAME@$VPS_IP:deployment/docker-compose.yaml
 
 # Create .env file on VPS
 scp /tmp/deploy-env $VPS_USERNAME@$VPS_IP:deployment/.env
@@ -202,8 +202,8 @@ docker compose -f docker-compose.yaml ps
 ### Local Deployment (Development)
 
 ```bash
-# Navigate to docker directory
-cd infrastructure/docker
+# Navigate to project root
+cd /path/to/quietspace-backend
 
 # Create network (first time only)
 docker network create monolith-network

@@ -45,7 +45,8 @@ The CI pipeline triggers on pushes to `main` or `prod` branches when any of thes
 paths:
   - 'src/**'                         # Source code changes
   - 'build.gradle.kts'               # Build configuration changes
-  - 'infrastructure/docker/**'       # Docker files changes
+  - 'docker-compose*.yml'            # Docker files changes
+  - 'Dockerfile'                     # Dockerfile changes
   - '.github/workflows/*-monolith.yml' # Pipeline changes
 ```
 

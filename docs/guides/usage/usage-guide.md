@@ -111,7 +111,7 @@ docker run -d --name quietspace-dev-maildev \
 
 MailDev web UI: <http://localhost:8025> (captured emails). SMTP listens on `1025`, matching `MAILDEV_PORT`.
 
-### 3. Export `.env` and run the application
+### 4. Export `.env` and run the application
 
 ```bash
 cd /path/to/quietspace-backend
@@ -126,7 +126,7 @@ Tomcat started on port 8080 (http) with context path '/'
 Started QuietspaceApplication in ... seconds
 ```
 
-### 4. Stop (Option A)
+### 5. Stop (Option A)
 
 Stop the application with `Ctrl+C`, then stop/remove the containers:
 
@@ -148,8 +148,6 @@ The Compose file references `./.env` **relative to the Compose file directory**.
 
 ```bash
 cp .env docker-compose.yaml.env  # if compose file is at root
-# OR if compose file is in a subdirectory:
-cp .env infrastructure/docker/.env
 ```
 
 ### 2. Create the external Docker network

@@ -226,7 +226,7 @@ DB_PORT_NUMBER=3307
 
 ## Docker Compose Configuration
 
-The project uses `docker-compose-dev.yml` at the project root for local development (MySQL, RabbitMQ, Mailpit). A full production stack is defined in `docker-compose.yaml` (to be created for production deployments).
+The project uses `docker-compose-dev.yml` at the project root for local development (RabbitMQ, Mailpit). A full production stack is defined in `docker-compose.yaml` (to be created for production deployments).
 
 ### Service Dependencies
 

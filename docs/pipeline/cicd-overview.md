@@ -50,11 +50,11 @@
 | File | Purpose |
 |---|---|
 | `.github/workflows/ci-backend.yml` | GitHub Actions CI/CD pipeline |
-| `infrastructure/docker/Dockerfile` | Multi-stage Docker build |
-| `infrastructure/docker/docker-compose.yaml` | Container orchestration |
+| `Dockerfile` | Multi-stage Docker build |
+| `docker-compose.yaml` | Container orchestration |
 | `.env.example` | Environment variable template (committed) |
 | `.env` | Environment variables (gitignored) |
-| `../../.dockerignore` | Docker build context exclusions |
+| `.dockerignore` | Docker build context exclusions |
 
 ## Related Documentation
 
