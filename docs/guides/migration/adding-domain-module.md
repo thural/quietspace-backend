@@ -45,7 +45,7 @@ public interface XXXRepository extends JpaRepository<XXX, UUID> {
     // Custom queries
 }
 ```
-**Note**: Repositories are kept `public` (not package-private) to allow same-module access from `adapter/`, `service/`, `api/`, `health/` subpackages. Cross-module repository imports are forbidden by ArchUnit rule `has_no_cross_module_repository_dependency` (see `docs/architecture/domains/README.md`).
+**Note**: Repositories are kept `public` (not package-private) to allow same-module access from `adapter/`, `service/`, `api/`, `health/` subpackages. Cross-module repository imports are forbidden by ArchUnit rule `has_no_cross_module_repository_dependency` (see `docs/architecture/domain-modules/domain-module-contracts.md`).
 
 ### 5. Consumer-Owned Ports (if needed)
 ```java
