@@ -39,7 +39,7 @@ src/main/java/dev/thural/quietspace/
 ### Rules enforced by ArchUnit:
 1. **No core → domain dependencies**: Core modules must not depend on domain modules
 2. **No domain → domain internal access**: Domain modules must not access other domain modules' internal classes directly (only via published interfaces/events)
-3. **Repositories must be package-private**: Repository interfaces are implementation details, not public APIs
+3. **No cross-module repository imports**: Repository interfaces are module-internal; cross-domain reads go through query ports (ArchUnit `has_no_cross_module_repository_dependency`)
 4. **Controllers must not access repositories directly**: Must go through service layer
 
 ## Consequences
@@ -52,6 +52,7 @@ src/main/java/dev/thural/quietspace/
 ### Negative
 - Requires refactoring existing code (Phase 1-3)
 - Some cross-feature queries need Domain Events + Outbox pattern (Phase 4)
+- Package-private repositories superseded by ArchUnit cross-module import ban (rule 3)
 
 ### Neutral
 - Incremental adoption: rules can be enabled as code is fixed
