@@ -31,6 +31,8 @@ Each domain module is a **self-contained vertical slice** owning a single aggreg
 |------------------|-----------------|
 | `UserRegisteredEvent` | — |
 | `UserFollowedEvent` | — |
+| `UserUnfollowedEvent` | — |
+| `UserPrivacyChangedEvent` | — |
 
 | Repository | Package-Private |
 |------------|-----------------|
@@ -50,6 +52,7 @@ Each domain module is a **self-contained vertical slice** owning a single aggreg
 |---------|-------------|
 | `PostService` | `createPost`, `votePoll`, `savePost`, `unsavePost`, `repost`, `getFeed` |
 | `PollService` | `createPoll`, `votePoll`, `getPollResults` |
+| `PostSecurityService` | `canAccess` (authorization via `UserQueryPort`) |
 
 | Events Published | Events Consumed |
 |------------------|-----------------|
@@ -89,6 +92,7 @@ Each domain module is a **self-contained vertical slice** owning a single aggreg
 | Port (Owned) | Interface | Purpose |
 |--------------|-----------|---------|
 | `NotificationCommentPort` | `UUID findCommentOwnerId(UUID commentId)` | Notification: comment owner for reply/reaction |
+| `CommentPostPort` | `boolean postExists(UUID postId)` | Verify post exists for comment creation |
 
 | Service | Key Methods |
 |---------|-------------|
@@ -179,11 +183,11 @@ Each domain module is a **self-contained vertical slice** owning a single aggreg
 | Service | Key Methods |
 |---------|-------------|
 | `NotificationService` | `getAllNotifications`, `getNotificationsByType`, `markAsRead`, `getCountOfPendingNotifications` |
-| `NotificationEventListener` | `@EventListener` for all 6 domain events |
+| `NotificationEventListener` | `@EventListener` for all 6+ domain events |
 
 | Events Published | Events Consumed |
 |------------------|-----------------|
-| — | `UserRegisteredEvent`, `PostCreatedEvent`, `CommentCreatedEvent`, `ReactionAddedEvent`, `MessageSentEvent`, `UserFollowedEvent` |
+| — | `UserRegisteredEvent`, `PostCreatedEvent`, `CommentCreatedEvent`, `ReactionAddedEvent`, `MessageSentEvent`, `UserFollowedEvent`, `UserUnfollowedEvent`, `UserPrivacyChangedEvent` |
 
 | Repository | Package-Private |
 |------------|-----------------|
@@ -200,17 +204,29 @@ stays on `UserService`; these ports are display data only.
 
 | Port | Owner Module | Methods | DTO |
 |------|--------------|---------|-----|
-| `UserQueryPort` | domain-user | `getUserSummary(UUID)`, `getUsersSummary(Set<UUID>)` | `UserSummaryDTO(id, username, displayName, photoId, statusType)` |
+| `UserQueryPort` | domain-user | `getUserSummary(UUID)`, `getUsersSummary(Set<UUID>)`, `findUserIdByUsernameOrEmail(String)`, `searchUserIds(String)` | `UserSummaryDTO(id, username, displayName, photoId, statusType)` |
 | `PhotoQueryPort` | domain-photo | `getPhotoSummary(UUID)`, `getPhotoSummaryByEntityId(UUID)`, `getPhotosSummary(Set<UUID>)` | `PhotoSummaryDTO(id, name, type, userId, entityId, entityType)` |
 | `PostQueryPort` | domain-post | `getPostSummary(UUID)`, `getPostsSummary(Set<UUID>)` | `PostSummaryDTO(id, authorId, title, text, photoId)` |
-| `CommentQueryPort` | domain-comment | `getCommentSummary(UUID)`, `getCommentsSummary(Set<UUID>)`, `countCommentsByPostId(UUID)` | `CommentSummaryDTO(id, postId, authorId, parentId, text)` |
+| `CommentQueryPort` | domain-comment | `getCommentSummary(UUID)`, `getCommentsSummary(Set<UUID>)`, `countCommentsByPostId(UUID)`, `findPostIdsByUserId(UUID)` | `CommentSummaryDTO(id, postId, authorId, parentId, text)` |
 | `ReactionQueryPort` | domain-reaction | `getReactionSummary(UUID)`, `getReactionsSummary(Set<UUID>)`, `countReactions(UUID, ReactionType)` | `ReactionSummaryDTO(id, userId, username, contentId, contentType, reactionType)` |
 
-First consumer migration (Phase 5.1): `CommentMapper` uses `ReactionQueryPort.countReactions`
-instead of `ReactionRepository`. Intentionally retained direct access: message→chat
-(chat owns message), entity-graph navigation (`Comment.user`, `Message.sender`,
-`PostSecurityService` authorization lookups), and shared-kernel `UserProfilePort`
-(photo must not depend on user — see `core-shared.ports`).
+First consumer migrations (Phase 5.1):
+- `CommentMapper` uses `ReactionQueryPort.countReactions` instead of `ReactionRepository`
+- `CommentMapper` uses `UserQueryPort.getUserSummary` instead of `UserRepository`
+- `MessageMapper` uses `UserQueryPort.getUserSummary` for sender/recipient names
+- `PostMapper` uses `UserQueryPort.getUserSummary` for author names
+- `PostMapper` uses `CommentQueryPort.countCommentsByPostId` for comment counts
+- `PostSecurityService` uses `UserQueryPort.findUserIdByUsernameOrEmail` instead of `UserRepository`
+- `PostSpecifications.containsText` uses `UserQueryPort.searchUserIds` for author search
+- `PostSpecifications.commentedByUser` uses `CommentQueryPort.findPostIdsByUserId`
+- `PostSpecifications.visibleToUser` uses `PostAuthorVisibility` + `ViewerAuthorAccess` local tables
+- `PostNotificationAdapter` uses `Post.authorId` (read-only FK view)
+- `PostCommentAdapter` uses `PostRepository.existsById`
+- `CommentNotificationAdapter` uses `Comment.userId` (FK column)
+
+Intentionally retained direct access: message→chat (chat owns message), entity-graph navigation (`Comment.user`, `Message.sender`, `Message.recipient`, `PostSecurityService` authorization lookups), and shared-kernel `UserProfilePort` (photo must not depend on user — see `core-shared.ports`).
+
+---
 
 ## Consumer-Owned Ports Pattern
 
@@ -223,9 +239,9 @@ instead of `ReactionRepository`. Intentionally retained direct access: message�
 │  │ }                                                    │   │
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
-                              ▲
-                              │ implements
-                              │
+                               ▲
+                               │ implements
+                               │
 ┌─────────────────────────────────────────────────────────────┐
 │  PROVIDER MODULE (e.g., domain-post)                        │
 │  ┌─────────────────────────────────────────────────────┐   │
@@ -250,10 +266,30 @@ instead of `ReactionRepository`. Intentionally retained direct access: message�
 | `CommentCreatedEvent` | domain-comment (CommentService) | domain-notification | commentId, postId, authorId, text |
 | `ReactionAddedEvent` | domain-reaction (ReactionService) | domain-notification | reactionId, contentId, contentType, reactionType, actorId |
 | `MessageSentEvent` | domain-message (MessageService) | domain-notification, domain-chat | messageId, chatId, senderId, text |
-| `UserFollowedEvent` | domain-user (UserService) | domain-notification | followerId, followedId |
+| `UserFollowedEvent` | domain-user (UserService) | domain-notification, domain-post (via projector) | followerId, followedId |
+| `UserUnfollowedEvent` | domain-user (UserService) | domain-post (via projector) | followerId, followedId |
+| `UserPrivacyChangedEvent` | domain-user (UserService) | domain-post (via projector) | userId, isPrivate |
 
 **Delivery**: Transactional Outbox → RabbitMQ (`domain.events` topic exchange) → STOMP/WebSocket + `@EventListener` consumers
 **Idempotency**: All consumers check `processed_events` table by `eventId` before processing.
+
+---
+
+## Consumer Migrations (Phase 5.1)
+
+| Consumer | Before | After | Port Used |
+|----------|--------|-------|-----------|
+| `CommentMapper.getLikeCount` | `ReactionRepository.countByContentIdAndReactionType` | `ReactionQueryPort.countReactions` | `ReactionQueryPort` |
+| `CommentMapper.resolveUsername` | `UserRepository.findById` | `UserQueryPort.getUserSummary` | `UserQueryPort` |
+| `MessageMapper` (sender/recipient names) | `UserRepository` | `UserQueryPort.getUserSummary` | `UserQueryPort` |
+| `PostMapper` (author name, repost author) | `UserRepository` | `UserQueryPort.getUserSummary` | `UserQueryPort` |
+| `PostMapper.commentCount` | `post.getComments().size()` | `CommentQueryPort.countCommentsByPostId` | `CommentQueryPort` |
+| `PostSecurityService.canAccess` | `UserRepository.findUserEntityByEmail/findUserByUsername` | `UserQueryPort.findUserIdByUsernameOrEmail` | `UserQueryPort` |
+| `PostSpecifications.containsText` | `root.get("user").get("username")` join | `UserQueryPort.searchUserIds` + `IN` clause | `UserQueryPort` |
+| `PostSpecifications.commentedByUser` | `JOIN p.comments c WHERE c.user.id = :userId` | `CommentQueryPort.findPostIdsByUserId` + `IN` clause | `CommentQueryPort` |
+| `PostSpecifications.visibleToUser` | JOINs to user/profile_settings/followers | Local tables `post_author_visibility` + `viewer_author_access` | — |
+| `PostNotificationAdapter.findPostOwnerId` | `post.getUser().getId()` | `post.getAuthorId()` (FK view) | — |
+| `CommentNotificationAdapter.findCommentOwnerId` | `comment.getUser().getId()` | `comment.getUserId()` (FK column) | — |
 
 ---
 

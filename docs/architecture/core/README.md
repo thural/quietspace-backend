@@ -57,6 +57,8 @@ Core modules provide shared infrastructure and cross-cutting concerns. They have
 | `ReactionAddedEvent` | Reaction | reactionId, contentId, contentType, reactionType, actorId |
 | `MessageSentEvent` | Message | messageId, chatId, senderId, text |
 | `UserFollowedEvent` | User | followerId, followedId |
+| `UserUnfollowedEvent` | User | followerId, followedId |
+| `UserPrivacyChangedEvent` | User | userId, isPrivate |
 | `EmailEvent` | Email | to, subject, templateName, variables |
 
 ### Event Infrastructure
@@ -67,6 +69,14 @@ Core modules provide shared infrastructure and cross-cutting concerns. They have
 | `TransactionalEventPublisher` | Persists events to outbox within same transaction |
 | `OutboxEvent` | JPA entity for outbox table |
 | `OutboxEventRepository` | Spring Data repository for outbox polling |
+| `ProcessedEvent` | Idempotency tracking entity |
+| `ProcessedEventRepository` | Spring Data repository for deduplication |
+
+### Shared Ports (SPI - Outbound)
+| Port | Provider | Consumers | Rationale |
+|------|----------|-----------|-----------|
+| `UserProfilePort` | `domain-user/.../adapter/UserProfileAdapter` | `domain-photo/PhotoServiceImpl` | Photo is a leaf; moving it would force `photo→user` cycle |
+| `WebSocketUserPort` | `domain-user/.../adapter/WebSocketUserAdapter` | `core-messaging` WebSocket auth | Core-driven outbound SPI |
 
 ---
 
@@ -113,7 +123,7 @@ Core modules provide shared infrastructure and cross-cutting concerns. They have
 | Interface | Purpose |
 |-----------|---------|
 | `AuthenticationProvider` | `UserDetails loadUserByUsername(String)` — implemented by domain-user |
-| `JwtTokenService` | Token generation/validation (`generateToken`, `validateToken`, `extractUsername`, `extractAllClaims`) |
+| `JwtTokenService` | `generateToken(UserDetails)`, `validateToken(String)` |
 
 ### Implementations
 | Class | Purpose |
@@ -139,6 +149,8 @@ Core modules provide shared infrastructure and cross-cutting concerns. They have
 |-------|---------|
 | `WebSocketConfig` | STOMP over WebSocket, RabbitMQ broker relay (`/topic`, `/queue`) |
 | `WebSocketSecurityConfig` | CSRF disabled, CONNECT permit, user destination prefix `/user` |
+| `RabbitMQConfig` | Topic exchange `domain.events`, email exchange/queue |
+| `PostVisibilityProjector` | Maintains feed-visibility read model from user lifecycle events (see ADR 005) |
 | `RabbitMQConfig` | Topic exchange `domain.events`, email exchange/queue |
 | `EmailEventPublisher` | Publishes `EmailEvent` to RabbitMQ |
 | `EmailEventConsumer` | Consumes from `email.queue`, delegates to `EmailService` |

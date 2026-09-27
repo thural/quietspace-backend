@@ -35,11 +35,15 @@ implementation("io.zipkin.reporter2:zipkin-reporter-brave")
 | `domain.user.follow.total` | Counter | Total follow operations | result=success\|error |
 | `domain.user.unfollow.total` | Counter | Total unfollow operations | result=success\|error |
 | `domain.user.follow.duration` | Timer | Follow operation latency | - |
+| `domain.user.privacy.change.total` | Counter | Total privacy setting changes | result=success\|error |
 | `domain.post.create.duration` | Timer | Post creation latency | - |
 | `domain.message.send.duration` | Timer | Message send latency | - |
 | `domain.notification.created` | Counter | Notifications created | type=FOLLOW_REQUEST\|POST_REACTION\|... |
 | `domain.outbox.publish.duration` | Timer | Outbox poller publish latency | - |
-| `domain.event.processing.duration` | Timer | Event consumer processing time | eventType=UserRegistered\|... |
+| `domain.event.processing.duration` | Timer | Event consumer processing time | eventType=UserRegistered\|UserFollowed\|UserUnfollowed\|UserPrivacyChanged\|PostCreated\|CommentCreated\|ReactionAdded\|MessageSent |
+| `domain.post.visibility.projector.duration` | Timer | PostVisibilityProjector event handling latency | eventType=UserRegistered\|UserPrivacyChanged\|UserFollowed\|UserUnfollowed |
+| `domain.post.visibility.table.size` | Gauge | Rows in post_author_visibility table | - |
+| `domain.post.viewer_author_access.size` | Gauge | Rows in viewer_author_access table | - |
 
 ### Standard JVM/HTTP Metrics (Auto-configured)
 | Metric | Description |
@@ -200,6 +204,7 @@ class UserHealthIndicatorTest {
 | Outbox Lag | `time() - max(outbox_event_published_at_timestamp)` |
 | Virtual Threads | `jvm_threads_live_threads{virtual="true"}` |
 | DB Connections | `hikaricp_connections_active` |
+| Post Visibility Lag | `time() - max(post_author_visibility.updated_at)` |
 
 ---
 
@@ -215,7 +220,7 @@ groups:
           severity: critical
         annotations:
           summary: "High HTTP 5xx error rate"
-      
+       
       - alert: OutboxLag
         expr: time() - max(outbox_event_published_at_timestamp) > 300
         for: 10m
@@ -223,7 +228,7 @@ groups:
           severity: warning
         annotations:
           summary: "Outbox events not published for 5+ minutes"
-      
+       
       - alert: VirtualThreadPinning
         expr: increase(jdk_VirtualThreadPinned_total[5m]) > 10
         for: 5m
@@ -231,4 +236,23 @@ groups:
           severity: warning
         annotations:
           summary: "Virtual thread pinning detected"
+       
+      - alert: PostVisibilityProjectorLag
+        expr: time() - max(post_author_visibility.updated_at_timestamp) > 60
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Post visibility projector lagging - events not processed"
 ```
+
+---
+
+## Observability Decision Log
+
+| Date | Decision | Rationale |
+|------|----------|-----------|
+| 2026-09-26 | Event-driven feed visibility (ADR 005) | Accepted eventual consistency on privacy changes to enable pagination-correct SQL filtering without cross-module joins |
+| 2026-09-26 | Projector metrics `domain.post.visibility.projector.duration` | Track outbox processing latency; alert on lag > 60s |
+| 2026-09-26 | Event processing metrics by type | Distinguish latency by event type (privacy vs follow vs registration) |
+| 2026-09-26 | Visibility table size gauges | Monitor denormalized table growth; detect projector backlog |
