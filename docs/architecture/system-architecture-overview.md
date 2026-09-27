@@ -1,9 +1,8 @@
 # System Architecture Overview — quietspace-platform
 
 > **Purpose.** Factual reference of the codebase architecture *as it is* (main branch,
-> post Phase 1.1 / 3.x work). Written to support refactoring proposals for the
-> open items in `docs/plans/modular-architecture-alignment-plan.md` — especially
-> the blocked Phase 4 (package-private) and Phase 5.1 (consumer migration) steps.
+> post Phase 1.1 / 3.x / 4.x work). Written to support refactoring proposals for the
+> open items in `docs/plans/modular-architecture-alignment-plan.md`.
 > Claims below were verified against `build.gradle.kts` files, imports, and tests;
 > package paths are exact.
 
@@ -51,7 +50,7 @@ everything ◄── app/quietspace-app (composition root, sole @SpringBootAppli
 
 | Module | Depends on (domain part) | Role |
 |--------|--------------------------|------|
-| `domain-user` | `domain-photo`, `domain-notification` | `User` aggregate; implements notification ports; reads photo views |
+| `domain-user` | `domain-photo`, `domain-notification` | `User` aggregate; implements notification ports; reads photo views; IAM bounded context |
 | `domain-post` | `domain-user`, `domain-photo`, `domain-reaction`, `domain-comment`, `domain-notification` | `Post`/`Poll` aggregates; implements notification/comment ports |
 | `domain-photo` | *(none — leaf)* | `Photo` aggregate; consumes `UserProfilePort` from core-shared |
 | `domain-comment` | `domain-user`, `domain-reaction`, `domain-notification` (+ `domain-post` **test-only**) | `Comment` aggregate |
@@ -89,15 +88,16 @@ dev.thural.quietspace.domain.user/
 └── security/           # UserAuthenticationProvider, beans
 ```
 
-`domain-post` adds `PostSecurityService` (SpEL bean `postSecurity`) and `PostSpecifications`;
+`domain-post` adds `PostSecurityService` (SpEL bean `postSecurity`), `PostSpecifications`, `PostVisibilityProjector`;
+`domain-comment` has `CommentCommandPort`/`Adapter` + `CommentQueryPort` + `CommentQueryAdapter`;
 `domain-notification` adds `NotificationEventListener` + `port/` (consumer-owned ports);
-`domain-chat` has `port/ChatMessagePort`; `domain-comment` has `port/CommentPostPort`.
+`domain-chat` has `port/ChatMessagePort`; `domain-comment` has `port/CommentPostPort`;
+`domain-reaction` has `ReactionQueryPort`/`Adapter`; `domain-photo` has `PhotoQueryPort`/`Adapter`;
+`domain-post` has `PostQueryPort`/`Adapter`; `domain-user` has `UserQueryPort`/`Adapter`.
 
-> **Caveat for reviewers:** per-module ArchUnit tests reference `adapter/service/
-> controller/model/repository` subpackages that largely don't exist; with
-> `allowEmptyShould(true)` those rules pass vacuously. Effective enforcement today =
-> Gradle edges + review. Any visibility/layering redesign should rewrite the rules
-> to constrain real packages (e.g. `*.domain.X.*Repository` imports).
+> **Caveat for reviewers:** per-module ArchUnit tests now reference **real packages**
+> (`domain.post..`, `domain.user..`, etc.) with explicit forbidden-dependency lists and
+> a cross-module repository-import ban. No vacuous `allowEmptyShould(true)` rules.
 
 ---
 
@@ -114,24 +114,38 @@ dev.thural.quietspace.domain.user/
 
 | Port (module) | Methods | DTO |
 |---------------|---------|-----|
-| `UserQueryPort` (user) | `getUserSummary`, `getUsersSummary` | `UserSummaryDTO(id, username, displayName, photoId, statusType)` |
+| `UserQueryPort` (user) | `getUserSummary`, `getUsersSummary`, `findUserIdByUsernameOrEmail`, `searchUserIds` | `UserSummaryDTO(id, username, displayName, photoId, statusType)` |
 | `PhotoQueryPort` (photo) | `getPhotoSummary`, `getPhotoSummaryByEntityId`, `getPhotosSummary` | `PhotoSummaryDTO(id, name, type, userId, entityId, entityType)` |
 | `PostQueryPort` (post) | `getPostSummary`, `getPostsSummary` | `PostSummaryDTO(id, authorId, title, text, photoId)` |
-| `CommentQueryPort` (comment) | `getCommentSummary`, `getCommentsSummary`, `countCommentsByPostId` | `CommentSummaryDTO(id, postId, authorId, parentId, text)` |
+| `CommentQueryPort` (comment) | `getCommentSummary`, `getCommentsSummary`, `countCommentsByPostId`, `findPostIdsByUserId` | `CommentSummaryDTO(id, postId, authorId, parentId, text)` |
 | `ReactionQueryPort` (reaction) | `getReactionSummary`, `getReactionsSummary`, `countReactions` | `ReactionSummaryDTO(id, userId, username, contentId, contentType, reactionType)` |
 
 Adapters (`*QueryAdapter`, `@Component`) delegate to the owning repository; unit-tested
-with Mockito. No consumer rewiring yet, except `CommentMapper.getLikeCount` →
-`ReactionQueryPort.countReactions` (Phase 5.1 pilot). Auth (`getSignedUser`) intentionally
-stays on `UserService` — ports carry display data only.
+with Mockito. No consumer rewiring yet, except:
+- `CommentMapper.getLikeCount` → `ReactionQueryPort.countReactions`
+- `CommentMapper.resolveUsername` → `UserQueryPort.getUserSummary`
+- `MessageMapper.resolveUsername` → `UserQueryPort.getUserSummary`
+- `PostMapper.resolveUsername` → `UserQueryPort.getUserSummary`
+- `PostMapper.commentCount` → `CommentQueryPort.countCommentsByPostId`
+- `PostSecurityService.canAccess` → `UserQueryPort.findUserIdByUsernameOrEmail`
+- `PostSpecifications.containsText` → `UserQueryPort.searchUserIds`
+- `PostSpecifications.commentedByUser` → `CommentQueryPort.findPostIdsByUserId`
+- `PostSpecifications.visibleToUser` → `PostAuthorVisibility` + `ViewerAuthorAccess` (local tables)
+
+Auth (`getSignedUser`) intentionally stays on `UserService` — ports carry display data only.
 
 ### 4.3 Consumer-owned ports (`port/` packages, provider implements)
 
-`domain-notification/port/`: `NotificationUserPost` trio (`NotificationUserPort`,
-`NotificationPostPort`, `NotificationCommentPort`); `domain-chat/port/ChatMessagePort`;
-`domain-comment/port/CommentPostPort`. Adapters live in provider modules
-(`PostNotificationAdapter`, `CommentNotificationAdapter`, `UserNotificationAdapter`,
-`MessageChatAdapter`, `PostCommentAdapter`).
+| Port | Owner module | Provider adapter | Purpose |
+|------|--------------|------------------|---------|
+| `NotificationUserPort` | notification | `UserNotificationAdapter` | Resolve notification recipient |
+| `NotificationPostPort` | notification | `PostNotificationAdapter` | Find post owner for notifications |
+| `NotificationCommentPort` | notification | `CommentNotificationAdapter` | Find comment owner for notifications |
+| `ChatMessagePort` | chat | `MessageChatAdapter` | Message send entry point |
+| `CommentPostPort` | comment | `PostCommentAdapter` | Verify post exists for comment creation |
+| `CommentCommandPort` | comment | `CommentCommandAdapter` | **Explicit cascade** — post deletion triggers comment cleanup |
+
+Adapters live in provider modules; consumer modules depend only on the port interfaces.
 
 ---
 
@@ -141,10 +155,12 @@ stays on `UserService` — ports carry display data only.
   atomically with aggregates via `TransactionalEventPublisher`; `ProcessedEvent` table
   gives consumers idempotency (`eventId` dedup).
 - **Domain events** (`core-shared/event/`): `UserRegisteredEvent`, `UserFollowedEvent`,
-  `PostCreatedEvent`, `CommentCreatedEvent`, `ReactionAddedEvent`, `MessageSentEvent`
-  (+ `EmailEvent`, `DomainEvent` base, `EventSerializer`).
-- **Consumers**: `NotificationEventListener` (all 6 events → notifications),
-  `SocketEventListener` (presence), chat last-message updates.
+  `UserUnfollowedEvent`, `UserPrivacyChangedEvent`, `PostCreatedEvent`, `CommentCreatedEvent`,
+  `ReactionAddedEvent`, `MessageSentEvent` (+ `EmailEvent`, `DomainEvent` base, `EventSerializer`).
+- **Consumers**: `NotificationEventListener` (all 6+ domain events → notifications),
+  `SocketEventListener` (presence), chat last-message updates, `PostVisibilityProjector`
+  (feed-visibility read model from `UserPrivacyChangedEvent`, `UserFollowedEvent`,
+  `UserUnfollowedEvent`, `UserRegisteredEvent`).
 - **Transport**: RabbitMQ (durable, at-least-once); STOMP broker relay in
   `core-messaging/.../config/WebSocketConfig.java` for multi-node delivery;
   `WebSocketSecurityConfig` (CSRF disabled for handshake, protocol frames permitted).
@@ -157,10 +173,13 @@ stays on `UserService` — ports carry display data only.
   (id, audit fields). Cross-aggregate JPA associations exist and are load-bearing:
   `Message.chat` (ownership, kept), `Message.sender/recipient` → decoupled to plain
   `senderId`/`recipientId` UUID columns (E.2), `Comment.user` → plain `userId` (E.1),
-  `Post.user` → transitional dual mapping: association retained as single writer for
+  `Post.user` → **transitional dual mapping**: association retained as single writer for
   feed-privacy SQL joins (`PostSpecifications.visibleToUser`), plus read-only `authorId`
   FK view used by all new code (E.3). Ports return detached snapshots and **cannot**
   populate associations — which is why the remaining joins stay.
+- **Removed**: `Post.comments` collection (E.1). `Post.comments` was `@OneToMany` with
+  cascade; replaced by `CommentQueryPort.countCommentsByPostId` (mapper), subquery
+  `findByCommentsUserId` (spec), and `CommentCommandPort.deleteAllByPostId` (cascade).
 - Response DTOs (`*Response`) are mutable Lombok `@SuperBuilder` hierarchies extending
   `BaseResponse`, built by hand-written `@Component` mappers (no MapStruct `@Mapper`
   interfaces in domains). Records are used only for the new `api.dto` summaries.
@@ -178,7 +197,7 @@ stays on `UserService` — ports carry display data only.
   (backed by `UserRepository`).
 - Method security: `@PreAuthorize("@postSecurity.canAccess(#postId, authentication.name)")`
   on selected `PostController` endpoints; `PostSecurityService` resolves username→entity
-  via `UserRepository` for authorization — needs a managed entity/role, not a snapshot.
+  via **`UserQueryPort.findUserIdByUsernameOrEmail`** (no direct `UserRepository`).
 - Security-posture tests (`PostControllerSecurityTest`, `CorsSecurityTest`, `CsrfTest`,
   `SecurityHeadersTest`, `SecurityFlowIT`) require the wired filter chain and live in app:
   a `@WebMvcTest` slice without `core-security` returns 200/404 instead of 401 (verified).
@@ -189,26 +208,52 @@ stays on `UserService` — ports carry display data only.
 
 | Layer | Location | Tech |
 |-------|----------|------|
-| Unit (services, mappers, adapters, utils, events) | each module `src/test` (Mockito, no context) | fast |
+| Unit (services, mappers, adapters, events, utils) | each module `src/test` (Mockito, no context) | fast |
 | Slice — web | `*ControllerSliceTest` (`@WebMvcTest`, `addFilters=false`) | per domain |
 | Slice — persistence | `*.repository.*RepositoryTest` (`@DataJpaTest`, H2) — moved out of app in Phase 1.1 | per domain |
 | Contract | `*.api.*QueryAdapterTest` (Mockito) | per `api` port |
 | Architecture | `*.archunit.*ArchitectureRulesTest` (+ global `ArchitectureRulesTest`) | per module (see §3 caveat) |
 | Integration | app only: `*FlowIT`, `UserServiceIT`, `WebSocketFlowIT`, `FlywayMigrationIT` (`@SpringBootTest` + Testcontainers) | full context |
 
+**H2 rules** (all three mandatory): (1) `application.yml` with `NON_KEYWORDS=user`; (2)
+`@AutoConfigureTestDatabase(Replace.NONE)`; (3) `testRuntimeOnly("com.h2database:h2")`
+from domain-conventions plugin.
+
 ---
 
-## 9. Open Design Questions (for the blocked-item proposals)
+## 9. Open Design Questions (resolved)
 
-1. **FlowIT placement**: accept app as the integration-test module (redefine Phase 1.1 done
-   as "zero unit/slice tests in app"), or fund per-domain sliced contexts?
-2. **`UserProfilePort`**: keep in core (status quo) vs. `PhotoUploadedEvent` outbox flow
-   (async, changes consistency)?
-3. **Response DTOs**: freeze mutable hierarchy (status quo) vs. record migration guarded by
-   JSON golden files per endpoint?
-4. **Phase 4 visibility**: (a) flatten domain packages so package-private is expressible,
-   (b) repos-only package-private + same-package tests with documented cross-module
-   exceptions, or (c) drop enforcement in favor of corrected ArchUnit rules?
-5. **Remaining direct repo access**: `Message*→ChatRepository` (ownership — likely keep),
-   `*Mapper→UserRepository` + `PostSecurityService→UserRepository` (managed-entity need —
-   needs an auth-aware design, snapshots don't suffice).
+1. **FlowIT placement**: ✅ Accept app as integration-test module; criterion → "zero unit/slice tests in app".
+2. **`UserProfilePort`**: ✅ Keep in `core-shared` (outbound SPI). Move would create `user↔photo` cycle.
+3. **Response DTOs**: ✅ Freeze mutable hierarchy; records only for new `api.dto` summaries.
+4. **Phase 4 visibility**: ✅ Drop `package-private` enforcement; enforce via corrected ArchUnit rules.
+5. **Remaining direct repo access**: `Message*→ChatRepository` (ownership — keep);
+   `PostSecurityService` → `UserRepository` eliminated (now uses `UserQueryPort`);
+   `CommentMapper`/`ReactionMapper`/`MessageMapper`/`PostMapper`/`PostSecurityService`
+   all use query ports; `Post.comments` collection removed.
+
+---
+
+## 10. CI/CD
+
+- **Jobs**: `test-core` (5 core modules), `test-domain` (8 domain modules), `test-app`
+  (app integration tests), `build-and-push` (Docker, needs all three).
+- **Paths filter**: triggers on `core/**`, `domain/**`, `app/**`, `buildSrc/**`, `gradle/**`.
+- **Caches**: `org.gradle.caching=true`, `org.gradle.configuration-cache=true` in `gradle.properties`.
+- **Timeouts**: 15/20/30 min per job; no flaky-test retry plugin (timeouts preferred).
+
+---
+
+## 11. ADRs
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| 001 | Core/Domain Split Architecture | Accepted |
+| 002 | Virtual Threads (Project Loom) | Accepted |
+| 003 | Transactional Outbox Pattern | Accepted |
+| 004 | IAM Bounded Context in domain-user | Accepted |
+| 005 | Feed-Visibility Read Model (Event-Driven) | Accepted |
+
+---
+
+*Document maintained alongside `docs/plans/refactoring-plan-blocked-items.md` (implementation history) and `docs/guides/testing.md` (testing conventions).*
