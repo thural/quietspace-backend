@@ -38,13 +38,14 @@ public class Xxx extends BaseEntity {
 }
 ```
 
-### 4. Package-Private Repository
+### 4. Repository (Public, ArchUnit-Enforced)
 ```java
 // domain/xxx/repository/XXXRepository.java
-interface XXXRepository extends JpaRepository<XXX, UUID> {
+public interface XXXRepository extends JpaRepository<XXX, UUID> {
     // Custom queries
 }
 ```
+**Note**: Repositories are kept `public` (not package-private) to allow same-module access from `adapter/`, `service/`, `api/`, `health/` subpackages. Cross-module repository imports are forbidden by ArchUnit rule `has_no_cross_module_repository_dependency` (see `docs/architecture/domains/README.md`).
 
 ### 5. Consumer-Owned Ports (if needed)
 ```java
@@ -283,7 +284,7 @@ ON processed_events (processed_at);
 |---------|----------|
 | Domain module depends on another's internal class | Use consumer-owned port (interface in consumer, adapter in provider) |
 | Controller injects repository | Inject service instead (ArchUnit enforces) |
-| Repository made public | Keep package-private (ArchUnit enforces) |
+| **Cross-module repository import** | Use query port instead (ArchUnit enforces `has_no_cross_module_repository_dependency`) |
 | Event consumer not idempotent | Check `processedEventRepository.existsByEventId()` |
 | New module <80% coverage | Add unit/slice/IT tests before merging |
 | Virtual thread pinning | Monitor JFR, replace `synchronized` with `ReentrantLock` |

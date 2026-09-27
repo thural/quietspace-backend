@@ -289,7 +289,7 @@ DB_HOST_NAME=my-custom-db docker compose -f docker-compose.yaml up -d
 
 ## Security Notes
 
-- Never commit `.env` file to git (it's in `.gitignore`)
+- Never commit `.env` file to git (it's in `../../../.gitignore`)
 - Use strong passwords for production
 - Rotate `JWT_SECRET_KEY` periodically
 - Use a secrets manager for production deployments

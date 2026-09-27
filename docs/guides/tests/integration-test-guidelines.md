@@ -249,7 +249,7 @@ class WebSocketFlowIT {
 
 ## 5. Build Tool Configuration
 
-Integration tests are separated from unit tests in `build.gradle.kts`:
+Integration tests are separated from unit tests in `../../../build.gradle.kts`:
 
 ```kotlin
 val integrationTest by tasks.registering(Test::class) {

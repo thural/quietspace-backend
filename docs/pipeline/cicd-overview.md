@@ -49,7 +49,7 @@
 
 | File | Purpose |
 |---|---|
-| `.github/workflows/pipeline-monolith.yml` | GitHub Actions CI/CD pipeline |
+| `.github/workflows/ci-backend.yml` | GitHub Actions CI/CD pipeline |
 | `infrastructure/docker/Dockerfile` | Multi-stage Docker build |
 | `infrastructure/docker/docker-compose.yaml` | Container orchestration |
 | `.env.example` | Environment variable template (committed) |
@@ -60,4 +60,4 @@
 
 - [CI Pipeline Details](ci-pipeline.md)
 - [CD Pipeline Details](cd-pipeline.md)
-- [Configuration Guide](../guide/usage/configuration.md)
+- [Configuration Guide](../guides/usage/configuration.md)

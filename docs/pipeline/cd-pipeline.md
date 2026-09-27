@@ -281,7 +281,7 @@ docker compose -f docker-compose.yaml up -d
 
 ## Environment Variables
 
-The pipeline generates a `.env` file on the VPS from GitHub Secrets. See [Configuration Guide](../guide/usage/configuration.md) for details.
+The pipeline generates a `.env` file on the VPS from GitHub Secrets. See [Configuration Guide](../guides/usage/configuration.md) for details.
 
 | Variable | Source | Purpose |
 |---|---|---|

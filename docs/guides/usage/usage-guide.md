@@ -15,7 +15,7 @@ It also documents every environment variable the application and infrastructure 
 
 | Tool | Version | Notes |
 |------|---------|-------|
-| Java | 25 | Provisioned automatically by the Gradle toolchain (`build.gradle.kts`); no manual install needed. |
+| Java | 25 | Provisioned automatically by the Gradle toolchain (`../../../build.gradle.kts`); no manual install needed. |
 | Gradle | 9.6.1 | Use the included wrapper (`./gradlew`). |
 | Docker | latest | Required for both options (containers). |
 | Docker Compose | v2 (`docker compose`) | Required for Option B only. |
