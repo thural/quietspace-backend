@@ -21,24 +21,24 @@ QuietSpace uses a layered configuration system with `.env` as the single source 
                     │ (env variables) │
                     └────────┬────────┘
                              │
-              ┌──────────────┴──────────────┐
+               ┌──────────────┴──────────────┐
+               ▼                             ▼
+     ┌─────────────────┐           ┌─────────────────┐
+     │ application.yml │           │ application.yml │
+     │   (base config) │           │   (base config) │
+     └────────┬────────┘           └────────┬────────┘
+              │                             │
               ▼                             ▼
-    ┌─────────────────┐           ┌─────────────────┐
-    │ application.yml │           │ application.yml │
-    │   (base config) │           │   (base config) │
-    └────────┬────────┘           └────────┬────────┘
-             │                             │
-             ▼                             ▼
-    ┌─────────────────┐           ┌─────────────────┐
-    │ application-    │           │ application-    │
-    │   dev.yml       │           │   prod.yml      │
-    └─────────────────┘           └─────────────────┘
-             │                             │
-             ▼                             ▼
-    ┌─────────────────┐           ┌─────────────────┐
-    │  Local Dev      │           │  Docker/Prod    │
-    │  (localhost)    │           │  (service names)│
-    └─────────────────┘           └─────────────────┘
+     ┌─────────────────┐           ┌─────────────────┐
+     │ application-    │           │ application-    │
+     │   dev.yml       │           │   prod.yml      │
+     └─────────────────┘           └─────────────────┘
+              │                             │
+              ▼                             ▼
+     ┌─────────────────┐           ┌─────────────────┐
+     │  Local Dev      │           │  Docker/Prod    │
+     │  (localhost)    │           │  (service names)│
+     └─────────────────┘           └─────────────────┘
 ```
 
 ## Environment Variables (.env)
@@ -195,7 +195,7 @@ DB_USER_PASSWORD=userpassword
 
 # If MySQL was already initialized, reset:
 docker volume rm quietspace_monolith_data
-docker compose -f infrastructure/docker/docker-compose.yaml up -d
+docker compose -f docker-compose.yaml up -d
 ```
 
 #### Error: Mail server connection refused
@@ -225,6 +225,8 @@ DB_PORT_NUMBER=3307
 ```
 
 ## Docker Compose Configuration
+
+The project uses `docker-compose-dev.yml` at the project root for local development (MySQL, RabbitMQ, Mailpit). A full production stack is defined in `docker-compose.yaml` (to be created for production deployments).
 
 ### Service Dependencies
 
@@ -274,7 +276,7 @@ DB_HOST_NAME=quietspace-monolith-db
 MAILDEV_HOST=mailpit
 FRONTEND_HOST=quietspace-frontend
 
-# Run from infrastructure/docker:
+# Run from project root:
 docker compose -f docker-compose.yaml up -d
 ```
 
@@ -289,7 +291,7 @@ DB_HOST_NAME=my-custom-db docker compose -f docker-compose.yaml up -d
 
 ## Security Notes
 
-- Never commit `.env` file to git (it's in `../../../.gitignore`)
+- Never commit `.env` file to git (it's in `.gitignore`)
 - Use strong passwords for production
 - Rotate `JWT_SECRET_KEY` periodically
 - Use a secrets manager for production deployments

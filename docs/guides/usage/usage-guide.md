@@ -2,8 +2,8 @@
 
 This guide explains how to start and stop the QuietSpace backend in **development mode**, using two approaches:
 
-- **A. Minimal Docker** — run only the required infrastructure containers (MySQL + MailDev) and run the application locally with Gradle.
-- **B. Full Docker Compose** — run the entire stack (database, backend, frontend, maildev) via Docker Compose.
+- **A. Minimal Docker** — run only the required infrastructure containers (MySQL + RabbitMQ + Mailpit) and run the application locally with Gradle.
+- **B. Full Docker Compose** — run the entire stack (database, backend, frontend, mailpit, RabbitMQ) via Docker Compose.
 
 It also documents every environment variable the application and infrastructure need.
 
@@ -67,7 +67,7 @@ All variables live in the root `.env`. The currently committed `.env` already co
 
 ---
 
-## Option A — Minimal Docker (MySQL + MailDev) + local Gradle run
+## Option A — Minimal Docker (MySQL + RabbitMQ + Mailpit) + local Gradle run
 
 Use this when you want to develop/debug the application on your host machine and only need containers for the stateful services.
 
@@ -89,7 +89,18 @@ Wait until it is ready (logs show `ready for connections`):
 docker logs -f quietspace-dev-mysql
 ```
 
-### 2. Start the MailDev container
+### 2. Start the RabbitMQ container
+
+```bash
+docker run -d --name quietspace-dev-rabbitmq \
+  -e RABBITMQ_DEFAULT_USER=guest \
+  -e RABBITMQ_DEFAULT_PASS=guest \
+  -p 5672:5672 \
+  -p 15672:15672 \
+  rabbitmq:3-management
+```
+
+### 3. Start the MailDev container
 
 ```bash
 docker run -d --name quietspace-dev-maildev \
@@ -98,7 +109,7 @@ docker run -d --name quietspace-dev-maildev \
   maildev/maildev
 ```
 
-MailDev web UI: <http://localhost:1080> (captured emails). SMTP listens on `1025`, matching `MAILDEV_PORT`.
+MailDev web UI: <http://localhost:8025> (captured emails). SMTP listens on `1025`, matching `MAILDEV_PORT`.
 
 ### 3. Export `.env` and run the application
 
@@ -120,22 +131,24 @@ Started QuietspaceApplication in ... seconds
 Stop the application with `Ctrl+C`, then stop/remove the containers:
 
 ```bash
-docker stop quietspace-dev-mysql quietspace-dev-maildev
+docker stop quietspace-dev-mysql quietspace-dev-rabbitmq quietspace-dev-maildev
 # optional cleanup:
-docker rm quietspace-dev-mysql quietspace-dev-maildev
+docker rm quietspace-dev-mysql quietspace-dev-rabbitmq quietspace-dev-maildev
 ```
 
 ---
 
 ## Option B — Full Docker Compose stack
 
-Runs database, backend, frontend, and MailDev together. The backend image is built from `infrastructure/docker/Dockerfile` (multi-stage, JDK 25 build → JRE 25 runtime).
+Runs database, backend, frontend, mailpit, RabbitMQ together. The backend image is built from `Dockerfile` (multi-stage, JDK 25 build → JRE 25 runtime).
 
 ### 1. Prepare the environment file
 
-The Compose file references `./.env` **relative to the Compose file directory** (`infrastructure/docker/.env`). Copy the root `.env` there so Compose can read it:
+The Compose file references `./.env` **relative to the Compose file directory**. Copy the root `.env` there so Compose can read it:
 
 ```bash
+cp .env docker-compose.yaml.env  # if compose file is at root
+# OR if compose file is in a subdirectory:
 cp .env infrastructure/docker/.env
 ```
 
@@ -149,34 +162,34 @@ docker network create monolith-network
 
 ### 3. Start the stack
 
-Run from the project root so the build context (`../..`) resolves correctly:
+Run from the project root so the build context resolves correctly:
 
 ```bash
-docker compose -f infrastructure/docker/docker-compose.yaml up -d --build
+docker compose -f docker-compose.yaml up -d --build
 ```
 
 Add the dev override (enables JDWP debug port `5005`) if desired:
 
 ```bash
-docker compose -f infrastructure/docker/docker-compose.yaml \
-               -f infrastructure/docker/docker-compose.override.yaml up -d --build
+docker compose -f docker-compose.yaml \
+               -f docker-compose.override.yaml up -d --build
 ```
 
 ### 4. Verify
 
 ```bash
-docker compose -f infrastructure/docker/docker-compose.yaml ps
+docker compose -f docker-compose.yaml ps
 curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/v3/api-docs
 ```
 
 ### 5. Stop (Option B)
 
 ```bash
-docker compose -f infrastructure/docker/docker-compose.yaml down
+docker compose -f docker-compose.yaml down
 # keep the database volume data:
-#   docker compose -f infrastructure/docker/docker-compose.yaml down
+#   docker compose -f docker-compose.yaml down
 # remove everything including volumes (DESTROYS data):
-#   docker compose -f infrastructure/docker/docker-compose.yaml down -v
+#   docker compose -f docker-compose.yaml down -v
 ```
 
 ---
@@ -193,7 +206,7 @@ docker compose -f infrastructure/docker/docker-compose.yaml down
 ## Troubleshooting
 
 - **`Could not resolve placeholder 'MAILDEV_HOST'`** — you ran the app via Gradle without exporting `.env`. Use `set -a && . ./.env && set +a` first (see Option A, step 3).
-- **Port `3306` already allocated** — a MySQL container is already running (e.g. `quietspace-monolith-db`). Stop the conflicting container or reuse it; do not start a second one on the same host port.
+- **Port `3306` already allocated** — a MySQL container is already running (e.g. `quietspace-dev-mysql`). Stop the conflicting container or reuse it; do not start a second one on the same host port.
 - **`network monolith-network not found`** — create it with `docker network create monolith-network` before `docker compose up`.
-- **Compose cannot find `.env`** — ensure `infrastructure/docker/.env` exists (copied from the project root).
+- **Compose cannot find `.env`** — ensure the `.env` file exists at the path referenced by the compose file.
 - **Database connection refused** — confirm the MySQL container is healthy and that `DB_USER_USERNAME` / `DB_USER_PASSWORD` match what was used to start it.
