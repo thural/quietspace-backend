@@ -1,8 +1,7 @@
 # System Architecture Overview — quietspace-platform
 
 > **Purpose.** Factual reference of the codebase architecture *as it is* (main branch,
-> post Phase 1.1 / 3.x / 4.x work). Written to support refactoring proposals for the
-> open items in `docs/plans/modular-architecture-alignment-plan.md`.
+> post Phase 1.1 / 3.x / 4.x work).
 > Claims below were verified against `build.gradle.kts` files, imports, and tests;
 > package paths are exact.
 
@@ -256,4 +255,4 @@ from domain-conventions plugin.
 
 ---
 
-*Document maintained alongside `docs/plans/refactoring-plan-blocked-items.md` (implementation history) and `docs/guides/testing.md` (testing conventions).*
+*Document maintained alongside `docs/guides/testing.md` (testing conventions).*

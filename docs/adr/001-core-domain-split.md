@@ -67,5 +67,5 @@ src/main/java/dev/thural/quietspace/
 - ADR 003: Transactional Outbox for Domain Events
 
 ## References
-- Architecture Improvement Plan (docs/plans/architecture-improvement-plan.md)
+- Architecture documentation (docs/architecture/)
 - ArchUnit test suite (src/test/java/dev/thural/quietspace/shared/test/archunit/)
