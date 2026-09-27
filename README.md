@@ -2,210 +2,223 @@
 
 ## Project Overview
 
-QuietSpace is a privacy-focused social media application designed for meaningful interactions through a intuitive
-interface. Built with Spring Boot, the application provides a comprehensive set of features for modern social
-networking, emphasizing clean code, security, and real-time interaction.
+QuietSpace is a privacy-focused social media platform built as a **Modular Monolith** using Spring Boot 4, Java 25, and Domain-Driven Design (DDD) with Hexagonal Architecture principles. The architecture enforces strict module boundaries, consumer-owned ports, and event-driven communication — enabling both operational simplicity and future microservice extraction readiness.
+
+## Architecture
+
+### Modular Monolith (Modulith)
+
+The system is organized into **two primary tiers** with strictly enforced boundaries:
+
+```
+quietspace-backend/
+├── core/                           # Infrastructure tier (zero domain deps)
+│   ├── core-shared/                # Base entities, events, utilities, outbox
+│   ├── core-data/                  # JPA config, auditing, repositories, Flyway
+│   ├── core-web/                   # Exception handling, OpenAPI, pagination
+│   ├── core-security/              # JWT filter chain, auth manager, passwords
+│   └── core-messaging/             # Event bus, RabbitMQ, STOMP/WebSocket
+│
+├── domain/                         # Business logic tier (vertical slices)
+│   ├── domain-user/                # IAM, authentication, user lifecycle
+│   ├── domain-post/                # Posts, polls, saves, reposts, feeds
+│   ├── domain-comment/             # Comments, replies, comment reactions
+│   ├── domain-reaction/            # Generic reactions on content
+│   ├── domain-chat/                # Chat rooms, membership
+│   ├── domain-message/             # Messages, read receipts
+│   ├── domain-notification/        # Sink: consumes 8+ event types
+│   └── domain-photo/               # Leaf: upload, storage, metadata
+│
+├── app/
+│   └── quietspace-app/             # Only executable module (bootJar)
+│
+├── buildSrc/                       # Build logic as Kotlin code
+│   └── conventions/                # Convention plugins (domain, core, test)
+│
+└── docs/architecture/              # Architecture documentation
+    ├── system-architecture-review.md
+    ├── modular-architecture-review.md
+    ├── modular-architecture-overview.md
+    ├── core-modules/core-module-apis.md
+    └── domain-modules/domain-module-contracts.md
+```
+
+### Dependency Rules (Enforced)
+
+| Direction | Allowed | Enforcement |
+|-----------|---------|-------------|
+| Domain → Core | ✅ Yes | Gradle `implementation` |
+| Domain → Domain | ❌ No | ArchUnit + Gradle |
+| Core → Domain | ❌ No | Gradle (no deps declared) |
 
 ## Features
 
 ### User Management
-
-- Secure user authentication and authorization
-- Email account activation system
-- Stateless security with JWT (JSON Web Tokens)
-- Refresh token mechanism
-- Token blacklist strategy for secure logout
+- Secure authentication/authorization with Spring Security 7
+- Email account activation with token-based verification
+- Stateless JWT authentication (HS256, issuer/audience validation)
+- Refresh token rotation with blacklist on logout
+- Role-based permissions (USER, ADMIN)
 
 ### Social Interactions
+- Posts with text, polls, images, saves, reposts
+- Nested comments and replies
+- Generic reactions (like, love, haha, wow, sad, angry) on posts/comments
+- Follow/unfollow with privacy controls
+- Algorithmic feed with visibility projection
 
-- Posts
-- Comments
-- Replies
-- User profiles
-- User Reactions
-- User Followings
-- Real-time notifications
-
-### Real-Time Chat
-
-- Secure WebSocket Chat Functionality
-- End-to-end encrypted messaging
-- Real-time chat using STOMP protocol
-- One-to-one private messaging
-- Group chat support
-- Message delivery and read receipts
-- Secure WebSocket connections
-- Persistent message storage
-- Integration with existing authentication system
+### Real-Time Communication
+- STOMP over WebSocket with RabbitMQ broker relay
+- JWT-authenticated WebSocket connections
+- One-to-one and group chat
+- Message delivery/read receipts
+- Real-time notifications via STOMP topics
 
 ### Media Management
+- Profile picture and attachment uploads
+- Thumbnailator-based compression and resizing
+- Database-backed storage with efficient DTO representation
 
-- User profile picture uploads
-- Post and Message image attachments
-- Image conversion and resizing
-- Efficient image storage and retrieval
-- Direct database storage of images
-- Optimized image representation in DTOs
-
-### Advanced Capabilities
-
-- Pagination, sorting and criteria queries for content
-- Robust error handling with global exception management
-- Scalable and modular application architecture
-- Detailed API documentation
+### Observability & Quality
+- Structured logging, metrics (Micrometer), health endpoints
+- Comprehensive test pyramid: unit, slice, integration, ArchUnit
+- Static analysis: SpotBugs, PMD, Checkstyle (fail build on violation)
+- API docs: OpenAPI 3 (springdoc), AsyncAPI (Springwolf)
 
 ## Technology Stack
 
-### Backend
+| Category | Technology |
+|----------|------------|
+| **Framework** | Spring Boot 4.1.0 |
+| **Language** | Java 25 |
+| **Build** | Gradle 9.6.1 (Kotlin DSL, convention plugins) |
+| **Security** | Spring Security 7, JJWT 0.13.0 |
+| **Database** | MySQL 8, JPA/Hibernate 7.4, Flyway |
+| **Messaging** | RabbitMQ, STOMP/WebSocket |
+| **Serialization** | Jackson 3.x (records, modules) |
+| **Mapping** | MapStruct 1.6.3 |
+| **Testing** | JUnit 5, Mockito, Testcontainers, ArchUnit |
+| **Docs** | springdoc OpenAPI 3, Springwolf AsyncAPI |
+| **Containerization** | Docker, Docker Compose |
 
-- Framework: Spring Boot 4.1.0
-- Language: Java 25
-- Security: Spring Security 7.x, JWT (JJWT 0.13.0)
-- API Documentation: Swagger/OpenAPI (springdoc 3.0.3), AsyncAPI (Springwolf 2.5.0)
-- Development Tools: Lombok 1.18.46, MapStruct 1.6.3
-- Serialization: Jackson 3.x
-- Containerization: Docker, Docker Compose
-- ORM: JPA/Hibernate 7.4.1
-- Database: MySQL
-- Migration: Flyway
-- Test: JUnit 5, Mockito, Spring Boot Test
+## Inter-Module Communication
 
-### Real-Time WebSocket Communication
+### Consumer-Owned Ports (Synchronous)
+Consumer defines the interface; provider implements it.
 
-- JWT-based authentication for connections
-- Secure message routing
-- Protection against unauthorized access
-- Encrypted message payload
-- Connection validation and management
-- Error handling with custom Event messages
-
-### Security and Authentication
-
-- Spring Security
-- JWT (JSON Web Tokens)
-- Secure token management
-- Encrypted WebSocket connections
-
-### Development Tools
-
-- Gradle 9.6.1 (Kotlin DSL)
-- Lombok
-- MapStruct
-- Mockito
-- JUnit 5
-
-### Deployment
-
-- Docker
-- Docker Compose
-- Kubernetes
-
-## Detailed Project Structure
-
-```plaintext
-quietspace-backend/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── dev/thural/quietspace/
-│   │   │       ├── controller/       # REST API endpoints
-│   │   │       ├── model/            # Data Transfer Objects
-│   │   │       │   ├── request/      # Input DTOs
-│   │   │       │   └── response/     # Output DTOs
-│   │   │       ├── entity/           # Database entities
-│   │   │       ├── repository/       # Data access layers
-│   │   │       ├── service/          # Business logic
-│   │   │       ├── mapper/           # Object mapping
-│   │   │       ├── config/           # Application configurations
-│   │   │       ├── security/         # Authentication components
-│   │   │       ├── exception/        # Error handling
-│   │   │       └── utils/            # Utility classes
-│   │   └── resources/
-│   │       ├── application.yml
-│   │       └── db/migration/         # Flyway database scripts
-│   └── test/
-│       ├── java/
-│       │   └── dev/thural/quietspace/
-│       │       ├── controller/       # MVC slice & integration tests
-│       │       ├── service/          # Service unit tests
-│       │       ├── mapper/           # Mapper tests
-│       │       └── repository/       # Data layer tests
-│       └── resources/
-│           └── application.yml       # Test config (H2)
-├── build.gradle.kts                  # Gradle build configuration
-├── settings.gradle.kts               # Gradle settings
-├── gradlew / gradlew.bat             # Gradle wrapper
-├── .env                              # Environment variables
-└── infrastructure/
-    ├── docker/                       # Containerization configs
-    └── k8s/                          # Kubernetes deployment
+```
+domain-notification (consumer)          domain-post (provider)
+├── NotificationPostPort  ◄────── implements ────►  PostNotificationAdapter
 ```
 
-## Code Quality Principles
+### Domain Events (Asynchronous)
+All events in `core-shared`, published via **Transactional Outbox** → RabbitMQ → idempotent consumers.
 
-### Development Best Practices
-
-- Modular and clean architecture
-- SOLID principles implementation
-- Meaningful naming conventions
-- Small, focused methods
-- Global exception handling
-- Strict DRY code approach
-- Consistent coding style
-- Integration, unit, and mock tests
+| Event | Publisher | Consumers |
+|-------|-----------|-----------|
+| `UserRegisteredEvent` | domain-user | domain-notification |
+| `PostCreatedEvent` | domain-post | domain-notification |
+| `CommentCreatedEvent` | domain-comment | domain-notification |
+| `ReactionAddedEvent` | domain-reaction | domain-notification |
+| `MessageSentEvent` | domain-message | domain-notification, domain-chat |
+| `UserFollowedEvent` | domain-user | domain-notification, domain-post (projector) |
 
 ## Getting Started
 
 ### Prerequisites
-
 - Java 25+
-- Gradle 9.x (or use the included wrapper)
+- Gradle 9.x (wrapper included)
 - MySQL 8+
-- Docker (optional, for containerized deployment)
+- Docker (for RabbitMQ, MySQL)
 
 ### Quick Setup
 
-1. Clone the repository
-   ```bash
-   git clone https://github.com/thural/quietspace-backend.git
-   cd quietspace-backend
-   ```
+```bash
+# 1. Clone
+git clone https://github.com/thural/quietspace-backend.git
+cd quietspace-backend
 
-2. Configure Environment
-    - Copy or create a `.env` file at the project root with:
-   ```
-   ACTIVE_PROFILE=dev
-   DB_PORT_NUMBER=3306
-   SERVER_PORT_NUMBER=8080
-   JWT_SECRET=your_secret_key
-   JWT_EXPIRATION=86400000
-   JWT_EXPIRATION_REFRESH=604800000
-   ```
+# 2. Configure environment
+cp .env.example .env  # Edit with your values
 
-3. Build and Run
-   ```bash
-   ./gradlew build
-   ./gradlew bootRun
-   ```
+# 3. Start infrastructure
+docker compose -f infrastructure/docker/docker-compose.yml up -d
+
+# 4. Build and run
+./gradlew build
+./gradlew :app:quietspace-app:bootRun
+```
+
+### Environment Variables (.env)
+
+```bash
+ACTIVE_PROFILE=dev
+DB_PORT_NUMBER=3306
+SERVER_PORT_NUMBER=8080
+JWT_SECRET=your-256-bit-secret-key
+JWT_EXPIRATION=86400000
+JWT_EXPIRATION_REFRESH=604800000
+RABBITMQ_HOST=localhost
+RABBITMQ_PORT=5672
+```
 
 ## API Documentation
 
-### REST API (OpenAPI 3.1 — springdoc)
-- UI: `http://localhost:8080/swagger-ui.html`
-- JSON: `http://localhost:8080/v3/api-docs`
+| Interface | UI | Spec |
+|-----------|-----|------|
+| **REST (OpenAPI 3)** | `http://localhost:8080/swagger-ui.html` | `http://localhost:8080/v3/api-docs` |
+| **WebSocket/STOMP (AsyncAPI)** | `http://localhost:8080/springwolf/asyncapi-ui.html` | `http://localhost:8080/springwolf/docs` |
 
-### WebSocket/STOMP (AsyncAPI v3 — Springwolf)
-- UI: `http://localhost:8080/springwolf/asyncapi-ui.html`
-- JSON: `http://localhost:8080/springwolf/docs`
+## Development
+
+### Running Tests
+
+```bash
+# All tests (unit + integration + ArchUnit)
+./gradlew test
+
+# Specific module
+./gradlew :domain:domain-user:test
+
+# Integration tests only (requires Testcontainers)
+./gradlew :app:quietspace-app:integrationTest
+```
+
+### Code Quality
+
+```bash
+# Static analysis (SpotBugs, PMD, Checkstyle)
+./gradlew check
+
+# Format check
+./gradlew spotlessCheck
+
+# Architecture rules (ArchUnit)
+./gradlew :domain:domain-user:test --tests "*ArchitectureRulesTest"
+```
+
+### Adding a New Domain Module
+
+See [`docs/guides/migration/adding-domain-module.md`](docs/guides/migration/adding-domain-module.md) for the complete checklist.
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| `docs/architecture/system-architecture-review.md` | SOLID adherence, modularity, encapsulation, industry alignment |
+| `docs/architecture/modular-architecture-review.md` | Module structure, communication patterns, Gradle enforcement |
+| `docs/architecture/modular-architecture-overview.md` | High-level architecture overview |
+| `docs/architecture/core-modules/core-module-apis.md` | Core module public APIs and SPIs |
+| `docs/architecture/domain-modules/domain-module-contracts.md` | Domain module contracts, ports, events, migrations |
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Commit changes
-4. Push and create a pull request
+2. Create a feature branch (`git checkout -b feature/xyz`)
+3. Ensure all quality gates pass: `./gradlew check test`
+4. Commit changes with conventional messages
+5. Push and create a pull request
 
-## License Notice
+## License
 
-This project is licensed under a **Proprietary License**. All other rights reserved. See the [LICENSE.md](./LICENSE.md) file for full terms.
-
+This project is licensed under a **Proprietary License**. All rights reserved. See [LICENSE.md](./LICENSE.md).
