@@ -1,10 +1,10 @@
 package dev.thural.quietspace.domain.user;
 
+import dev.thural.quietspace.core.shared.util.OffsetDateTimeProvider;
+import dev.thural.quietspace.domain.user.audit.ApplicationAuditAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.DateTimeProvider;
-import dev.thural.quietspace.domain.user.audit.ApplicationAuditAware;
-import dev.thural.quietspace.core.shared.util.OffsetDateTimeProvider;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 

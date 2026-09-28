@@ -1,7 +1,6 @@
 package dev.thural.quietspace.domain.user.service;
 
 import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
-import dev.thural.quietspace.domain.user.service.CommonService;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;

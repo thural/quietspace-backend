@@ -1,5 +1,6 @@
 package dev.thural.quietspace.core.shared.event;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import jakarta.persistence.EntityManager;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;

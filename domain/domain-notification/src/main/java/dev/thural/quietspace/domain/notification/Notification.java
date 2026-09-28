@@ -1,13 +1,8 @@
 package dev.thural.quietspace.domain.notification;
-import dev.thural.quietspace.core.shared.entity.BaseEntity;
 
+import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import dev.thural.quietspace.core.shared.enums.EntityType;
-import dev.thural.quietspace.domain.notification.NotificationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -2,9 +2,9 @@ package dev.thural.quietspace.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
+import dev.thural.quietspace.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.message.dto.MessageRequest;
 import dev.thural.quietspace.domain.photo.PhotoService;
-import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

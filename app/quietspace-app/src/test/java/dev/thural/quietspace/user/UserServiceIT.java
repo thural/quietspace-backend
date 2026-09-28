@@ -1,8 +1,8 @@
 package dev.thural.quietspace.user;
 
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.user.ProfileSettings;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;

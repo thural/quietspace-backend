@@ -1,7 +1,7 @@
 package dev.thural.quietspace.core.messaging.event.listener;
 
-import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
 import dev.thural.quietspace.core.messaging.event.message.BaseEvent;
+import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

@@ -1,12 +1,12 @@
 package dev.thural.quietspace.domain.reaction.repository;
 
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.post.Post;
 import dev.thural.quietspace.domain.post.PostRepository;
 import dev.thural.quietspace.domain.reaction.Reaction;
 import dev.thural.quietspace.domain.reaction.ReactionRepository;
-import dev.thural.quietspace.core.shared.enums.EntityType;
-import dev.thural.quietspace.core.shared.enums.ReactionType;
-import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;

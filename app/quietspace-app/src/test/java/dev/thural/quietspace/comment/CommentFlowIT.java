@@ -1,13 +1,13 @@
 package dev.thural.quietspace.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.thural.quietspace.config.TestcontainersConfig;
+import dev.thural.quietspace.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.comment.CommentRepository;
 import dev.thural.quietspace.domain.comment.dto.CommentRequest;
-import dev.thural.quietspace.config.TestcontainersConfig;
 import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.post.PostRepository;
 import dev.thural.quietspace.domain.post.dto.PostRequest;
-import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;

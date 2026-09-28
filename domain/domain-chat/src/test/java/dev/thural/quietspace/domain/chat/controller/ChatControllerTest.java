@@ -1,12 +1,12 @@
 package dev.thural.quietspace.domain.chat.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.chat.ChatService;
+import dev.thural.quietspace.domain.chat.dto.ChatMessageView;
 import dev.thural.quietspace.domain.chat.dto.ChatResponse;
 import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
-import dev.thural.quietspace.domain.chat.dto.ChatMessageView;
-import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.dto.UserResponse;
 import org.junit.jupiter.api.BeforeEach;

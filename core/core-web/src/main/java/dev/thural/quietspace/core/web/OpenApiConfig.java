@@ -1,4 +1,4 @@
-package dev.thural.quietspace.config;
+package dev.thural.quietspace.core.web;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;

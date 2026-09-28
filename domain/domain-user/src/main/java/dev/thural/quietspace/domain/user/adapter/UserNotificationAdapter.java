@@ -1,7 +1,7 @@
 package dev.thural.quietspace.domain.user.adapter;
 
-import dev.thural.quietspace.domain.notification.port.NotificationUserPort;
 import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
+import dev.thural.quietspace.domain.notification.port.NotificationUserPort;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import dev.thural.quietspace.domain.user.UserService;

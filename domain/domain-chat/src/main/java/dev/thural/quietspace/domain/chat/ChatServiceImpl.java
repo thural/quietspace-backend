@@ -1,16 +1,12 @@
 package dev.thural.quietspace.domain.chat;
 
-import dev.thural.quietspace.domain.chat.dto.ChatResponse;
-import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
-import dev.thural.quietspace.domain.chat.dto.UpdateChatRequest;
-import dev.thural.quietspace.domain.chat.Chat;
-import dev.thural.quietspace.domain.chat.ChatMapper;
-import dev.thural.quietspace.domain.chat.ChatRepository;
-import dev.thural.quietspace.domain.chat.ChatService;
-import dev.thural.quietspace.domain.chat.port.ChatMessagePort;
 import dev.thural.quietspace.core.shared.exception.CustomErrorException;
 import dev.thural.quietspace.core.shared.exception.UnauthorizedException;
 import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
+import dev.thural.quietspace.domain.chat.dto.ChatResponse;
+import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
+import dev.thural.quietspace.domain.chat.dto.UpdateChatRequest;
+import dev.thural.quietspace.domain.chat.port.ChatMessagePort;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserMapper;
 import dev.thural.quietspace.domain.user.UserService;
@@ -20,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;

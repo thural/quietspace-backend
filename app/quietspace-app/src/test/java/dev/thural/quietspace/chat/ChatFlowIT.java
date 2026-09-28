@@ -1,13 +1,13 @@
 package dev.thural.quietspace.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.thural.quietspace.config.TestcontainersConfig;
+import dev.thural.quietspace.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.chat.ChatRepository;
 import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
 import dev.thural.quietspace.domain.chat.dto.UpdateChatRequest;
-import dev.thural.quietspace.config.TestcontainersConfig;
 import dev.thural.quietspace.domain.message.MessageRepository;
 import dev.thural.quietspace.domain.photo.PhotoService;
-import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;

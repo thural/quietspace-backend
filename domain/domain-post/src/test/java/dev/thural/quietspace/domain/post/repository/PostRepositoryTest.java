@@ -1,14 +1,9 @@
 package dev.thural.quietspace.domain.post.repository;
 
+import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.comment.Comment;
 import dev.thural.quietspace.domain.comment.CommentRepository;
-import dev.thural.quietspace.domain.post.Post;
-import dev.thural.quietspace.domain.post.PostAuthorVisibilityRepository;
-import dev.thural.quietspace.domain.post.PostRepository;
-import dev.thural.quietspace.domain.post.PostSpecifications;
-import dev.thural.quietspace.domain.post.ViewerAuthorAccess;
-import dev.thural.quietspace.domain.post.ViewerAuthorAccessRepository;
-import dev.thural.quietspace.core.shared.enums.Role;
+import dev.thural.quietspace.domain.post.*;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import dev.thural.quietspace.domain.user.UserService;

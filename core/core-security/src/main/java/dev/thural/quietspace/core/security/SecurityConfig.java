@@ -1,4 +1,4 @@
-package dev.thural.quietspace.security;
+package dev.thural.quietspace.core.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package dev.thural.quietspace.security;
+package dev.thural.quietspace.core.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

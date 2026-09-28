@@ -1,7 +1,7 @@
-package dev.thural.quietspace.security;
+package dev.thural.quietspace.core.security;
 
-import dev.thural.quietspace.core.shared.security.TokenRepository;
 import dev.thural.quietspace.core.security.TokenCleanupScheduler;
+import dev.thural.quietspace.core.shared.security.TokenRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

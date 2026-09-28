@@ -1,5 +1,6 @@
 package dev.thural.quietspace.domain.post;
 
+import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.domain.comment.api.CommentCommandPort;
 import dev.thural.quietspace.domain.photo.Photo;
 import dev.thural.quietspace.domain.photo.PhotoService;
@@ -7,7 +8,6 @@ import dev.thural.quietspace.domain.post.dto.PostRequest;
 import dev.thural.quietspace.domain.post.dto.PostResponse;
 import dev.thural.quietspace.domain.post.dto.RepostRequest;
 import dev.thural.quietspace.domain.post.dto.VoteRequest;
-import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,7 +23,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static dev.thural.quietspace.core.shared.util.PagingProvider.buildPageRequest;

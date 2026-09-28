@@ -1,8 +1,8 @@
 package dev.thural.quietspace.domain.photo.controller;
 
+import dev.thural.quietspace.core.web.GlobalExceptionHandler;
 import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
-import dev.thural.quietspace.core.shared.exception.GlobalExceptionHandler;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,11 +1,6 @@
 package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.core.shared.event.ProcessedEvent;
-import dev.thural.quietspace.core.shared.event.ProcessedEventRepository;
-import dev.thural.quietspace.core.shared.event.UserFollowedEvent;
-import dev.thural.quietspace.core.shared.event.UserPrivacyChangedEvent;
-import dev.thural.quietspace.core.shared.event.UserRegisteredEvent;
-import dev.thural.quietspace.core.shared.event.UserUnfollowedEvent;
+import dev.thural.quietspace.core.shared.event.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.thural.quietspace.core.messaging.event.EventType;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 

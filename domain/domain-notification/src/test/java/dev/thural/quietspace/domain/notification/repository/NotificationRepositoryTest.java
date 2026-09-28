@@ -1,10 +1,10 @@
 package dev.thural.quietspace.domain.notification.repository;
 
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.notification.Notification;
 import dev.thural.quietspace.domain.notification.NotificationRepository;
-import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.domain.notification.NotificationType;
-import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;

@@ -1,9 +1,9 @@
 package dev.thural.quietspace.domain.post;
 
+import dev.thural.quietspace.domain.comment.api.CommentQueryPort;
 import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
 import dev.thural.quietspace.domain.post.dto.*;
-import dev.thural.quietspace.domain.comment.api.CommentQueryPort;
 import dev.thural.quietspace.domain.reaction.ReactionService;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
 import dev.thural.quietspace.domain.user.User;

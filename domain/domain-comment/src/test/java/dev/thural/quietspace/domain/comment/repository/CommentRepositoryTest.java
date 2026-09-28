@@ -1,10 +1,10 @@
 package dev.thural.quietspace.domain.comment.repository;
 
+import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.comment.Comment;
 import dev.thural.quietspace.domain.comment.CommentRepository;
 import dev.thural.quietspace.domain.post.Post;
 import dev.thural.quietspace.domain.post.PostRepository;
-import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;

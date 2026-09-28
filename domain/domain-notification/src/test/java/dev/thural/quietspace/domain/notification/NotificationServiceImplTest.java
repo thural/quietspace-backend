@@ -1,15 +1,10 @@
 package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.domain.notification.Notification;
-import dev.thural.quietspace.domain.notification.NotificationMapper;
-import dev.thural.quietspace.domain.notification.NotificationRepository;
-import dev.thural.quietspace.domain.notification.NotificationServiceImpl;
-import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
 import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
 import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
 import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
 import dev.thural.quietspace.domain.notification.port.NotificationUserPort;
-import dev.thural.quietspace.domain.notification.NotificationType;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

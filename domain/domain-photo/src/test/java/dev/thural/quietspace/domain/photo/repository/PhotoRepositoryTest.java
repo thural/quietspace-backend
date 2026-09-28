@@ -1,8 +1,8 @@
 package dev.thural.quietspace.domain.photo.repository;
 
+import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.domain.photo.Photo;
 import dev.thural.quietspace.domain.photo.PhotoRepository;
-import dev.thural.quietspace.core.shared.enums.EntityType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

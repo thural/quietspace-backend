@@ -1,12 +1,12 @@
-package dev.thural.quietspace.core.shared.util;
+package dev.thural.quietspace.shared.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
-import dev.thural.quietspace.domain.user.auth.dto.AuthResponse;
 import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.user.ProfileSettings;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
+import dev.thural.quietspace.domain.user.auth.dto.AuthResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;

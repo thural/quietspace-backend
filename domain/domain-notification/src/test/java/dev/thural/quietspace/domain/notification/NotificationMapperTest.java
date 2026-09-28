@@ -1,12 +1,9 @@
 package dev.thural.quietspace.domain.notification;
 
-import dev.thural.quietspace.domain.notification.Notification;
-import dev.thural.quietspace.domain.notification.NotificationMapper;
-import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
 import dev.thural.quietspace.core.shared.enums.EntityType;
-import dev.thural.quietspace.domain.notification.NotificationType;
-import dev.thural.quietspace.domain.notification.port.NotificationUserPort;
 import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
+import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
+import dev.thural.quietspace.domain.notification.port.NotificationUserPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,12 +14,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.OffsetDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationMapperTest {

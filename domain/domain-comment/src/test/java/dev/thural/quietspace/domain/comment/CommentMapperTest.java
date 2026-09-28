@@ -1,14 +1,11 @@
 package dev.thural.quietspace.domain.comment;
 
-import dev.thural.quietspace.domain.comment.Comment;
-import dev.thural.quietspace.domain.comment.CommentMapper;
-import dev.thural.quietspace.domain.comment.CommentRepository;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
 import dev.thural.quietspace.domain.comment.dto.CommentRequest;
 import dev.thural.quietspace.domain.comment.dto.CommentResponse;
-import dev.thural.quietspace.domain.reaction.api.ReactionQueryPort;
 import dev.thural.quietspace.domain.reaction.ReactionService;
+import dev.thural.quietspace.domain.reaction.api.ReactionQueryPort;
 import dev.thural.quietspace.domain.reaction.dto.ReactionResponse;
-import dev.thural.quietspace.core.shared.enums.ReactionType;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.api.UserQueryPort;
 import dev.thural.quietspace.domain.user.api.dto.UserSummaryDTO;
@@ -24,7 +21,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CommentMapperTest {

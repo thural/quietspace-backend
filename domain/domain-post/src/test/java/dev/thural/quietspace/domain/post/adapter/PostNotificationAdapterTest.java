@@ -2,7 +2,6 @@ package dev.thural.quietspace.domain.post.adapter;
 
 import dev.thural.quietspace.domain.post.Post;
 import dev.thural.quietspace.domain.post.PostRepository;
-import dev.thural.quietspace.domain.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

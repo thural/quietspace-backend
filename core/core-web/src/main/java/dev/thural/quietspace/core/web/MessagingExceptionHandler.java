@@ -1,5 +1,6 @@
-package dev.thural.quietspace.core.shared.exception;
+package dev.thural.quietspace.core.web;
 
+import dev.thural.quietspace.core.shared.exception.CustomMessagingException;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;

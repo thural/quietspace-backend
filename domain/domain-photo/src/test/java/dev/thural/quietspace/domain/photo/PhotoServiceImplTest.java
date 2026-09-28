@@ -1,14 +1,11 @@
 package dev.thural.quietspace.domain.photo;
 
-import dev.thural.quietspace.domain.photo.Photo;
-import dev.thural.quietspace.domain.photo.PhotoRepository;
-import dev.thural.quietspace.domain.photo.PhotoServiceImpl;
-import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
 import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.core.shared.exception.ImageUploadException;
 import dev.thural.quietspace.core.shared.exception.UnsupportedImageTypeException;
 import dev.thural.quietspace.core.shared.ports.UserProfilePort;
 import dev.thural.quietspace.core.shared.util.ImageCompressionUtil;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PhotoServiceImplTest {

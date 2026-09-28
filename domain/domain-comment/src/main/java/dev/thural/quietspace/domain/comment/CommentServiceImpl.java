@@ -1,9 +1,9 @@
 package dev.thural.quietspace.domain.comment;
 
+import dev.thural.quietspace.core.shared.exception.UnauthorizedException;
 import dev.thural.quietspace.domain.comment.dto.CommentRequest;
 import dev.thural.quietspace.domain.comment.dto.CommentResponse;
 import dev.thural.quietspace.domain.comment.port.CommentPostPort;
-import dev.thural.quietspace.core.shared.exception.UnauthorizedException;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;

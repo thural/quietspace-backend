@@ -1,9 +1,9 @@
-package dev.thural.quietspace.domain.user;
+package dev.thural.quietspace.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
+import dev.thural.quietspace.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.photo.PhotoService;
-import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.user.UserRepository;
 import dev.thural.quietspace.domain.user.controller.UserController;
 import dev.thural.quietspace.domain.user.dto.ProfileSettingsRequest;

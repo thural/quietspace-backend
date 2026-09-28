@@ -1,4 +1,4 @@
-package dev.thural.quietspace.security;
+package dev.thural.quietspace.core.security;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

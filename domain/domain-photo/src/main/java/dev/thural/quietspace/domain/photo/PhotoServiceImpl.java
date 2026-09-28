@@ -1,11 +1,11 @@
 package dev.thural.quietspace.domain.photo;
 
 import dev.thural.quietspace.core.shared.enums.EntityType;
-import dev.thural.quietspace.core.shared.ports.UserProfilePort;
-import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
 import dev.thural.quietspace.core.shared.exception.ImageUploadException;
 import dev.thural.quietspace.core.shared.exception.UnsupportedImageTypeException;
+import dev.thural.quietspace.core.shared.ports.UserProfilePort;
 import dev.thural.quietspace.core.shared.util.ImageCompressionUtil;
+import dev.thural.quietspace.domain.photo.dto.PhotoResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

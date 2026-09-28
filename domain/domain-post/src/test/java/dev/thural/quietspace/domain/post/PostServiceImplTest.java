@@ -1,13 +1,11 @@
 package dev.thural.quietspace.domain.post;
 
+import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.domain.photo.PhotoService;
-import dev.thural.quietspace.domain.post.*;
 import dev.thural.quietspace.domain.post.dto.PostRequest;
 import dev.thural.quietspace.domain.post.dto.PostResponse;
 import dev.thural.quietspace.domain.post.dto.RepostRequest;
 import dev.thural.quietspace.domain.post.dto.VoteRequest;
-import dev.thural.quietspace.core.shared.enums.Role;
-import dev.thural.quietspace.core.shared.util.PagingProvider;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;

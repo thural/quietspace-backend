@@ -1,13 +1,9 @@
 package dev.thural.quietspace.domain.comment;
 
-import dev.thural.quietspace.domain.comment.Comment;
-import dev.thural.quietspace.domain.comment.CommentMapper;
-import dev.thural.quietspace.domain.comment.CommentRepository;
-import dev.thural.quietspace.domain.comment.CommentServiceImpl;
+import dev.thural.quietspace.core.shared.util.PagingProvider;
 import dev.thural.quietspace.domain.comment.dto.CommentRequest;
 import dev.thural.quietspace.domain.comment.dto.CommentResponse;
 import dev.thural.quietspace.domain.comment.port.CommentPostPort;
-import dev.thural.quietspace.core.shared.util.PagingProvider;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.BeforeEach;

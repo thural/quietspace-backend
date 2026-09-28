@@ -1,8 +1,8 @@
 package dev.thural.quietspace.domain.user.adapter;
 
 import dev.thural.quietspace.core.shared.entity.BaseEntity;
-import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
 import dev.thural.quietspace.core.shared.enums.StatusType;
+import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
 import dev.thural.quietspace.domain.user.UserRepository;
 import dev.thural.quietspace.domain.user.UserService;
 import lombok.RequiredArgsConstructor;

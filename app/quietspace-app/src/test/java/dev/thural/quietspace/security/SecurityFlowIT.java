@@ -1,14 +1,14 @@
 package dev.thural.quietspace.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
 import dev.thural.quietspace.config.TestcontainersConfig;
 import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.core.shared.service.EmailService;
-import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
+import dev.thural.quietspace.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.user.ProfileSettings;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package dev.thural.quietspace.security;
+package dev.thural.quietspace.core.security;
 
 import dev.thural.quietspace.core.shared.model.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;

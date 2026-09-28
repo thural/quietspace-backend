@@ -1,6 +1,6 @@
 package dev.thural.quietspace.core.web;
 
-import dev.thural.quietspace.core.shared.controller.HealthController;
+import dev.thural.quietspace.core.web.HealthController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

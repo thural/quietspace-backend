@@ -2,13 +2,7 @@ package dev.thural.quietspace.domain.notification;
 
 import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.core.shared.enums.ReactionType;
-import dev.thural.quietspace.core.shared.event.CommentCreatedEvent;
-import dev.thural.quietspace.core.shared.event.MessageSentEvent;
-import dev.thural.quietspace.core.shared.event.PostCreatedEvent;
-import dev.thural.quietspace.core.shared.event.ProcessedEventRepository;
-import dev.thural.quietspace.core.shared.event.ReactionAddedEvent;
-import dev.thural.quietspace.core.shared.event.UserFollowedEvent;
-import dev.thural.quietspace.core.shared.event.UserRegisteredEvent;
+import dev.thural.quietspace.core.shared.event.*;
 import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
 import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
 import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
@@ -22,10 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationEventListenerTest {

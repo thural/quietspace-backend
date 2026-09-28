@@ -1,5 +1,13 @@
-package dev.thural.quietspace.core.shared.exception;
+package dev.thural.quietspace.core.web;
 
+import dev.thural.quietspace.core.shared.exception.ActivationTokenException;
+import dev.thural.quietspace.core.shared.exception.CustomDataNotFoundException;
+import dev.thural.quietspace.core.shared.exception.CustomErrorException;
+import dev.thural.quietspace.core.shared.exception.CustomParameterConstraintException;
+import dev.thural.quietspace.core.shared.exception.ImageUploadException;
+import dev.thural.quietspace.core.shared.exception.UnauthorizedException;
+import dev.thural.quietspace.core.shared.exception.UnsupportedImageTypeException;
+import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
 import dev.thural.quietspace.core.shared.model.CustomErrorResponse;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;

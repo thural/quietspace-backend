@@ -1,10 +1,6 @@
 package dev.thural.quietspace.domain.post;
 
-import dev.thural.quietspace.core.shared.event.ProcessedEventRepository;
-import dev.thural.quietspace.core.shared.event.UserFollowedEvent;
-import dev.thural.quietspace.core.shared.event.UserPrivacyChangedEvent;
-import dev.thural.quietspace.core.shared.event.UserRegisteredEvent;
-import dev.thural.quietspace.core.shared.event.UserUnfollowedEvent;
+import dev.thural.quietspace.core.shared.event.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,9 +13,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostVisibilityProjectorTest {

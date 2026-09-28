@@ -2,12 +2,12 @@ package dev.thural.quietspace.reaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
+import dev.thural.quietspace.core.shared.enums.EntityType;
+import dev.thural.quietspace.core.shared.enums.ReactionType;
+import dev.thural.quietspace.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.photo.PhotoService;
 import dev.thural.quietspace.domain.reaction.ReactionRepository;
 import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
-import dev.thural.quietspace.core.shared.enums.EntityType;
-import dev.thural.quietspace.core.shared.enums.ReactionType;
-import dev.thural.quietspace.core.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;

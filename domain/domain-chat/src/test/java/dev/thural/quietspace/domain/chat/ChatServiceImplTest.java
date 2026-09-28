@@ -1,9 +1,5 @@
 package dev.thural.quietspace.domain.chat;
 
-import dev.thural.quietspace.domain.chat.Chat;
-import dev.thural.quietspace.domain.chat.ChatMapper;
-import dev.thural.quietspace.domain.chat.ChatRepository;
-import dev.thural.quietspace.domain.chat.ChatServiceImpl;
 import dev.thural.quietspace.domain.chat.dto.ChatResponse;
 import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
 import dev.thural.quietspace.domain.chat.dto.UpdateChatRequest;

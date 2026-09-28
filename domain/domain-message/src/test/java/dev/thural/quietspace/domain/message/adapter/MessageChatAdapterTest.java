@@ -6,7 +6,6 @@ import dev.thural.quietspace.domain.message.MessageRepository;
 import dev.thural.quietspace.domain.message.MessageService;
 import dev.thural.quietspace.domain.message.dto.MessageRequest;
 import dev.thural.quietspace.domain.message.dto.MessageResponse;
-import dev.thural.quietspace.domain.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,4 +1,4 @@
-package dev.thural.quietspace.security;
+package dev.thural.quietspace.core.security;
 
 import dev.thural.quietspace.core.shared.security.JwtTokenService;
 import dev.thural.quietspace.core.shared.security.TokenRepository;

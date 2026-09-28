@@ -1,6 +1,5 @@
 package dev.thural.quietspace.domain.chat;
 
-import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.chat.dto.ChatMessageView;
 import dev.thural.quietspace.domain.chat.dto.ChatResponse;
 import dev.thural.quietspace.domain.chat.dto.CreateChatRequest;
