@@ -1,5 +1,6 @@
 package dev.thural.quietspace.domain.user.adapter;
 
+import dev.thural.quietspace.core.security.port.CurrentUserPort;
 import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import dev.thural.quietspace.core.shared.enums.StatusType;
 import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
@@ -22,12 +23,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class WebSocketUserAdapter implements WebSocketUserPort {
 
+    private final CurrentUserPort currentUserPort;
     private final UserService userService;
     private final UserRepository userRepository;
 
     @Override
     public UUID currentUserId() {
-        return userService.getSignedUser().getId();
+        return currentUserPort.currentUserId();
     }
 
     @Override

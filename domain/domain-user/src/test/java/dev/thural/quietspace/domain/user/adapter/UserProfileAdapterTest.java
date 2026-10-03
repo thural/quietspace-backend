@@ -1,8 +1,8 @@
 package dev.thural.quietspace.domain.user.adapter;
 
+import dev.thural.quietspace.core.security.port.CurrentUserPort;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
-import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 class UserProfileAdapterTest {
 
     @Mock
-    private UserService userService;
+    private CurrentUserPort currentUserPort;
     @Mock
     private UserRepository userRepository;
 
@@ -30,8 +30,7 @@ class UserProfileAdapterTest {
     @Test
     void currentUserId_shouldReturnSignedUserId() {
         UUID id = UUID.randomUUID();
-        User user = User.builder().id(id).username("u").build();
-        when(userService.getSignedUser()).thenReturn(user);
+        when(currentUserPort.currentUserId()).thenReturn(id);
 
         assertThat(adapter.currentUserId()).isEqualTo(id);
     }

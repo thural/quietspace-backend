@@ -1,9 +1,9 @@
 package dev.thural.quietspace.domain.user.adapter;
 
+import dev.thural.quietspace.core.security.port.CurrentUserPort;
 import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
-import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class UserNotificationAdapterTest {
 
     @Mock
-    private UserService userService;
+    private CurrentUserPort currentUserPort;
     @Mock
     private UserRepository userRepository;
 
@@ -31,7 +31,7 @@ class UserNotificationAdapterTest {
     @Test
     void currentUserId_shouldReturnSignedUserId() {
         UUID id = UUID.randomUUID();
-        when(userService.getSignedUser()).thenReturn(User.builder().id(id).username("u").build());
+        when(currentUserPort.currentUserId()).thenReturn(id);
 
         assertThat(adapter.currentUserId()).isEqualTo(id);
     }

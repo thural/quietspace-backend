@@ -1,14 +1,15 @@
 package dev.thural.quietspace.domain.user.auth;
 
 import dev.thural.quietspace.core.shared.enums.Role;
-import dev.thural.quietspace.core.shared.event.EmailEvent;
+import dev.thural.quietspace.core.shared.event.TransactionalEventPublisher;
+import dev.thural.quietspace.core.shared.event.UserRegisteredEvent;
 import dev.thural.quietspace.core.shared.exception.ActivationTokenException;
 import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
 import dev.thural.quietspace.core.security.port.JwtTokenService;
 import dev.thural.quietspace.domain.user.token.Token;
 import dev.thural.quietspace.domain.user.token.TokenRepository;
+import dev.thural.quietspace.domain.user.token.TokenService;
 import dev.thural.quietspace.core.shared.service.SecurityAuditService;
-import dev.thural.quietspace.core.shared.service.impl.EmailEventPublisher;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import dev.thural.quietspace.domain.user.UserService;
@@ -59,9 +60,11 @@ class AuthServiceTest {
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock
-    private EmailEventPublisher emailEventPublisher;
-    @Mock
     private TokenRepository tokenRepository;
+    @Mock
+    private TokenService tokenService;
+    @Mock
+    private TransactionalEventPublisher eventPublisher;
     @Mock
     private SecurityAuditService auditService;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -132,14 +135,14 @@ class AuthServiceTest {
         assertThat(savedUser.isEnabled()).isFalse();
         assertThat(savedUser.getProfileSettings()).isNotNull();
 
-        verify(emailEventPublisher).publish(any(EmailEvent.class));
+        verify(eventPublisher).publish(any(UserRegisteredEvent.class));
     }
 
     @Test
     void register_whenPublisherFails_shouldPropagate() {
         when(passwordEncoder.encode(anyString())).thenReturn("encoded");
         when(userRepository.save(any(User.class))).thenReturn(user);
-        doThrow(new RuntimeException("Broker error")).when(emailEventPublisher).publish(any(EmailEvent.class));
+        doThrow(new RuntimeException("Broker error")).when(eventPublisher).publish(any(UserRegisteredEvent.class));
 
         assertThatThrownBy(() -> authService.register(registrationRequest))
                 .isInstanceOf(RuntimeException.class)
@@ -199,7 +202,7 @@ class AuthServiceTest {
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("expired");
 
-        verify(emailEventPublisher).publish(any(EmailEvent.class));
+        verify(eventPublisher).publish(any(UserRegisteredEvent.class));
     }
 
     @Test
@@ -250,7 +253,10 @@ class AuthServiceTest {
         when(jwtTokenService.extractUsername("valid-refresh-token")).thenReturn("testuser");
         when(jwtTokenService.isTokenValid("valid-refresh-token", user)).thenReturn(true);
         when(jwtTokenService.generateToken(any(), any(User.class))).thenReturn("new-access-token");
+        when(jwtTokenService.generateRefreshToken(any(), any(User.class))).thenReturn("new-refresh-token");
+        when(jwtTokenService.extractJti(anyString())).thenReturn("jti-123");
         when(tokenRepository.existsByToken("valid-refresh-token")).thenReturn(false);
+        when(tokenRepository.findByJti("jti-123")).thenReturn(Optional.empty());
         when(userRepository.findUserByUsername("testuser")).thenReturn(Optional.of(user));
 
         AuthResponse response = authService.refreshToken("Bearer valid-refresh-token");
@@ -313,7 +319,7 @@ class AuthServiceTest {
 
         authService.resendActivationToken("test@example.com");
 
-        verify(emailEventPublisher).publish(any(EmailEvent.class));
+        verify(eventPublisher).publish(any(UserRegisteredEvent.class));
     }
 
     @Test

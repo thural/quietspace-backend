@@ -1,5 +1,6 @@
 package dev.thural.quietspace.domain.user.adapter;
 
+import dev.thural.quietspace.core.security.port.CurrentUserPort;
 import dev.thural.quietspace.core.shared.enums.StatusType;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
@@ -23,6 +24,8 @@ import static org.mockito.Mockito.when;
 class WebSocketUserAdapterTest {
 
     @Mock
+    private CurrentUserPort currentUserPort;
+    @Mock
     private UserService userService;
     @Mock
     private UserRepository userRepository;
@@ -33,7 +36,7 @@ class WebSocketUserAdapterTest {
     @Test
     void currentUserId_shouldReturnSignedUserId() {
         UUID id = UUID.randomUUID();
-        when(userService.getSignedUser()).thenReturn(User.builder().id(id).username("u").build());
+        when(currentUserPort.currentUserId()).thenReturn(id);
 
         assertThat(adapter.currentUserId()).isEqualTo(id);
     }

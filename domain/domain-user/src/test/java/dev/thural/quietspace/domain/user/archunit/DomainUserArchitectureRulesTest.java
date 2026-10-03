@@ -41,10 +41,8 @@ class DomainUserArchitectureRulesTest {
     void has_no_core_security_dependency() {
         ArchRule rule = noClasses()
                 .that().resideInAPackage("dev.thural.quietspace.domain.user..")
-                .should().dependOnClassesThat()
-                .resideInAnyPackage("dev.thural.quietspace.core.security..")
-                .andShould().resideInAnyPackage("dev.thural.quietspace.core.security.port..")
-                .allowEmptyShould(true)
+                .should().dependOnClassesThat(JavaClass.Predicates.resideInAPackage("dev.thural.quietspace.core.security..")
+                        .and(JavaClass.Predicates.resideOutsideOfPackage("dev.thural.quietspace.core.security.port..")))
                 .because("DomainUser may only depend on core.security.port (SPIs), not other core-security internals");
         rule.check(CLASSES);
     }

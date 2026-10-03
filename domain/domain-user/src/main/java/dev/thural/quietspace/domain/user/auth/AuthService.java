@@ -1,15 +1,16 @@
 package dev.thural.quietspace.domain.user.auth;
 
 import dev.thural.quietspace.core.shared.enums.StatusType;
-import dev.thural.quietspace.core.shared.event.EmailEvent;
+import dev.thural.quietspace.core.shared.event.TransactionalEventPublisher;
+import dev.thural.quietspace.core.shared.event.UserRegisteredEvent;
 import dev.thural.quietspace.core.shared.exception.ActivationTokenException;
 import dev.thural.quietspace.core.shared.exception.CustomErrorException;
 import dev.thural.quietspace.core.shared.exception.UserNotFoundException;
 import dev.thural.quietspace.core.security.port.JwtTokenService;
 import dev.thural.quietspace.domain.user.token.Token;
 import dev.thural.quietspace.domain.user.token.TokenRepository;
+import dev.thural.quietspace.domain.user.token.TokenService;
 import dev.thural.quietspace.core.shared.service.SecurityAuditService;
-import dev.thural.quietspace.core.shared.service.impl.EmailEventPublisher;
 import dev.thural.quietspace.domain.user.ProfileSettings;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
@@ -51,10 +52,11 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenService jwtTokenService;
     private final AuthenticationManager authenticationManager;
-    private final EmailEventPublisher emailEventPublisher;
     private final TokenRepository tokenRepository;
+    private final TokenService tokenService;
     private final SecurityAuditService auditService;
     private final MeterRegistry meterRegistry;
+    private final TransactionalEventPublisher eventPublisher;
 
     @Value("${spring.application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -83,7 +85,19 @@ public class AuthService {
         user.setProfileSettings(settings);
 
         User savedUser = userRepository.save(user);
-        sendValidationEmail(savedUser);
+
+        // Generate activation code and save token in same transaction
+        String activationCode = generateAndSaveActivationToken(savedUser);
+
+        // Publish domain event for async notification handling
+        eventPublisher.publish(new UserRegisteredEvent(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getEmail(),
+                activationCode
+        ));
+
+        auditService.logRegistration(savedUser.getEmail());
     }
 
     @Transactional
@@ -107,7 +121,9 @@ public class AuthService {
             log.info("jwt token generated successfully for user: {}", user.getUsername());
             auditService.logLoginSuccess(user.getEmail());
             meterRegistry.counter("auth.login.success").increment();
-            saveRefreshTokenJti(jwtRefreshToken, user);
+            tokenService.saveRefreshToken(user.getId(), user.getEmail(), 
+                    jwtTokenService.extractJti(jwtRefreshToken), jwtRefreshToken, 
+                    Long.parseLong(System.getProperty("spring.application.security.jwt.refresh-token.expiration", "604800000")));
 
             setOnlineStatus(user.getEmail(), ONLINE);
 
@@ -174,16 +190,12 @@ public class AuthService {
         log.info("sending activation code to email address: {}", user.getEmail());
         String newActivationCode = generateAndSaveActivationToken(user);
 
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("username", user.getFullName());
-        variables.put("confirmationUrl", activationUrl);
-        variables.put("activationCode", newActivationCode);
-
-        emailEventPublisher.publish(new EmailEvent(
+        // Publish domain event for async notification handling
+        eventPublisher.publish(new UserRegisteredEvent(
+                user.getId(),
+                user.getUsername(),
                 user.getEmail(),
-                "account activation",
-                "activate_account",
-                variables
+                newActivationCode
         ));
     }
 
@@ -257,7 +269,9 @@ public class AuthService {
         claims.put("fullName", user.getFullName());
         String newAccessToken = jwtTokenService.generateToken(claims, user);
         String newRefreshToken = jwtTokenService.generateRefreshToken(claims, user);
-        saveRefreshTokenJti(newRefreshToken, user);
+        tokenService.saveRefreshToken(user.getId(), user.getEmail(),
+                jwtTokenService.extractJti(newRefreshToken), newRefreshToken,
+                Long.parseLong(System.getProperty("spring.application.security.jwt.refresh-token.expiration", "604800000")));
 
         auditService.logTokenRefresh(username);
         meterRegistry.counter("auth.token.refresh").increment();
@@ -269,17 +283,6 @@ public class AuthService {
                 .message("token was refreshed")
                 .userId(String.valueOf(user.getId()))
                 .build();
-    }
-
-    private void saveRefreshTokenJti(String refreshToken, User user) {
-        String jti = jwtTokenService.extractJti(refreshToken);
-        tokenRepository.save(Token.builder()
-                .token(jti)
-                .jti(jti)
-                .email(user.getEmail())
-                .userId(user.getId())
-                .used(false)
-                .build());
     }
 
     public void resendActivationToken(String email) {

@@ -1,8 +1,8 @@
 package dev.thural.quietspace.domain.user.adapter;
 
+import dev.thural.quietspace.core.security.port.CurrentUserPort;
 import dev.thural.quietspace.core.shared.ports.UserProfilePort;
 import dev.thural.quietspace.domain.user.UserRepository;
-import dev.thural.quietspace.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +19,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserProfileAdapter implements UserProfilePort {
 
-    private final UserService userService;
+    private final CurrentUserPort currentUserPort;
     private final UserRepository userRepository;
 
     @Override
     public UUID currentUserId() {
-        return userService.getSignedUser().getId();
+        return currentUserPort.currentUserId();
     }
 
     @Override
