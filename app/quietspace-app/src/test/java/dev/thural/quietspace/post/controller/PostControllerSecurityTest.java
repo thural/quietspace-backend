@@ -1,7 +1,7 @@
 package dev.thural.quietspace.post.controller;
 
 import dev.thural.quietspace.core.security.port.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.TokenBlacklistPort;
 import dev.thural.quietspace.domain.notification.NotificationService;
 import dev.thural.quietspace.domain.post.PostService;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class PostControllerSecurityTest {
     @MockitoBean
     private NotificationService notificationService;
     @MockitoBean
-    private TokenRepository tokenRepository;
+    private TokenBlacklistPort tokenBlacklistPort;
     @MockitoBean
     private JwtTokenService jwtTokenService;
     @MockitoBean

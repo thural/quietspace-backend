@@ -2,7 +2,6 @@ package dev.thural.quietspace.domain.user.auth;
 
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
-import dev.thural.quietspace.domain.user.auth.UserSecurityBeans;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserSecurityBeansTest {
+class UserIamConfigTest {
 
     @Mock
     private UserRepository userRepository;
@@ -27,7 +26,7 @@ class UserSecurityBeansTest {
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private UserSecurityBeans beans;
+    private UserIamConfig beans;
 
     @Test
     void userDetailsService_givenEmail_shouldLoadByEmail() {

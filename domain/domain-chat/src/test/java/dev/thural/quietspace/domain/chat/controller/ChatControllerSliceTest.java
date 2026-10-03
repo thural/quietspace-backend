@@ -3,6 +3,7 @@ package dev.thural.quietspace.domain.chat.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.core.shared.enums.Role;
 import dev.thural.quietspace.core.security.port.JwtTokenService;
+import dev.thural.quietspace.core.security.port.TokenBlacklistPort;
 import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.chat.ChatService;
 import dev.thural.quietspace.domain.chat.dto.ChatMessageView;
@@ -51,6 +52,8 @@ class ChatControllerSliceTest {
     UserService userService;
     @MockitoBean
     JwtTokenService jwtTokenService;
+    @MockitoBean
+    TokenBlacklistPort tokenBlacklistPort;
     @MockitoBean
     UserDetailsService userDetailsService;
 

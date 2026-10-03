@@ -61,6 +61,9 @@ public class AuthService {
     @Value("${spring.application.mailing.frontend.activation-url}")
     private String activationUrl;
 
+    @Value("${spring.application.security.jwt.refresh-token.expiration:604800000}")
+    private long refreshTokenExpiration;
+
     public void register(RegistrationRequest request) {
         log.info("registering new user with email: {}", request.getEmail());
         auditService.logRegistration(request.getEmail());
@@ -121,9 +124,13 @@ public class AuthService {
             log.info("jwt token generated successfully for user: {}", user.getUsername());
             auditService.logLoginSuccess(user.getEmail());
             meterRegistry.counter("auth.login.success").increment();
-            tokenService.saveRefreshToken(user.getId(), user.getEmail(), 
-                    jwtTokenService.extractJti(jwtRefreshToken), jwtRefreshToken, 
-                    Long.parseLong(System.getProperty("spring.application.security.jwt.refresh-token.expiration", "604800000")));
+            // NOTE: refresh records store the JTI in the token column (blacklist
+            // records store the full JWT), matching pre-refactor semantics so the
+            // existsByToken blacklist check in refreshToken() keeps working.
+            tokenService.saveRefreshToken(user.getId(), user.getEmail(),
+                    jwtTokenService.extractJti(jwtRefreshToken),
+                    jwtTokenService.extractJti(jwtRefreshToken),
+                    refreshTokenExpiration);
 
             setOnlineStatus(user.getEmail(), ONLINE);
 
@@ -270,8 +277,9 @@ public class AuthService {
         String newAccessToken = jwtTokenService.generateToken(claims, user);
         String newRefreshToken = jwtTokenService.generateRefreshToken(claims, user);
         tokenService.saveRefreshToken(user.getId(), user.getEmail(),
-                jwtTokenService.extractJti(newRefreshToken), newRefreshToken,
-                Long.parseLong(System.getProperty("spring.application.security.jwt.refresh-token.expiration", "604800000")));
+                jwtTokenService.extractJti(newRefreshToken),
+                jwtTokenService.extractJti(newRefreshToken),
+                refreshTokenExpiration);
 
         auditService.logTokenRefresh(username);
         meterRegistry.counter("auth.token.refresh").increment();

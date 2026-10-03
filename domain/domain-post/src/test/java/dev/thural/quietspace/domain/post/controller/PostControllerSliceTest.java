@@ -2,6 +2,7 @@ package dev.thural.quietspace.domain.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.core.security.port.JwtTokenService;
+import dev.thural.quietspace.core.security.port.TokenBlacklistPort;
 import dev.thural.quietspace.domain.notification.NotificationService;
 import dev.thural.quietspace.domain.post.Post;
 import dev.thural.quietspace.domain.post.PostService;
@@ -52,6 +53,8 @@ class PostControllerSliceTest {
     PostService postService;
     @MockitoBean
     JwtTokenService jwtTokenService;
+    @MockitoBean
+    TokenBlacklistPort tokenBlacklistPort;
     @MockitoBean
     UserDetailsService userDetailsService;
     @MockitoBean

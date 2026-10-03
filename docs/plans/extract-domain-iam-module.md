@@ -10,7 +10,7 @@ This supersedes the prior extraction strategy (obsolete). Single source of truth
    - `dev.thural.quietspace.domain.user.auth` (authentication, login, token management, future `auth/strategy/` for OAuth2/WebAuthn/social)
    - `dev.thural.quietspace.domain.user.profile` (profiles, avatars, display names)
    - `dev.thural.quietspace.domain.user.settings` (preferences, privacy controls)
-2. **`JwtTokenServiceImpl` stays in `core-security`.** Stateless JWT engine (parse/verify/claims) + `core-security.port.JwtTokenService` + `core-security.port.CurrentUserPort` live in core. Stateful `Token` entity + `TokenRepository` + revocation/blacklist live in `domain-user` (e.g. `domain.user.token`).
+2. **`JwtTokenServiceImpl` stays in `core-security`.** Stateless JWT engine (parse/verify/claims) + SPIs (`core-security.port.JwtTokenService`, `core-security.port.CurrentUserPort`, `core-security.port.TokenBlacklistPort`) live in core. Stateful `Token` entity + `TokenRepository` + revocation/blacklist live in `domain-user` (`domain.user.token`). `CurrentUserPort` is **implemented in `domain-user.adapter`** (`CurrentUserAdapter`: SecurityContext username → `UserRepository` → id) because the runtime principal is `UserDetails`, never a UUID — a core-side implementation cannot resolve an id without user data. Same applies to `TokenBlacklistPort` (implemented by `TokenBlacklistAdapter` in `domain-user.token`).
 3. **Activation mail via enriched event.** `UserRegisteredEvent` gains `activationCode`; `domain-notification` consumes it and dispatches mail via `EmailEventPublisher → EmailEvent`. No direct mail coupling from identity logic.
 
 ---
@@ -31,11 +31,11 @@ Core interfaces and event contracts land **before** any consumer code references
 
 | Step | Action | Files |
 |------|--------|-------|
-| 1.1 | Core SPIs & event contract first (moved forward from old PR 2) | `JwtTokenService` interface + `AuthenticationProvider` SPI → `core-security.port`; new `CurrentUserPort` → `core-security.port` + `SecurityContextCurrentUserAdapter` → `core-security.adapter` (throws `UnauthenticatedException` → 401 when anonymous — see §2.6); add `activationCode` to `core-shared/event/UserRegisteredEvent.java` (+ ctor/getters for Jackson/outbox roundtrip) + update `EventSerializerTest` |
+| 1.1 | Core SPIs & event contract first (moved forward from old PR 2) | `JwtTokenService` interface + `AuthenticationProvider` SPI → `core-security.port`; new `CurrentUserPort` + `TokenBlacklistPort` → `core-security.port` (`UnauthenticatedException` → 401 when anonymous — see §2.6); add `activationCode` to `core-shared/event/UserRegisteredEvent.java` (+ ctor/getters for Jackson/outbox roundtrip) + update `EventSerializerTest` |
 | 1.2 | Package creation & class relocations (imports now resolve to final paths) | Create `domain.user.auth` (incl. `auth/strategy/` placeholder, `auth/controller/`), `domain.user.profile`, `domain.user.settings`, `domain.user.token`; relocate IAM classes into `auth/`; move `Token.java`, `TokenRepository.java` from `core-shared.security` → `domain-user.token` |
 | 1.3 | Configuration consolidation | `security/UserSecurityBeans.java` → merge into internal `domain-user/UserIamConfig.java`, imported by `quietspace-app` (no legacy package scan) |
-| 1.4 | Service wiring (no `UserCredentialsPort` — same-module collaboration) | `AuthService.register()` generates code, persists `Token`, publishes enriched `UserRegisteredEvent` via `TransactionalEventPublisher` in same TX (drop direct `EmailEventPublisher` call); new `TokenService.java` in `domain-user.token` (blacklist/refresh/revoke) |
-| 1.5 | Adapter updates in single pass | `UserProfileAdapter`, `WebSocketUserAdapter`, `UserNotificationAdapter` → `core-security.port.CurrentUserPort` instead of `UserService.getSignedUser()` |
+| 1.4 | Service wiring (no `UserCredentialsPort` — same-module collaboration) | `AuthService.register()` generates code, persists `Token`, publishes enriched `UserRegisteredEvent` via `TransactionalEventPublisher` in same TX (drop direct `EmailEventPublisher` call); new `TokenService.java` in `domain-user.token` (blacklist/refresh/revoke). Preserve `token`-column dual use: refresh records store the JTI, blacklist records store the full JWT — otherwise `existsByToken` in `refreshToken()` false-positives. Refresh expiry via `@Value` (never `System.getProperty`). |
+| 1.5 | Adapter updates in single pass | `UserProfileAdapter`, `WebSocketUserAdapter`, `UserNotificationAdapter` → `core-security.port.CurrentUserPort` instead of `UserService.getSignedUser()`; new `CurrentUserAdapter` in `domain-user.adapter` implements the port (username → `UserRepository` → id); `JwtFilter` uses `TokenBlacklistPort` (implemented by `TokenBlacklistAdapter` in `domain-user.token`) instead of `TokenRepository` — preserves zero core→domain edge |
 | 1.6 | Verification (compiles: ports + event contract already in place) | `./gradlew :domain:domain-user:test` |
 
 Future auth methods (OCP): add `domain.user.auth.strategy.OAuth2AuthenticationProvider` / `PasskeyWebAuthnProvider` / `GoogleSocialAuthProvider` implementing the core `AuthenticationProvider` SPI. Zero edits to existing password flow or core.
@@ -95,7 +95,8 @@ noClasses().that().resideInAPackage("..domain.user.controller..")
 | `core-shared/security/AuthenticationProvider.java` | `core-security.port.AuthenticationProvider` |
 | `core-shared/security/Token.java` | `domain-user/token/Token.java` |
 | `core-shared/security/TokenRepository.java` | `domain-user/token/TokenRepository.java` |
-| (new) `core-security/port/CurrentUserPort.java` + adapter | `core-security` |
+| (new) `core-security/port/CurrentUserPort.java` + `TokenBlacklistPort.java` (interfaces) | `core-security` |
+| (new) `domain-user/adapter/CurrentUserAdapter.java` + `domain-user/token/TokenBlacklistAdapter.java` (implementations) | `domain-user` |
 | (enriched) `core-shared/event/UserRegisteredEvent.java` | add `activationCode` |
 
 Explicitly **not created**: `domain-iam/` subproject, `UserCredentialsPort`, `UserCredentialsAdapter`, `DomainIamArchitectureRulesTest`, `settings.gradle.kts` include.

@@ -31,7 +31,7 @@ class PostVisibilityProjectorTest {
     @Test
     void onUserRegistered_shouldInsertDefaultPublicRow() {
         UUID userId = UUID.randomUUID();
-        var event = new UserRegisteredEvent(userId, "u", "u@test.com");
+        var event = new UserRegisteredEvent(userId, "u", "u@test.com", "123456");
         when(processedEventRepository.existsByEventId(event.getEventId())).thenReturn(false);
         when(visibilityRepository.findById(userId)).thenReturn(Optional.empty());
 
