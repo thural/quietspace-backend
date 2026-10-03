@@ -131,4 +131,20 @@ class JwtServiceTest {
 
         assertThat(jwtService.isTokenExpired(token)).isTrue();
     }
+
+    @Test
+    void extractJti_givenGeneratedToken_shouldReturnNonNullId() {
+        String token = jwtService.generateToken(userDetails);
+
+        assertThat(jwtService.extractJti(token)).isNotNull();
+    }
+
+    @Test
+    void generateToken_givenExtraClaims_shouldEmbedThem() {
+        String token = jwtService.generateToken(java.util.Map.of("custom", "value"), userDetails);
+
+        String custom = jwtService.extractClaim(token, claims -> claims.get("custom", String.class));
+
+        assertThat(custom).isEqualTo("value");
+    }
 }
