@@ -15,7 +15,7 @@ Each domain module is a **self-contained vertical slice** owning a single aggreg
 ## Module Contracts
 
 ### domain-user
-**Aggregate**: `User`, `ProfileSettings`, `Follow` (value object)
+**Aggregate**: `User`, `ProfileSettings`, `Follow` (value object), `Token` (refresh/blacklist records)
 
 | Port (Owned) | Interface | Purpose |
 |--------------|-----------|---------|
@@ -25,11 +25,15 @@ Each domain module is a **self-contained vertical slice** owning a single aggreg
 | Service | Key Methods |
 |---------|-------------|
 | `UserService` | `followUser`, `unfollowUser`, `blockUser`, `unblockUser`, `updateProfile`, `getSignedUser` |
-| `UserAuthenticationProvider` | `loadUserByUsername` (implements core-security) |
+| `AuthService` | `register` (publishes `UserRegisteredEvent` with `activationCode`), `authenticate`, `activateAccount`, `refreshToken`, `signout` |
+| `TokenService` | `saveRefreshToken`, `blacklistToken`, `revokeTokenByJti`, `cleanExpiredTokens` |
+| `UserAuthenticationProvider` | `loadUserByUsername` (implements `core-security.port.AuthenticationProvider`) |
+| `CurrentUserAdapter` | `currentUserId` (implements `core-security.port.CurrentUserPort`) |
+| `TokenBlacklistAdapter` | `isBlacklisted`, `isRevokedByJti` (implements `core-security.port.TokenBlacklistPort`) |
 
 | Events Published | Events Consumed |
 |------------------|-----------------|
-| `UserRegisteredEvent` | — |
+| `UserRegisteredEvent` (incl. `activationCode`) | — |
 | `UserFollowedEvent` | — |
 | `UserUnfollowedEvent` | — |
 | `UserPrivacyChangedEvent` | — |
@@ -37,6 +41,7 @@ Each domain module is a **self-contained vertical slice** owning a single aggreg
 | Repository | Package-Private |
 |------------|-----------------|
 | `UserRepository` | ✅ |
+| `TokenRepository` | ✅ |
 
 ---
 
@@ -261,7 +266,7 @@ Intentionally retained direct access: message→chat (chat owns message), entity
 
 | Event | Publisher | Consumers | Payload |
 |-------|-----------|-----------|---------|
-| `UserRegisteredEvent` | domain-user (AuthService) | domain-notification | userId, username, email |
+| `UserRegisteredEvent` | domain-user (AuthService) | domain-notification (welcome notification + activation email) | userId, username, email, activationCode |
 | `PostCreatedEvent` | domain-post (PostService) | domain-notification | postId, authorId, title, text |
 | `CommentCreatedEvent` | domain-comment (CommentService) | domain-notification | commentId, postId, authorId, text |
 | `ReactionAddedEvent` | domain-reaction (ReactionService) | domain-notification | reactionId, contentId, contentType, reactionType, actorId |

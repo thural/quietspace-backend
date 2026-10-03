@@ -51,7 +51,7 @@ Core modules provide shared infrastructure and cross-cutting concerns. They have
 ### Domain Events (Event Contracts)
 | Event | Aggregate | Payload |
 |-------|-----------|---------|
-| `UserRegisteredEvent` | User | userId, username, email |
+| `UserRegisteredEvent` | User | userId, username, email, activationCode |
 | `PostCreatedEvent` | Post | postId, authorId, title, text |
 | `CommentCreatedEvent` | Comment | commentId, postId, authorId, text |
 | `ReactionAddedEvent` | Reaction | reactionId, contentId, contentType, reactionType, actorId |
@@ -119,17 +119,19 @@ Core modules provide shared infrastructure and cross-cutting concerns. They have
 ## core-security
 **Package**: `dev.thural.quietspace.core.security`
 
-### Public Interfaces
+### Public Interfaces (`core.security.port` — SPIs implemented by domain-user)
 | Interface | Purpose |
 |-----------|---------|
-| `AuthenticationProvider` | `UserDetails loadUserByUsername(String)` — implemented by domain-user |
-| `JwtTokenService` | `generateToken(UserDetails)`, `validateToken(String)` |
+| `AuthenticationProvider` | `UserDetails loadUserByUsername(String)` — implemented by `domain-user/.../auth/UserAuthenticationProvider` |
+| `JwtTokenService` | `generateToken(UserDetails)`, `validateToken(String)` — implemented by `JwtService` (stateless, stays in core-security) |
+| `CurrentUserPort` | `UUID currentUserId()` — implemented by `domain-user/.../adapter/CurrentUserAdapter` (username → `UserRepository` → id); throws `UnauthenticatedException` when anonymous |
+| `TokenBlacklistPort` | `isBlacklisted(String)`, `isRevokedByJti(String)` — implemented by `domain-user/.../token/TokenBlacklistAdapter` |
 
 ### Implementations
 | Class | Purpose |
 |-------|---------|
-| `JwtTokenServiceImpl` | HS256 JWT with issuer/audience validation, refresh tokens |
-| `JwtFilter` | Servlet filter for JWT authentication |
+| `JwtService` | HS256 JWT with issuer/audience validation, refresh tokens (implements `JwtTokenService`) |
+| `JwtFilter` | Servlet filter for JWT authentication; blacklist checks via `TokenBlacklistPort` (zero core→domain edge) |
 | `SecurityConfig` | Spring Security filter chain, CSRF disabled for stateless API |
 | `SecurityBeans` | PasswordEncoder, AuthenticationManager beans |
 

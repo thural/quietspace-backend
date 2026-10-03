@@ -30,9 +30,10 @@ public abstract class DomainEvent {
 | `eventType` | String | "UserRegistered" |
 | `username` | String | Registered username |
 | `email` | String | Registered email |
+| `activationCode` | String | Account activation code (for activation email) |
 
-**Publisher**: `domain-user` → `AuthService.registerUser()`
-**Consumers**: `domain-notification` → welcome notification
+**Publisher**: `domain-user` → `AuthService.register()` (via `TransactionalEventPublisher`, same TX as user + token persist)
+**Consumers**: `domain-notification` → welcome notification + activation email (`EmailEvent` → `email.queue`)
 **Routing Key**: `domain.user.registered`
 
 ---
