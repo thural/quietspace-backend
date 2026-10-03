@@ -10,4 +10,6 @@ dependencies {
     implementation(project(":domain:domain-notification"))
     // Test-only: CommentRepositoryTest exercises Post association.
     testImplementation(project(":domain:domain-post"))
+    // Test-only: JwtFilter deps for web-slice tests (core-security has no domain deps).
+    testImplementation(project(":core:core-security"))
 }

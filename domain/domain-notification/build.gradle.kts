@@ -10,6 +10,8 @@ dependencies {
     // arrives via consumer-owned ports (adapters live in provider modules).
     // Test-only: NotificationRepositoryTest persists a User fixture.
     testImplementation(project(":domain:domain-user"))
+    // Test-only: JwtFilter deps for web-slice tests (core-security has no domain deps).
+    testImplementation(project(":core:core-security"))
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework:spring-messaging")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

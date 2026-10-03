@@ -10,4 +10,7 @@ dependencies {
     implementation(project(":domain:domain-reaction"))
     implementation(project(":domain:domain-comment"))
     implementation(project(":domain:domain-notification"))
+
+    // Test-only: JwtFilter deps for web-slice tests (core-security has no domain deps).
+    testImplementation(project(":core:core-security"))
 }

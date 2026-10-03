@@ -3,6 +3,7 @@ package dev.thural.quietspace.domain.notification;
 import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.core.shared.enums.ReactionType;
 import dev.thural.quietspace.core.shared.event.*;
+import dev.thural.quietspace.core.shared.service.impl.EmailEventPublisher;
 import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
 import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
 import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
@@ -33,6 +34,8 @@ class NotificationEventListenerTest {
     private SimpMessagingTemplate template;
     @Mock
     private ProcessedEventRepository processedEventRepository;
+    @Mock
+    private EmailEventPublisher emailEventPublisher;
 
     @InjectMocks
     private NotificationEventListener listener;
@@ -53,23 +56,25 @@ class NotificationEventListenerTest {
 
     @Test
     void onUserRegistered_shouldSaveWelcomeNotification() {
-        var event = new UserRegisteredEvent(UUID.randomUUID(), "user", "u@x.com");
+        var event = new UserRegisteredEvent(UUID.randomUUID(), "user", "u@x.com", "123456");
         stubCommon(saved("FOLLOW_REQUEST"));
 
         listener.onUserRegistered(event);
 
         verify(notificationRepository).save(any(Notification.class));
+        verify(emailEventPublisher).publish(any(EmailEvent.class));
         verify(processedEventRepository).save(any());
     }
 
     @Test
     void onUserRegistered_givenAlreadyProcessed_shouldSkip() {
-        var event = new UserRegisteredEvent(UUID.randomUUID(), "user", "u@x.com");
+        var event = new UserRegisteredEvent(UUID.randomUUID(), "user", "u@x.com", "123456");
         when(processedEventRepository.existsByEventId(event.getEventId())).thenReturn(true);
 
         listener.onUserRegistered(event);
 
         verify(notificationRepository, never()).save(any(Notification.class));
+        verify(emailEventPublisher, never()).publish(any(EmailEvent.class));
     }
 
     @Test

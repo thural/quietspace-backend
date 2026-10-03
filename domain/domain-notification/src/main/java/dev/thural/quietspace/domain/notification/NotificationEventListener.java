@@ -2,15 +2,19 @@ package dev.thural.quietspace.domain.notification;
 
 import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.core.shared.event.*;
+import dev.thural.quietspace.core.shared.service.impl.EmailEventPublisher;
 import dev.thural.quietspace.domain.notification.port.NotificationCommentPort;
 import dev.thural.quietspace.domain.notification.port.NotificationPostPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static dev.thural.quietspace.core.messaging.constant.WebSocketPaths.NOTIFICATION_SUBJECT;
@@ -29,6 +33,10 @@ public class NotificationEventListener {
     private final NotificationPostPort postPort;
     private final SimpMessagingTemplate template;
     private final ProcessedEventRepository processedEventRepository;
+    private final EmailEventPublisher emailEventPublisher;
+
+    @Value("${spring.application.mailing.frontend.activation-url}")
+    private String activationUrl;
 
     @EventListener
     @Transactional
@@ -48,11 +56,26 @@ public class NotificationEventListener {
                         .build()
         );
         sendNotification(event.getAggregateId(), notification);
+        sendActivationEmail(event);
         processedEventRepository.save(ProcessedEvent.builder()
                 .eventId(event.getEventId())
                 .eventType(event.getEventType())
                 .processedAt(java.time.OffsetDateTime.now())
                 .build());
+    }
+
+    private void sendActivationEmail(UserRegisteredEvent event) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("username", event.getUsername());
+        variables.put("confirmationUrl", activationUrl);
+        variables.put("activationCode", event.getActivationCode());
+
+        emailEventPublisher.publish(new EmailEvent(
+                event.getEmail(),
+                "account activation",
+                "activate_account",
+                variables
+        ));
     }
 
     @EventListener
