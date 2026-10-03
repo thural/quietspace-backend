@@ -1,4 +1,4 @@
-package dev.thural.quietspace.domain.user.security;
+package dev.thural.quietspace.domain.user.auth;
 
 import dev.thural.quietspace.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class UserSecurityBeans {
+public class UserIamConfig {
 
     private final UserRepository userRepository;
 

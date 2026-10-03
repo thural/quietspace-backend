@@ -2,8 +2,8 @@ package dev.thural.quietspace.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.config.TestcontainersConfig;
-import dev.thural.quietspace.core.shared.security.Token;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.domain.user.token.Token;
+import dev.thural.quietspace.domain.user.token.TokenRepository;
 import dev.thural.quietspace.core.shared.service.EmailService;
 import dev.thural.quietspace.shared.util.IntegrationTestHelper;
 import dev.thural.quietspace.domain.photo.PhotoService;

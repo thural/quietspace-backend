@@ -1,6 +1,6 @@
 package dev.thural.quietspace.post.controller;
 
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
 import dev.thural.quietspace.core.shared.security.TokenRepository;
 import dev.thural.quietspace.domain.notification.NotificationService;
 import dev.thural.quietspace.domain.post.PostService;

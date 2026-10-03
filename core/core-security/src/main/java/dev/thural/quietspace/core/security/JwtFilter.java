@@ -1,7 +1,7 @@
 package dev.thural.quietspace.core.security;
 
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
+import dev.thural.quietspace.core.security.port.TokenBlacklistPort;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-    private final TokenRepository tokenRepository;
+    private final TokenBlacklistPort tokenBlacklistPort;
     private final UserDetailsService userDetailsService;
     private final JwtTokenService jwtTokenService;
 
@@ -41,13 +41,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String jwtToken = authHeader.substring(7);
 
-        if (tokenRepository.existsByToken(jwtToken)) {
+        if (tokenBlacklistPort.isBlacklisted(jwtToken)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            if (tokenRepository.existsByJti(jwtTokenService.extractJti(jwtToken))) {
+            if (tokenBlacklistPort.isRevokedByJti(jwtTokenService.extractJti(jwtToken))) {
                 filterChain.doFilter(request, response);
                 return;
             }

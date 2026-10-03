@@ -33,7 +33,7 @@ class TransactionalEventPublisherTest {
     void publish_savesToOutboxAndFlushes() {
         ReflectionTestUtils.setField(publisher, "entityManager", entityManager);
         
-        var event = new UserRegisteredEvent(UUID.randomUUID(), "user", "u@x.com");
+        var event = new UserRegisteredEvent(UUID.randomUUID(), "user", "u@x.com", "123456");
         when(eventSerializer.serialize(event)).thenReturn("{\"eventType\":\"UserRegistered\"}");
 
         publisher.publish(event);

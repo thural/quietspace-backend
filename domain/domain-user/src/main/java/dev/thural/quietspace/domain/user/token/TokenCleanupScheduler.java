@@ -1,6 +1,5 @@
-package dev.thural.quietspace.core.security;
+package dev.thural.quietspace.domain.user.token;
 
-import dev.thural.quietspace.core.shared.security.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

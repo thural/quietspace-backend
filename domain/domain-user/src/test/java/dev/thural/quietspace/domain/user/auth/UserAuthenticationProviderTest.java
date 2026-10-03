@@ -1,7 +1,8 @@
-package dev.thural.quietspace.domain.user.security;
+package dev.thural.quietspace.domain.user.auth;
 
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
+import dev.thural.quietspace.domain.user.auth.UserAuthenticationProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

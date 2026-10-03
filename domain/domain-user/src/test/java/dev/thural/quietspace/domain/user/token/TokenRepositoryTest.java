@@ -1,8 +1,8 @@
-package dev.thural.quietspace.domain.user.repository;
+package dev.thural.quietspace.domain.user.token;
 
 import dev.thural.quietspace.core.shared.enums.Role;
-import dev.thural.quietspace.core.shared.security.Token;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.domain.user.token.Token;
+import dev.thural.quietspace.domain.user.token.TokenRepository;
 import dev.thural.quietspace.domain.user.User;
 import dev.thural.quietspace.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -82,7 +82,7 @@ class TokenRepositoryTest {
 
     @Test
     void getByEmail() {
-        Optional<Token> foundToken = tokenRepository.getByEmail(token.getEmail());
+        Optional<Token> foundToken = tokenRepository.findByEmail(token.getEmail());
         assertTrue(foundToken.isPresent());
         assertEquals(token.getToken(), foundToken.get().getToken());
     }

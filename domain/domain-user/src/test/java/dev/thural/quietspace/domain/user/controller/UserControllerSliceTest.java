@@ -2,8 +2,11 @@ package dev.thural.quietspace.domain.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.core.web.GlobalExceptionHandler;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
+import dev.thural.quietspace.core.security.port.TokenBlacklistPort;
+import dev.thural.quietspace.domain.user.auth.UserIamConfig;
+import dev.thural.quietspace.domain.user.token.TokenRepository;
+import dev.thural.quietspace.domain.user.UserRepository;
 import dev.thural.quietspace.domain.user.UserService;
 import dev.thural.quietspace.domain.user.dto.UserRequest;
 import dev.thural.quietspace.domain.user.dto.UserResponse;
@@ -18,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = UserController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, dev.thural.quietspace.domain.user.auth.UserIamConfig.class})
 public class UserControllerSliceTest {
 
     @Autowired
@@ -48,17 +52,26 @@ public class UserControllerSliceTest {
     @MockitoBean
     UserService userService;
     @MockitoBean
+    UserRepository userRepository;
+    @MockitoBean
     TokenRepository tokenRepository;
     @MockitoBean
     JwtTokenService jwtTokenService;
     @MockitoBean
     UserDetailsService userDetailsService;
+    @MockitoBean
+    TokenBlacklistPort tokenBlacklistPort;
 
     @TestConfiguration
     static class TestConfig {
         @Bean
         ObjectMapper objectMapper() {
             return new com.fasterxml.jackson.databind.ObjectMapper();
+        }
+
+        @Bean
+        PasswordEncoder passwordEncoder() {
+            return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         }
     }
 

@@ -1,8 +1,7 @@
 package dev.thural.quietspace.domain.message.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
 import dev.thural.quietspace.domain.chat.Chat;
 import dev.thural.quietspace.domain.message.Message;
 import dev.thural.quietspace.domain.message.MessageService;
@@ -49,8 +48,6 @@ class MessageControllerSliceTest {
     private MessageService messageService;
     @MockitoBean
     JwtTokenService jwtTokenService;
-    @MockitoBean
-    TokenRepository tokenRepository;
     @MockitoBean
     UserDetailsService userDetailsService;
 

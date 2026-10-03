@@ -17,12 +17,13 @@ class UserRegisteredEventTest {
     @Test
     void fullConstructor_setsAllFields() {
         var userId = UUID.randomUUID();
-        var event = new UserRegisteredEvent(userId, "john", "john@example.com");
+        var event = new UserRegisteredEvent(userId, "john", "john@example.com", "123456");
 
         assertThat(event.getEventType()).isEqualTo("UserRegistered");
         assertThat(event.getAggregateType()).isEqualTo("User");
         assertThat(event.getAggregateId()).isEqualTo(userId);
         assertThat(event.getUsername()).isEqualTo("john");
         assertThat(event.getEmail()).isEqualTo("john@example.com");
+        assertThat(event.getActivationCode()).isEqualTo("123456");
     }
 }

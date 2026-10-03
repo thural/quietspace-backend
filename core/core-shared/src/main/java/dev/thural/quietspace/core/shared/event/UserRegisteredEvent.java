@@ -11,16 +11,18 @@ public class UserRegisteredEvent extends DomainEvent {
 
     private String username;
     private String email;
+    private String activationCode;
 
     public UserRegisteredEvent() {
         setEventType("UserRegistered");
     }
 
-    public UserRegisteredEvent(UUID userId, String username, String email) {
+    public UserRegisteredEvent(UUID userId, String username, String email, String activationCode) {
         this();
         setAggregateType("User");
         setAggregateId(userId);
         this.username = username;
         this.email = email;
+        this.activationCode = activationCode;
     }
 }

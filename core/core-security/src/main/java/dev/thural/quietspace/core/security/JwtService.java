@@ -1,5 +1,6 @@
 package dev.thural.quietspace.core.security;
 
+import dev.thural.quietspace.core.security.port.JwtTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -19,7 +20,7 @@ import java.util.function.Function;
 
 @Service
 @Slf4j
-public class JwtService {
+public class JwtService implements JwtTokenService {
 
     @Value("${spring.application.security.jwt.secret-key}")
     private String secretKey;

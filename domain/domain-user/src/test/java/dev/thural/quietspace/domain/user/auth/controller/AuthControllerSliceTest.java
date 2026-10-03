@@ -1,8 +1,9 @@
 package dev.thural.quietspace.domain.user.auth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
+import dev.thural.quietspace.core.security.port.TokenBlacklistPort;
+import dev.thural.quietspace.domain.user.token.TokenRepository;
 import dev.thural.quietspace.domain.user.auth.AuthService;
 import dev.thural.quietspace.domain.user.auth.dto.AuthRequest;
 import dev.thural.quietspace.domain.user.auth.dto.AuthResponse;
@@ -50,6 +51,8 @@ class AuthControllerSliceTest {
     private JwtTokenService jwtTokenService;
     @MockitoBean
     private UserDetailsService userDetailsService;
+    @MockitoBean
+    private TokenBlacklistPort tokenBlacklistPort;
 
     @Test
     void register_givenValidRequest_shouldReturn200() throws Exception {

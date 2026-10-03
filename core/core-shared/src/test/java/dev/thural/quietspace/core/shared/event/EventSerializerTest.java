@@ -19,7 +19,7 @@ class EventSerializerTest {
 
     @Test
     void serialize_thenDeserialize_preservesEvent() {
-        var original = new UserRegisteredEvent(UUID.randomUUID(), "john", "john@example.com");
+        var original = new UserRegisteredEvent(UUID.randomUUID(), "john", "john@example.com", "123456");
 
         String json = serializer.serialize(original);
         var deserialized = serializer.deserialize(json, UserRegisteredEvent.class);
@@ -27,6 +27,7 @@ class EventSerializerTest {
         assertThat(deserialized.getEventId()).isEqualTo(original.getEventId());
         assertThat(deserialized.getUsername()).isEqualTo("john");
         assertThat(deserialized.getEmail()).isEqualTo("john@example.com");
+        assertThat(deserialized.getActivationCode()).isEqualTo("123456");
         assertThat(deserialized.getEventType()).isEqualTo("UserRegistered");
     }
 

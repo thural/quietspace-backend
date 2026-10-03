@@ -2,8 +2,7 @@ package dev.thural.quietspace.domain.comment.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.core.shared.enums.Role;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
 import dev.thural.quietspace.domain.comment.Comment;
 import dev.thural.quietspace.domain.comment.CommentService;
 import dev.thural.quietspace.domain.comment.dto.CommentRequest;
@@ -48,8 +47,6 @@ class CommentControllerSliceTest {
     CommentService commentService;
     @MockitoBean
     NotificationService notificationService;
-    @MockitoBean
-    TokenRepository tokenRepository;
     @MockitoBean
     JwtTokenService jwtTokenService;
     @MockitoBean

@@ -3,8 +3,7 @@ package dev.thural.quietspace.domain.reaction.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.thural.quietspace.core.shared.enums.EntityType;
 import dev.thural.quietspace.core.shared.enums.ReactionType;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
 import dev.thural.quietspace.domain.notification.NotificationService;
 import dev.thural.quietspace.domain.reaction.ReactionService;
 import dev.thural.quietspace.domain.reaction.dto.ReactionRequest;
@@ -45,8 +44,6 @@ class ReactionControllerTest {
 
     @MockitoBean
     NotificationService notificationService;
-    @MockitoBean
-    TokenRepository tokenRepository;
     @MockitoBean
     JwtTokenService jwtTokenService;
     @MockitoBean

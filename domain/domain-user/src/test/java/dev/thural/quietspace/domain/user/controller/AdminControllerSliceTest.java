@@ -1,8 +1,8 @@
 package dev.thural.quietspace.domain.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
+import dev.thural.quietspace.domain.user.token.TokenRepository;
 import dev.thural.quietspace.domain.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,7 @@
 package dev.thural.quietspace.domain.notification.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
 import dev.thural.quietspace.domain.notification.NotificationService;
 import dev.thural.quietspace.domain.notification.NotificationType;
 import dev.thural.quietspace.domain.notification.dto.NotificationResponse;
@@ -43,8 +42,6 @@ class NotificationControllerTest {
 
     @MockitoBean
     NotificationService notificationService;
-    @MockitoBean
-    TokenRepository tokenRepository;
     @MockitoBean
     JwtTokenService jwtTokenService;
     @MockitoBean

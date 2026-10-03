@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation(project(":core:core-shared"))
     implementation(project(":core:core-data"))
+    implementation(project(":core:core-security"))
     implementation(project(":core:core-messaging"))
     // One-way edge: user reads photo views; photo never depends on user.
     implementation(project(":domain:domain-photo"))

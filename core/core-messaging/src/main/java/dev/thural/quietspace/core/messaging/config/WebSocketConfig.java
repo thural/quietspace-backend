@@ -1,7 +1,7 @@
 package dev.thural.quietspace.core.messaging.config;
 
 import dev.thural.quietspace.core.shared.ports.WebSocketUserPort;
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;

@@ -1,7 +1,7 @@
 package dev.thural.quietspace.core.security;
 
-import dev.thural.quietspace.core.shared.security.JwtTokenService;
-import dev.thural.quietspace.core.shared.security.TokenRepository;
+import dev.thural.quietspace.core.security.port.JwtTokenService;
+import dev.thural.quietspace.core.security.port.TokenBlacklistPort;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 class JwtFilterTest {
 
     @Mock
-    private TokenRepository tokenRepository;
+    private TokenBlacklistPort tokenBlacklistPort;
     @Mock
     private UserDetailsService userDetailsService;
     @Mock
@@ -75,7 +75,7 @@ class JwtFilterTest {
     @Test
     void doFilter_givenBlacklistedToken_shouldSkip() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer blacklisted-token");
-        when(tokenRepository.existsByToken("blacklisted-token")).thenReturn(true);
+        when(tokenBlacklistPort.isBlacklisted("blacklisted-token")).thenReturn(true);
 
         jwtFilter.doFilterInternal(request, response, filterChain);
 
@@ -86,9 +86,9 @@ class JwtFilterTest {
     @Test
     void doFilter_givenRevokedJti_shouldSkip() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer revoked-jti-token");
-        when(tokenRepository.existsByToken("revoked-jti-token")).thenReturn(false);
+        when(tokenBlacklistPort.isBlacklisted("revoked-jti-token")).thenReturn(false);
         when(jwtTokenService.extractJti("revoked-jti-token")).thenReturn("revoked-jti");
-        when(tokenRepository.existsByJti("revoked-jti")).thenReturn(true);
+        when(tokenBlacklistPort.isRevokedByJti("revoked-jti")).thenReturn(true);
 
         jwtFilter.doFilterInternal(request, response, filterChain);
 
@@ -99,7 +99,7 @@ class JwtFilterTest {
     @Test
     void doFilter_givenNullUsername_shouldSkip() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer some-token");
-        when(tokenRepository.existsByToken("some-token")).thenReturn(false);
+        when(tokenBlacklistPort.isBlacklisted("some-token")).thenReturn(false);
         when(jwtTokenService.extractUsername("some-token")).thenReturn(null);
 
         jwtFilter.doFilterInternal(request, response, filterChain);
@@ -111,7 +111,7 @@ class JwtFilterTest {
     @Test
     void doFilter_givenMalformedToken_shouldSkipAndContinueChain() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer malformed-token");
-        when(tokenRepository.existsByToken("malformed-token")).thenReturn(false);
+        when(tokenBlacklistPort.isBlacklisted("malformed-token")).thenReturn(false);
         when(jwtTokenService.extractJti("malformed-token"))
                 .thenThrow(new io.jsonwebtoken.MalformedJwtException("bad token"));
 
@@ -124,7 +124,7 @@ class JwtFilterTest {
     @Test
     void doFilter_givenValidToken_shouldSetAuthenticationAndContinue() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer valid-token");
-        when(tokenRepository.existsByToken("valid-token")).thenReturn(false);
+        when(tokenBlacklistPort.isBlacklisted("valid-token")).thenReturn(false);
         when(jwtTokenService.extractUsername("valid-token")).thenReturn("testuser");
         when(userDetailsService.loadUserByUsername("testuser")).thenReturn(userDetails);
         when(jwtTokenService.isTokenValid("valid-token", userDetails)).thenReturn(true);
@@ -139,7 +139,7 @@ class JwtFilterTest {
     @Test
     void doFilter_whenUserDetailsNotFound_shouldPropagate() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer valid-token");
-        when(tokenRepository.existsByToken("valid-token")).thenReturn(false);
+        when(tokenBlacklistPort.isBlacklisted("valid-token")).thenReturn(false);
         when(jwtTokenService.extractUsername("valid-token")).thenReturn("unknown");
         when(userDetailsService.loadUserByUsername("unknown")).thenThrow(new RuntimeException("User not found"));
 

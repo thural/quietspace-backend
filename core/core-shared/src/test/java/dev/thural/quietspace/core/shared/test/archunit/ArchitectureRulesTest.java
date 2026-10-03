@@ -27,7 +27,7 @@ public class ArchitectureRulesTest {
     // Currently public repositories (to be made package-private in Phase 4)
     private static final String PUBLIC_REPOSITORIES_PATTERN =
         "ChatRepository|CommentRepository|MessageRepository|NotificationRepository|"
-        + "PhotoRepository|PostRepository|ReactionRepository|TokenRepository|UserRepository";
+        + "PhotoRepository|PostRepository|ReactionRepository|UserRepository";
 
     @ArchTest
     static final ArchRule no_core_depends_on_domain = noClasses()

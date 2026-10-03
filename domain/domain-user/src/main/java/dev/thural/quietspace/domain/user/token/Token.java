@@ -1,4 +1,4 @@
-package dev.thural.quietspace.core.shared.security;
+package dev.thural.quietspace.domain.user.token;
 
 import dev.thural.quietspace.core.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
